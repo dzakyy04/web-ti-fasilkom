@@ -1,11 +1,11 @@
-@extends('auth.layouts.app')
+@extends('auth.layout')
 
 @section('content')
     <div class="nk-block-head">
         <div class="nk-block-head-content">
             <h4 class="nk-block-title">Login</h4>
             <div class="nk-block-des">
-                <p>Silahkan masukkan email dan password anda.</p>
+                <p>Silahkan masukkan username dan password anda.</p>
             </div>
         </div>
     </div>
@@ -17,7 +17,7 @@
             </div>
             <div class="form-control-wrap">
                 <input type="text" class="form-control form-control-lg @error('username') is-invalid @enderror"
-                    id="username" name="username" placeholder="Masukkan email anda" value="{{ old('username') }}">
+                    id="username" name="username" placeholder="Masukkan username anda" value="{{ old('username') }}">
             </div>
             @error('username')
                 <div class="mt-1 small text-danger">
