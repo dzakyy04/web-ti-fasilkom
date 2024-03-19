@@ -17,8 +17,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->group(function () {
    Route::middleware('guest')->group(function () {
+      // Login
       Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login.view');
       Route::post('/login', [AuthController::class, 'login'])->name('login');
+
+      // Forgot Password
+      Route::get('/lupa-password', [AuthController::class, 'showForgotPasswordForm'])->name('password.request');
    });
 
    Route::middleware('auth')->group(function () {
