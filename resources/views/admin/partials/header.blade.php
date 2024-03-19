@@ -56,10 +56,14 @@
                             <div class="dropdown-inner">
                                 <ul class="link-list">
                                     <li>
-                                        <a href="#">
+                                        <a href="#" id="logout-link">
                                             <em class="icon ni ni-signout"></em>
                                             <span>Logout</span>
                                         </a>
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                            style="display: none;">
+                                            @csrf
+                                        </form>
                                     </li>
                                 </ul>
                             </div>
@@ -70,3 +74,14 @@
         </div>
     </div>
 </div>
+
+@push('js')
+    <script>
+        $(document).ready(function() {
+            $('#logout-link').click(function(event) {
+                event.preventDefault();
+                $('#logout-form').submit();
+            });
+        });
+    </script>
+@endpush
