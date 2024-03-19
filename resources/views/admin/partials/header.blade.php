@@ -6,7 +6,7 @@
                         class="icon ni ni-menu"></em></a>
             </div>
             <div class="nk-header-brand d-xl-none">
-                <a href="html/index.html" class="logo-link">
+                <a href="#" class="logo-link">
                     <img class="logo-light logo-img" src="{{ asset('assets/images/unsri-light.png') }}" alt="logo">
                     <img class="logo-dark logo-img" src="{{ asset('assets/images/unsri-dark.png') }}" alt="logo-dark">
                 </a>
