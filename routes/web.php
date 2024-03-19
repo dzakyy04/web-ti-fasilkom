@@ -27,6 +27,7 @@ Route::prefix('admin')->group(function () {
 
       // Reset Password
       Route::get('/reset-password', [AuthController::class, 'showPasswordResetForm'])->name('password.reset');
+      Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
    });
 
    Route::middleware('auth')->group(function () {
