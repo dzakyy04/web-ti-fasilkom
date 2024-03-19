@@ -23,6 +23,7 @@ Route::prefix('admin')->group(function () {
 
       // Forgot Password
       Route::get('/lupa-password', [AuthController::class, 'showForgotPasswordForm'])->name('password.request');
+      Route::post('/lupa-password', [AuthController::class, 'sendResetLinkEmail'])->name('password.email');
    });
 
    Route::middleware('auth')->group(function () {
