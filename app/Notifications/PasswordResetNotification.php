@@ -67,6 +67,6 @@ class PasswordResetNotification extends Notification
 
     private function getResetUrl($notifiable)
     {
-        return config('app.url') . '/reset-password?email=' . urlencode($notifiable->email) . '&token=' . $this->token;
+        return config('app.url') . '/admin/reset-password?email=' . urlencode($notifiable->email) . '&token=' . $this->token;
     }
 }

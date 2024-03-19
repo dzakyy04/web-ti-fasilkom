@@ -24,6 +24,9 @@ Route::prefix('admin')->group(function () {
       // Forgot Password
       Route::get('/lupa-password', [AuthController::class, 'showForgotPasswordForm'])->name('password.request');
       Route::post('/lupa-password', [AuthController::class, 'sendResetLinkEmail'])->name('password.email');
+
+      // Reset Password
+      Route::get('/reset-password', [AuthController::class, 'showPasswordResetForm'])->name('password.reset');
    });
 
    Route::middleware('auth')->group(function () {

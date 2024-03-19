@@ -61,4 +61,9 @@ class AuthController extends Controller
         }
         return back()->with('error', __($status));
     }
+
+    public function showPasswordResetForm() {
+        $title = 'Reset Password';
+        return view('auth.password-reset', compact('title'));
+    }
 }
