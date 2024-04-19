@@ -22,15 +22,13 @@ const items = [
 // options with default values
 const options = {
     defaultPosition: 0,
+    interval: 5000,
 
     indicators: {
         activeClasses: "bg-white dark:bg-gray-800",
         inactiveClasses:
             "bg-white/50 dark:bg-gray-800/50 hover:bg-white dark:hover:bg-gray-800",
     },
-
-    // callback functions
-    onChange: () => {},
 };
 
 // instance options object
@@ -41,12 +39,17 @@ const instanceOptions = {
 
 const carousel = new Carousel(carouselElement, items, options, instanceOptions);
 
+carousel.updateOnChange(toggleInactiveClass);
+
 function toggleInactiveClass() {
     items.forEach((item) => {
         if (item.position !== carousel.getActiveItem().position) {
-            item.el.classList.add("scale-75");
+            item.el.classList.add("scale-[0.9]");
         } else {
-            item.el.classList.remove("scale-75");
+            item.el.classList.remove("scale-[0.9]");
         }
     });
 }
+
+document.addEventListener("DOMContentLoaded", toggleInactiveClass);
+carousel.cycle();
