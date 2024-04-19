@@ -39,14 +39,15 @@ const instanceOptions = {
 
 const carousel = new Carousel(carouselElement, items, options, instanceOptions);
 
+carousel.updateOnNext(toggleInactiveClass);
 carousel.updateOnChange(toggleInactiveClass);
 
 function toggleInactiveClass() {
     items.forEach((item) => {
         if (item.position !== carousel.getActiveItem().position) {
-            item.el.classList.add("scale-[0.9]");
+            item.el.classList.add("scale-[0.95]");
         } else {
-            item.el.classList.remove("scale-[0.9]");
+            item.el.classList.remove("scale-[0.95]");
         }
     });
 }

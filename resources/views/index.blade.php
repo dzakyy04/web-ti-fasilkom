@@ -7,20 +7,17 @@
       <!-- Item 1 -->
       <div class="hidden w-3/4 px-3 mx-auto duration-700 ease-in-out rounded-2xl" id="carousel-item-1" data-carousel-item>
         <img src="{{ asset('images/carousel-image.png') }}"
-          class="absolute block w-full px-0.5 md:px-2 -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 rounded-2xl"
-          alt="...">
+          class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 rounded-2xl" alt="...">
       </div>
       <!-- Item 2 -->
       <div class="hidden w-3/4 mx-auto duration-700 ease-in-out rounded-2xl" id="carousel-item-2" data-carousel-item>
         <img src="{{ asset('images/carousel-image.png') }}"
-          class="absolute block w-full px-0.5 md:px-2 -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 rounded-2xl"
-          alt="...">
+          class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 rounded-2xl" alt="...">
       </div>
       <!-- Item 3 -->
       <div class="hidden w-3/4 mx-auto duration-700 ease-in-out rounded-2xl" id="carousel-item-3" data-carousel-item>
         <img src="{{ asset('images/carousel-image.png') }}"
-          class="absolute block w-full px-0.5 md:px-2 -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 rounded-2xl"
-          alt="...">
+          class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 rounded-2xl" alt="...">
       </div>
     </div>
     <!-- Slider indicators -->
