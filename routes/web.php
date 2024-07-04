@@ -1,8 +1,9 @@
 <?php
 
-use App\Http\Controllers\Admin\AuthController;
-use App\Http\Controllers\Admin\DashboardController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\ArticleController;
+use App\Http\Controllers\Admin\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,5 +34,8 @@ Route::prefix('admin')->group(function () {
    Route::middleware('auth')->group(function () {
       Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
       Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+      // Article
+      Route::get('/berita', [ArticleController::class, 'index'])->name('articles');
    });
 });

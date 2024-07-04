@@ -18,9 +18,15 @@
             <div class="nk-sidebar-menu" data-simplebar>
                 <ul class="nk-menu">
                     <li class="nk-menu-item has-sub">
-                        <a href="" class="nk-menu-link">
+                        <a href="{{ route('dashboard') }}" class="nk-menu-link">
                             <span class="nk-menu-icon"><em class="icon ni ni-dashboard"></em></em></span>
                             <span class="nk-menu-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nk-menu-item has-sub">
+                        <a href="{{ route('articles') }}" class="nk-menu-link">
+                            <span class="nk-menu-icon"><em class="icon ni ni-article"></em></em></span>
+                            <span class="nk-menu-text">Berita</span>
                         </a>
                     </li>
                 </ul>
