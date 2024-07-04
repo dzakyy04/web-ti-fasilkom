@@ -72,18 +72,29 @@
                             </div>
                             <div class="col-sm-12">
                                 <div class="form-group">
+                                    <label class="form-label" for="description">Deskripsi</label>
+                                    <div class="form-control-wrap">
+                                        <textarea id="description" class="form-control no-resize @error('description') is-invalid @enderror" name="description"
+                                            placeholder="Masukkan deskripsi berita" value="{{ old('description') }}" required></textarea>
+                                        @error('description')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
                                     <label class="form-label" for="thumbnail">Thumbnail</label>
                                     <div class="form-control-wrap">
+                                        <img id="thumbnail-preview" src="#" alt="Thumbnail Preview">
                                         <input type="file" id="thumbnail"
                                             class="form-control @error('thumbnail') is-invalid @enderror" name="thumbnail"
-                                            placeholder="Contoh: B/735-11/02/01/Smh" value="{{ old('thumbnail') }}" required
-                                            accept="image/*" onchange="previewThumbnail(event)">
+                                            placeholder="Contoh: B/735-11/02/01/Smh" value="{{ old('thumbnail') }}"
+                                            required accept="image/*" onchange="previewThumbnail(event)">
                                         @error('thumbnail')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
-                                    <img id="thumbnail-preview" src="#" alt="Thumbnail Preview">
-
                                 </div>
                             </div>
                             <div class="col-sm-12">

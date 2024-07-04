@@ -26,8 +26,9 @@ class ArticleController extends Controller
     {
         $request->validate([
             'title' => 'required',
-            'slug' => 'required|unique:articles,slug',
+            'slug' => 'required|unique:articles',
             'thumbnail' => 'required|file|mimes:png,jpg,jpeg',
+            'description' => 'required',
             'content' => 'required',
         ]);
 
@@ -62,6 +63,7 @@ class ArticleController extends Controller
         $summernote->title = $request->title;
         $summernote->slug = $uniqueSlug;
         $summernote->thumbnail = $thumbnailPath;
+        $summernote->description = $request->description;
         $summernote->content = $content;
 
         $summernote->save();

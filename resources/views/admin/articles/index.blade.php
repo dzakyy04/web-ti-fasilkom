@@ -52,7 +52,7 @@
                                 alt="">
                             <div class="card-inner">
                                 <h5 class="card-title">{{ $article->title }}</h5>
-                                <p class="card-text">{{ $article->content }}</p>
+                                <p class="card-text">{{ $article->description }}</p>
                                 <a href="#" class="btn btn-primary d-flex justify-content-center">Lihat
                                     Berita</a>
                             </div>
