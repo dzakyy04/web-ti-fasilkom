@@ -37,5 +37,7 @@ Route::prefix('admin')->group(function () {
 
       // Article
       Route::get('/berita', [ArticleController::class, 'index'])->name('articles');
+      Route::get('/berita/tambah', [ArticleController::class, 'create'])->name('articles.create');
+      Route::post('/berita/tambah', [ArticleController::class, 'store'])->name('articles.store');
    });
 });
