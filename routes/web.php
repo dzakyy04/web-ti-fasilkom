@@ -39,5 +39,7 @@ Route::prefix('admin')->group(function () {
       Route::get('/berita', [ArticleController::class, 'index'])->name('articles');
       Route::get('/berita/tambah', [ArticleController::class, 'create'])->name('articles.create');
       Route::post('/berita/tambah', [ArticleController::class, 'store'])->name('articles.store');
+      Route::get('/berita/{slug}/edit', [ArticleController::class, 'edit'])->name('articles.edit');
+      Route::put('/berita/{slug}/edit', [ArticleController::class, 'update'])->name('articles.update');
    });
 });

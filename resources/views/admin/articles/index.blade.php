@@ -64,7 +64,7 @@
                                         data-bs-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
                                     <div class="dropdown-menu dropdown-menu-end dropdown-menu-xs">
                                         <ul class="link-list-plain">
-                                            <li><a href="#">Edit</a></li>
+                                            <li><a href="{{ route('articles.edit', $article->slug) }}">Edit</a></li>
                                             <li><a href="#">Hapus</a></li>
                                         </ul>
                                     </div>
