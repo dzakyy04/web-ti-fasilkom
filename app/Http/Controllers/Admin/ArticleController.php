@@ -41,8 +41,12 @@ class ArticleController extends Controller
         $thumbnailPath = $uploadedFile->storeAs('public/berita/thumbnail', $thumbnailName);
 
         $content = $request->content;
+        $content = $this->ensureValidHtml($content); // Ensure valid HTML
+
         $dom = new \DomDocument();
+        libxml_use_internal_errors(true);
         $dom->loadHtml($content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        libxml_clear_errors();
         $images = $dom->getElementsByTagName('img');
 
         foreach ($images as $k => $img) {
@@ -91,6 +95,8 @@ class ArticleController extends Controller
 
         $article = Article::where('slug', $slug)->firstOrFail();
 
+        $oldContent = $article->content;
+
         $newSlug = Str::slug($request->title, '-');
         $uniqueSlug = $this->makeUniqueSlug($newSlug, $article->id);
 
@@ -112,11 +118,16 @@ class ArticleController extends Controller
             $dataToUpdate['thumbnail'] = $thumbnailPath;
         }
 
+        // Handle content images
         $content = $request->content;
+        $content = $this->ensureValidHtml($content); // Ensure valid HTML
         $dom = new \DomDocument();
+        libxml_use_internal_errors(true);
         $dom->loadHtml($content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        libxml_clear_errors();
         $images = $dom->getElementsByTagName('img');
 
+        $newImages = [];
         foreach ($images as $k => $img) {
             $data = $img->getAttribute('src');
             if (strpos($data, 'data:image') === 0) {
@@ -128,11 +139,28 @@ class ArticleController extends Controller
 
                 $img->removeAttribute('src');
                 $img->setAttribute('src', env('APP_URL') . Storage::url($image_name));
+
+                $newImages[] = env('APP_URL') . Storage::url($image_name);
+            } else {
+                $newImages[] = $data;
             }
         }
 
         $content = $dom->saveHTML();
         $dataToUpdate['content'] = $content;
+
+        // Delete removed images
+        $domOld = new \DomDocument();
+        $domOld->loadHtml($oldContent, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        $oldImages = $domOld->getElementsByTagName('img');
+
+        foreach ($oldImages as $img) {
+            $src = $img->getAttribute('src');
+            if (!in_array($src, $newImages)) {
+                $imagePath = str_replace(env('APP_URL') . '/storage/', 'public/', $src);
+                Storage::delete($imagePath);
+            }
+        }
 
         $article->update($dataToUpdate);
 
@@ -142,7 +170,22 @@ class ArticleController extends Controller
     public function delete($slug)
     {
         $article = Article::where('slug', $slug)->firstOrFail();
+
+        // Delete thumbnail
         Storage::delete($article->thumbnail);
+
+        // Delete content images
+        $dom = new \DomDocument();
+        libxml_use_internal_errors(true);
+        $dom->loadHtml($article->content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        libxml_clear_errors();
+        $images = $dom->getElementsByTagName('img');
+
+        foreach ($images as $img) {
+            $src = $img->getAttribute('src');
+            $imagePath = str_replace(env('APP_URL') . '/storage/', 'public/', $src);
+            Storage::delete($imagePath);
+        }
 
         $article->delete();
 
@@ -160,5 +203,14 @@ class ArticleController extends Controller
         }
 
         return $uniqueSlug;
+    }
+
+    private function ensureValidHtml($content)
+    {
+        // Ensure that the HTML is valid by wrapping it in a single root element if needed
+        if (strpos($content, '<html') === false) {
+            $content = '<html><body>' . $content . '</body></html>';
+        }
+        return $content;
     }
 }
