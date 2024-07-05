@@ -41,5 +41,6 @@ Route::prefix('admin')->group(function () {
       Route::post('/berita/tambah', [ArticleController::class, 'store'])->name('articles.store');
       Route::get('/berita/{slug}/edit', [ArticleController::class, 'edit'])->name('articles.edit');
       Route::put('/berita/{slug}/edit', [ArticleController::class, 'update'])->name('articles.update');
+      Route::delete('/berita/{slug}/delete', [ArticleController::class, 'delete'])->name('articles.delete');
    });
 });

@@ -27,6 +27,11 @@
             const wrappingDiv = $("<div>").addClass("w-100").css("overflow-x", "scroll");
             datatableWrap.children().appendTo(wrappingDiv);
             datatableWrap.append(wrappingDiv);
+
+            $('.delete-link').click(function(event) {
+                event.preventDefault();
+                $('.delete-form').submit();
+            });
         });
     </script>
 @endpush
@@ -65,7 +70,15 @@
                                     <div class="dropdown-menu dropdown-menu-end dropdown-menu-xs">
                                         <ul class="link-list-plain">
                                             <li><a href="{{ route('articles.edit', $article->slug) }}">Edit</a></li>
-                                            <li><a href="#">Hapus</a></li>
+                                            <li>
+                                                <a href="#" class="delete-link">Hapus</a>
+                                                <form class="delete-form"
+                                                    action="{{ route('articles.delete', $article->slug) }}" method="POST"
+                                                    style="display: none;">
+                                                    @method('DELETE')
+                                                    @csrf
+                                                </form>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>

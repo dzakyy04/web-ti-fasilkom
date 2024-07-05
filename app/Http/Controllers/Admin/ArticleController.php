@@ -139,6 +139,16 @@ class ArticleController extends Controller
         return redirect()->route('articles')->with('success', 'Berita berhasil diperbarui.');
     }
 
+    public function delete($slug)
+    {
+        $article = Article::where('slug', $slug)->firstOrFail();
+        Storage::delete($article->thumbnail);
+
+        $article->delete();
+
+        return redirect()->route('articles')->with('success', 'Berita berhasil dihapus.');
+    }
+
     private function makeUniqueSlug($slug, $currentSlug = null)
     {
         $uniqueSlug = $slug;
