@@ -19,19 +19,19 @@
                 <ul class="nk-menu">
                     <li class="nk-menu-item has-sub">
                         <a href="{{ route('dashboard') }}" class="nk-menu-link">
-                            <span class="nk-menu-icon"><em class="icon ni ni-dashboard"></em></em></span>
+                            <span class="nk-menu-icon"><em class="icon ni ni-dashboard"></em></span>
                             <span class="nk-menu-text">Dashboard</span>
                         </a>
                     </li>
                     <li class="nk-menu-item has-sub">
                         <a href="{{ route('articles') }}" class="nk-menu-link">
-                            <span class="nk-menu-icon"><em class="icon ni ni-article"></em></em></span>
+                            <span class="nk-menu-icon"><em class="icon ni ni-article"></em></span>
                             <span class="nk-menu-text">Berita</span>
                         </a>
                     </li>
                     <li class="nk-menu-item has-sub">
                         <a href="{{ route('lecturers') }}" class="nk-menu-link">
-                            <span class="nk-menu-icon"><em class="icon ni ni-article"></em></em></span>
+                            <span class="nk-menu-icon"><em class="icon ni ni-users"></em></span>
                             <span class="nk-menu-text">Dosen</span>
                         </a>
                     </li>

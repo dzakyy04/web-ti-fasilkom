@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\LecturerController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ResearchFieldController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,5 +47,8 @@ Route::prefix('admin')->group(function () {
 
       // Lecturer
       Route::get('/dosen', [LecturerController::class, 'index'])->name('lecturers');
+      Route::get('/dosen/{id}', [LecturerController::class, 'findLecturer'])->name('lecturers.find');
+      Route::post('/dosen', [LecturerController::class, 'store'])->name('lecturers.store');
+      Route::put('/dosen/{id}', [LecturerController::class, 'update'])->name('lecturers.update');
    });
 });

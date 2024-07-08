@@ -9,7 +9,103 @@
             const wrappingDiv = $("<div>").addClass("w-100").css("overflow-x", "scroll");
             datatableWrap.children().appendTo(wrappingDiv);
             datatableWrap.append(wrappingDiv);
+
+            let educationIndex = {{ old('educations') ? count(old('educations')) : 1 }};
+            let editEducationIndex = 0;
+
+            $('#addEducation').click(function() {
+                $('#educations').append(`
+                <div class="education mb-2">
+                    <input type="text" class="form-control mb-1" name="educations[${educationIndex}][degree]" placeholder="Masukkan gelar (contoh: S1)" required>
+                    <input type="text" class="form-control mb-1" name="educations[${educationIndex}][institution]" placeholder="Masukkan institusi" required>
+                    <input type="text" class="form-control mb-1" name="educations[${educationIndex}][major]" placeholder="Masukkan jurusan" required>
+                </div>
+            `);
+                educationIndex++;
+            });
+
+            $('#addResearchField').click(function() {
+                $('#research_fields').append(`
+                <input type="text" class="form-control mb-1" name="research_fields[]" placeholder="Masukkan bidang riset" required>
+            `);
+            });
+
+            $('#edit_addEducation').click(function() {
+                $('#edit_educations').append(`
+                <div class="education mb-2">
+                    <input type="text" class="form-control mb-1" name="educations[${editEducationIndex}][degree]" placeholder="Masukkan gelar (contoh: S1)" required>
+                    <input type="text" class="form-control mb-1" name="educations[${editEducationIndex}][institution]" placeholder="Masukkan institusi" required>
+                    <input type="text" class="form-control mb-1" name="educations[${editEducationIndex}][major]" placeholder="Masukkan jurusan" required>
+                </div>
+            `);
+                editEducationIndex++;
+            });
+
+            $('#edit_addResearchField').click(function() {
+                $('#edit_research_fields').append(`
+                <input type="text" class="form-control mb-1" name="research_fields[]" placeholder="Masukkan bidang riset" required>
+            `);
+            });
+
+            @if ($errors->any())
+                $('#modalForm').modal('show');
+            @endif
+
+            $('.edit-button').click(function() {
+                var lecturerId = $(this).data('id');
+                var url = "{{ route('lecturers.find', ':id') }}";
+                url = url.replace(':id', lecturerId);
+
+                // Fetch lecturer data via AJAX
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    success: function(response) {
+                        $('#editModal').modal('show');
+                        $('#editForm').attr('action', "{{ route('lecturers.update', ':id') }}"
+                            .replace(':id', lecturerId));
+                        $('#editForm #edit_name').val(response.name);
+                        $('#editForm #edit_nip').val(response.nip);
+                        $('#editForm #edit_nidn').val(response.nidn);
+                        $('#editForm #edit_position').val(response.position);
+
+                        // Clear existing education inputs
+                        $('#editForm #edit_educations').empty();
+
+                        // Populate education inputs
+                        $.each(response.educations, function(index, education) {
+                            $('#editForm #edit_educations').append(`
+                            <div class="education mb-2">
+                                <input type="text" class="form-control mb-1" name="educations[${index}][degree]" value="${education.degree}" placeholder="Gelar (misal: S1)" required>
+                                <input type="text" class="form-control mb-1" name="educations[${index}][institution]" value="${education.institution}" placeholder="Institusi" required>
+                                <input type="text" class="form-control mb-1" name="educations[${index}][major]" value="${education.major}" placeholder="Jurusan" required>
+                            </div>
+                        `);
+                        });
+
+                        // Set editEducationIndex based on the number of existing educations
+                        editEducationIndex = response.educations.length;
+
+                        // Clear existing research field inputs
+                        $('#editForm #edit_research_fields').empty();
+
+                        // Populate research field inputs
+                        $.each(response.research_fields, function(index, researchField) {
+                            $('#editForm #edit_research_fields').append(`
+                            <input type="text" class="form-control mb-1" name="research_fields[]" value="${researchField.name}" placeholder="Bidang Riset" required>
+                        `);
+                        });
+                    }
+                });
+            });
         });
+
+        @if (session()->has('success'))
+            let message = @json(session('success'));
+            NioApp.Toast(`<h5>Berhasil</h5><p>${message}</p>`, 'success', {
+                position: 'top-right',
+            });
+        @endif
     </script>
 @endpush
 
@@ -21,9 +117,9 @@
                     <h3 class="nk-block-title page-title">Dosen</h3>
                 </div>
                 <div class="nk-block-head-content">
-                    <a href="{{ route('articles.create') }}" class="btn btn-primary">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalForm">
                         <em class="icon ni ni-plus me-1"></em>Tambah Dosen</span>
-                    </a>
+                    </button>
                 </div>
             </div>
             <div class="mt-3">
@@ -36,6 +132,7 @@
                             <th class="text-nowrap text-center align-middle">Nama</th>
                             <th class="text-nowrap text-center align-middle">NIP</th>
                             <th class="text-nowrap text-center align-middle">NIDN</th>
+                            <th class="text-nowrap text-center align-middle">Jabatan</th>
                             <th class="text-nowrap text-center no-export align-middle">Aksi</th>
                         </tr>
                     </thead>
@@ -50,13 +147,15 @@
                                 <td>{{ $lecturer->name }}</td>
                                 <td>{{ $lecturer->nip }}</td>
                                 <td>{{ $lecturer->nidn }}</td>
+                                <td>{{ $lecturer->position }}</td>
                                 <td>
-                                    <a href="" class="btn btn-primary btn-xs rounded-pill">
+                                    <button type="button" class="btn btn-primary btn-xs rounded-pill">
                                         <em class="ni ni-eye"></em>
-                                    </a>
-                                    <a href="" class="btn btn-warning btn-xs rounded-pill">
+                                    </button>
+                                    <button type="button" class="btn btn-warning btn-xs rounded-pill edit-button"
+                                        data-id="{{ $lecturer->id }}">
                                         <em class="ni ni-edit"></em>
-                                    </a>
+                                    </button>
                                     <button class="btn btn-danger btn-xs rounded-pill" data-bs-toggle="modal"
                                         data-bs-target="#deleteArticleModal">
                                         <em class="ni ni-trash"></em>
@@ -66,6 +165,211 @@
                         @endforeach
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+
+    {{-- Add Modal --}}
+    <div class="modal fade" id="modalForm">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tambah Dosen</h5>
+                    <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <em class="icon ni ni-cross"></em>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('lecturers.store') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="form-group">
+                            <label class="form-label" for="photo">Foto</label>
+                            <div class="form-control-wrap">
+                                <input type="file" class="form-control @error('photo') is-invalid @enderror"
+                                    name="photo" id="photo" required>
+                                @error('photo')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="name">Nama</label>
+                            <div class="form-control-wrap">
+                                <input type="text" class="form-control @error('name') is-invalid @enderror"
+                                    name="name" id="name" value="{{ old('name') }}" placeholder="Masukkan nama"
+                                    required>
+                                @error('name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="nip">NIP</label>
+                            <div class="form-control-wrap">
+                                <input type="text" class="form-control @error('nip') is-invalid @enderror" name="nip"
+                                    id="nip" value="{{ old('nip') }}" placeholder="Masukkan NIP" required>
+                                @error('nip')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="nidn">NIDN</label>
+                            <div class="form-control-wrap">
+                                <input type="text" class="form-control @error('nidn') is-invalid @enderror"
+                                    name="nidn" id="nidn" value="{{ old('nidn') }}" placeholder="Masukkan NIDN"
+                                    required>
+                                @error('nidn')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="position">Jabatan</label>
+                            <div class="form-control-wrap">
+                                <input type="text" class="form-control @error('position') is-invalid @enderror"
+                                    name="position" id="position" value="{{ old('position') }}"
+                                    placeholder="Masukkan jabatan">
+                                @error('position')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="educations">Riwayat Pendidikan</label>
+                            <div id="educations">
+                                @if (old('educations'))
+                                    @foreach (old('educations') as $index => $education)
+                                        <div class="education mb-2">
+                                            <input type="text"
+                                                class="form-control mb-1 @error('educations.' . $index . '.degree') is-invalid @enderror"
+                                                name="educations[{{ $index }}][degree]"
+                                                value="{{ $education['degree'] }}" placeholder="Gelar (misal: S1)"
+                                                required>
+                                            <input type="text"
+                                                class="form-control mb-1 @error('educations.' . $index . '.institution') is-invalid @enderror"
+                                                name="educations[{{ $index }}][institution]"
+                                                value="{{ $education['institution'] }}" placeholder="Institusi" required>
+                                            <input type="text"
+                                                class="form-control mb-1 @error('educations.' . $index . '.major') is-invalid @enderror"
+                                                name="educations[{{ $index }}][major]"
+                                                value="{{ $education['major'] }}" placeholder="Jurusan" required>
+                                            @error('educations.' . $index . '.degree')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                            @error('educations.' . $index . '.institution')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                            @error('educations.' . $index . '.major')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <div class="education mb-2">
+                                        <input type="text" class="form-control mb-1" name="educations[0][degree]"
+                                            placeholder="Masukkan gelar (contoh: S1)" required>
+                                        <input type="text" class="form-control mb-1" name="educations[0][institution]"
+                                            placeholder="Masukkan institusi" required>
+                                        <input type="text" class="form-control mb-1" name="educations[0][major]"
+                                            placeholder="Masukkan jurusan" required>
+                                    </div>
+                                @endif
+                            </div>
+                            <button type="button" class="btn btn-secondary btn-sm" id="addEducation">Tambah
+                                Pendidikan</button>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="research_fields">Bidang Riset</label>
+                            <div id="research_fields" class="mb-2">
+                                @if (old('research_fields'))
+                                    @foreach (old('research_fields') as $field)
+                                        <input type="text"
+                                            class="form-control mb-1 @error('research_fields.' . $loop->index) is-invalid @enderror"
+                                            name="research_fields[]" value="{{ $field }}"
+                                            placeholder="Masukkan bidang riset" required>
+                                        @error('research_fields.' . $loop->index)
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    @endforeach
+                                @else
+                                    <input type="text" class="form-control mb-1" name="research_fields[]"
+                                        placeholder="Masukkan bidang riset" required>
+                                @endif
+                            </div>
+                            <button type="button" class="btn btn-secondary btn-sm" id="addResearchField">Tambah Bidang
+                                Riset</button>
+                        </div>
+                        <div class="form-group d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary"><em
+                                    class="ni ni-save me-1"></em>Simpan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Edit Modal --}}
+    <div class="modal fade" id="editModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Dosen</h5>
+                    <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <em class="icon ni ni-cross"></em>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <form id="editForm" action="" method="POST" enctype="multipart/form-data">
+                        @method('PUT')
+                        @csrf
+                        <div class="form-group">
+                            <label class="form-label" for="edit_name">Nama</label>
+                            <div class="form-control-wrap">
+                                <input type="text" class="form-control" name="name" id="edit_name" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="edit_nip">NIP</label>
+                            <div class="form-control-wrap">
+                                <input type="text" class="form-control" name="nip" id="edit_nip" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="edit_nidn">NIDN</label>
+                            <div class="form-control-wrap">
+                                <input type="text" class="form-control" name="nidn" id="edit_nidn">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="edit_position">Jabatan</label>
+                            <div class="form-control-wrap">
+                                <input type="text" class="form-control" name="position" id="edit_position">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="edit_educations">Riwayat Pendidikan</label>
+                            <div id="edit_educations">
+                                <!-- Education fields will be populated dynamically via JavaScript -->
+                            </div>
+                            <button type="button" class="btn btn-secondary btn-sm" id="edit_addEducation">Tambah
+                                Pendidikan</button>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="edit_research_fields">Bidang Riset</label>
+                            <div id="edit_research_fields">
+                                <!-- Research fields will be populated dynamically via JavaScript -->
+                            </div>
+                            <button type="button" class="btn btn-secondary btn-sm" id="edit_addResearchField">Tambah
+                                Bidang Riset</button>
+                        </div>
+                        <div class="form-group d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary"><em
+                                    class="ni ni-save me-1"></em>Simpan</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

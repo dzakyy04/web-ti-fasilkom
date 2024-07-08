@@ -9,6 +9,8 @@ class ResearchField extends Model
 {
     use HasFactory;
 
+    protected $guarded = ['id'];
+
     public function lecturers()
     {
         return $this->belongsToMany(Lecturer::class, 'lecturer_research_field');
