@@ -50,5 +50,6 @@ Route::prefix('admin')->group(function () {
       Route::get('/dosen/{id}', [LecturerController::class, 'findLecturer'])->name('lecturers.find');
       Route::post('/dosen', [LecturerController::class, 'store'])->name('lecturers.store');
       Route::put('/dosen/{id}', [LecturerController::class, 'update'])->name('lecturers.update');
+      Route::delete('/dosen/{id}', [LecturerController::class, 'delete'])->name('lecturers.delete');
    });
 });

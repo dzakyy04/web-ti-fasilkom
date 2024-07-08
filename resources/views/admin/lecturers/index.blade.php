@@ -98,6 +98,24 @@
                     }
                 });
             });
+
+            $('.delete-button').click(function() {
+                var lecturerId = $(this).data('id');
+                var url = "{{ route('lecturers.find', ':id') }}";
+                url = url.replace(':id', lecturerId);
+
+                // Fetch lecturer data via AJAX
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    success: function(response) {
+                        $('#deleteModal').modal('show');
+                        $('#deleteForm').attr('action', "{{ route('lecturers.delete', ':id') }}"
+                            .replace(':id', lecturerId));
+                        $("#deleteText").text("Apakah anda yakin ingin menghapus dosen " + response.name + "?");
+                    }
+                });
+            });
         });
 
         @if (session()->has('success'))
@@ -156,8 +174,8 @@
                                         data-id="{{ $lecturer->id }}">
                                         <em class="ni ni-edit"></em>
                                     </button>
-                                    <button class="btn btn-danger btn-xs rounded-pill" data-bs-toggle="modal"
-                                        data-bs-target="#deleteArticleModal">
+                                    <button class="btn btn-danger btn-xs rounded-pill delete-button"
+                                        data-id="{{ $lecturer->id }}">
                                         <em class="ni ni-trash"></em>
                                     </button>
                                 </td>
@@ -367,6 +385,31 @@
                         <div class="form-group d-flex justify-content-end">
                             <button type="submit" class="btn btn-primary"><em
                                     class="ni ni-save me-1"></em>Simpan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Delete Modal --}}
+    <div class="modal fade" id="deleteModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Hapus Dosen</h5>
+                    <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <em class="icon ni ni-cross"></em>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <form id="deleteForm" action="" method="POST" enctype="multipart/form-data">
+                        @method('DELETE')
+                        @csrf
+                        <p id="deleteText"></p>
+                        <div class="form-group d-flex justify-content-end">
+                            <button type="submit" class="btn btn-danger"><em
+                                    class="ni ni-trash me-1"></em>Hapus</button>
                         </div>
                     </form>
                 </div>

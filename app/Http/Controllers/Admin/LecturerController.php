@@ -123,6 +123,17 @@ class LecturerController extends Controller
         return redirect()->route('lecturers')->with('success', 'Data dosen berhasil diperbarui.');
     }
 
+    public function delete($id)
+    {
+        $lecturer = Lecturer::findOrFail($id);
+        Storage::delete($lecturer->photo);
+
+        $lecturer->educations()->delete();
+        $lecturer->researchFields()->detach();
+        $lecturer->delete();
+        return redirect()->route('lecturers')->with('success', 'Data dosen berhasil dihapus.');
+    }
+
     public function findLecturer($id)
     {
         $lecturer = Lecturer::with('educations', 'researchFields')->findOrFail($id);
