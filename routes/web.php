@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\ArticleController;
+use App\Http\Controllers\Admin\LecturerController;
 use App\Http\Controllers\Admin\DashboardController;
 
 /*
@@ -42,5 +43,8 @@ Route::prefix('admin')->group(function () {
       Route::get('/berita/{slug}/edit', [ArticleController::class, 'edit'])->name('articles.edit');
       Route::put('/berita/{slug}/edit', [ArticleController::class, 'update'])->name('articles.update');
       Route::delete('/berita/{slug}/delete', [ArticleController::class, 'delete'])->name('articles.delete');
+
+      // Lecturer
+      Route::get('/dosen', [LecturerController::class, 'index'])->name('lecturers');
    });
 });
