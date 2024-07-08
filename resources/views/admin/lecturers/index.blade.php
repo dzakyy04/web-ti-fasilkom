@@ -112,7 +112,46 @@
                         $('#deleteModal').modal('show');
                         $('#deleteForm').attr('action', "{{ route('lecturers.delete', ':id') }}"
                             .replace(':id', lecturerId));
-                        $("#deleteText").text("Apakah anda yakin ingin menghapus dosen " + response.name + "?");
+                        $("#deleteText").text("Apakah anda yakin ingin menghapus dosen " +
+                            response.name + "?");
+                    }
+                });
+            });
+
+            $('.show-button').click(function() {
+                var lecturerId = $(this).data('id');
+                var url = "{{ route('lecturers.find', ':id') }}";
+                url = url.replace(':id', lecturerId);
+
+                // Fetch lecturer data via AJAX
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    success: function(response) {
+                        console.log(response);
+                        let photoUrl = response.photo.replace('public/', '');
+                        $('#showModal').modal('show');
+                        $('#showPhoto').attr('src', `{{ Storage::url('${photoUrl}') }}`);
+                        $('#showName').text(response.name);
+                        $('#showNip').text(response.nip);
+                        $('#showNidn').text(response.nidn);
+                        $('#showPosition').text(response.position);
+
+
+                        let educationHtml = '<ul>';
+                        response.educations.forEach(function(education) {
+                            educationHtml +=
+                                `<li>${education.degree} ${education.major} - ${education.institution}</li>`;
+                        });
+                        educationHtml += '</ul>';
+                        $('#showEducation').html(educationHtml);
+
+                        var researchFieldHtml = '<ol class="list-group list-group-numbered">';
+                        response.research_fields.forEach(function(field) {
+                            researchFieldHtml += `<li>${field.name}</li>`;
+                        });
+                        researchFieldHtml += '</ol>';
+                        $('#showResearchField').html(researchFieldHtml);
                     }
                 });
             });
@@ -137,6 +176,9 @@
                 <div class="nk-block-head-content">
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalForm">
                         <em class="icon ni ni-plus me-1"></em>Tambah Dosen</span>
+                    </button>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#showModal">
+                        <em class="icon ni ni-plus me-1"></em>Detail Dosen</span>
                     </button>
                 </div>
             </div>
@@ -167,7 +209,8 @@
                                 <td>{{ $lecturer->nidn }}</td>
                                 <td>{{ $lecturer->position }}</td>
                                 <td>
-                                    <button type="button" class="btn btn-primary btn-xs rounded-pill">
+                                    <button type="button" class="btn btn-primary btn-xs rounded-pill show-button"
+                                        data-id="{{ $lecturer->id }}">
                                         <em class="ni ni-eye"></em>
                                     </button>
                                     <button type="button" class="btn btn-warning btn-xs rounded-pill edit-button"
@@ -183,6 +226,57 @@
                         @endforeach
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+
+    {{-- Show Modal --}}
+    <div class="modal fade" id="showModal">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detail Dosen</h5>
+                    <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <em class="icon ni ni-cross"></em>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center mb-3">
+                            <img src="" alt="" class="img-fluid" id="showPhoto" style="max-height: 300px;">
+                        </div>
+                        <div class="col-md-8">
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td class="fw-bold">Nama</td>
+                                        <td id="showName"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">NIP</td>
+                                        <td id="showNip"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">NIDN</td>
+                                        <td id="showNidn"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Jabatan</td>
+                                        <td id="showPosition"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Riwayat Pendidikan</td>
+                                        <td id="showEducation"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Bidang Riset</td>
+                                        <td id="showResearchField"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -214,8 +308,8 @@
                             <label class="form-label" for="name">Nama</label>
                             <div class="form-control-wrap">
                                 <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                    name="name" id="name" value="{{ old('name') }}" placeholder="Masukkan nama"
-                                    required>
+                                    name="name" id="name" value="{{ old('name') }}"
+                                    placeholder="Masukkan nama" required>
                                 @error('name')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -224,8 +318,9 @@
                         <div class="form-group">
                             <label class="form-label" for="nip">NIP</label>
                             <div class="form-control-wrap">
-                                <input type="text" class="form-control @error('nip') is-invalid @enderror" name="nip"
-                                    id="nip" value="{{ old('nip') }}" placeholder="Masukkan NIP" required>
+                                <input type="text" class="form-control @error('nip') is-invalid @enderror"
+                                    name="nip" id="nip" value="{{ old('nip') }}"
+                                    placeholder="Masukkan NIP" required>
                                 @error('nip')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -235,8 +330,8 @@
                             <label class="form-label" for="nidn">NIDN</label>
                             <div class="form-control-wrap">
                                 <input type="text" class="form-control @error('nidn') is-invalid @enderror"
-                                    name="nidn" id="nidn" value="{{ old('nidn') }}" placeholder="Masukkan NIDN"
-                                    required>
+                                    name="nidn" id="nidn" value="{{ old('nidn') }}"
+                                    placeholder="Masukkan NIDN" required>
                                 @error('nidn')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
