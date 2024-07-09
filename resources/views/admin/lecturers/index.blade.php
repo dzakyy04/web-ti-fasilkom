@@ -1,9 +1,27 @@
 @extends('admin.layouts.app')
 
+@push('css')
+    <style>
+        .photo-preview {
+            max-width: 200px;
+            max-height: 200px;
+            margin: 10px 0;
+            display: none;
+        }
+    </style>
+@endpush
+
 @push('js')
     <script src="{{ asset('assets/js/libs/datatable-btns.js?ver=3.0.3') }}"></script>
     <script src="{{ asset('assets/js/example-toastr.js?ver=3.0.3') }}"></script>
     <script>
+        function previewPhoto(event) {
+            var preview = $('.photo-preview');
+            preview.show();
+            preview.attr('src', URL.createObjectURL(event.target.files[0]));
+        }
+
+
         $(document).ready(function() {
             const datatableWrap = $(".datatable-wrap");
             const wrappingDiv = $("<div>").addClass("w-100").css("overflow-x", "scroll");
@@ -177,9 +195,6 @@
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalForm">
                         <em class="icon ni ni-plus me-1"></em>Tambah Dosen</span>
                     </button>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#showModal">
-                        <em class="icon ni ni-plus me-1"></em>Detail Dosen</span>
-                    </button>
                 </div>
             </div>
             <div class="mt-3">
@@ -297,8 +312,9 @@
                         <div class="form-group">
                             <label class="form-label" for="photo">Foto</label>
                             <div class="form-control-wrap">
+                                <img class="photo-preview" src="#" alt="Photo Preview">
                                 <input type="file" class="form-control @error('photo') is-invalid @enderror"
-                                    name="photo" id="photo" required>
+                                    name="photo" id="photo" onchange="previewPhoto(event)" required>
                                 @error('photo')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
