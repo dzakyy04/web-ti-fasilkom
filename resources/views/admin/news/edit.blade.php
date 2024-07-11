@@ -17,7 +17,7 @@
     <script src="{{ asset('assets/js/editors.js?ver=3.0.3') }}"></script>
     <script>
         $(document).ready(function() {
-            var oldThumbnail = "{{ Storage::url($article->thumbnail) }}";
+            var oldThumbnail = "{{ Storage::url($newsItem->thumbnail) }}";
             $("#thumbnail-preview-old").attr("src", oldThumbnail);
             $("#thumbnail").change(function() {
                 if (this.files && this.files[0]) {
@@ -51,7 +51,7 @@
             <div class="card-inner">
                 <div class="preview-block">
                     <span class="preview-title-lg overline-title">Edit Berita</span>
-                    <form method="post" action="{{ route('articles.update', $article->slug) }}" enctype="multipart/form-data"
+                    <form method="post" action="{{ route('news.update', $newsItem->slug) }}" enctype="multipart/form-data"
                         class="is-alter form-validate form-control-wrap">
                         @method('PUT')
                         @csrf
@@ -62,7 +62,7 @@
                                     <div class="form-control-wrap">
                                         <input type="text" id="title"
                                             class="form-control @error('title') is-invalid @enderror" name="title"
-                                            placeholder="Masukkan judul berita" value="{{ old('title', $article->title) }}"
+                                            placeholder="Masukkan judul berita" value="{{ old('title', $newsItem->title) }}"
                                             required>
                                         @error('title')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -77,7 +77,7 @@
                                         <input type="text" id="slug"
                                             class="form-control @error('slug') is-invalid @enderror" name="slug"
                                             placeholder="Otomatis terisi berdasarkan judul"
-                                            value="{{ old('slug', $article->slug) }}" required>
+                                            value="{{ old('slug', $newsItem->slug) }}" required>
                                         @error('slug')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -89,7 +89,7 @@
                                     <label class="form-label" for="description">Deskripsi</label>
                                     <div class="form-control-wrap">
                                         <textarea id="description" class="form-control no-resize @error('description') is-invalid @enderror" name="description"
-                                            placeholder="Masukkan deskripsi berita" required>{{ old('description', $article->description) }}</textarea>
+                                            placeholder="Masukkan deskripsi berita" required>{{ old('description', $newsItem->description) }}</textarea>
                                         @error('description')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -101,7 +101,7 @@
                                     <label class="form-label" for="thumbnail">Thumbnail</label>
                                     <div class="form-control-wrap">
                                         <img id="thumbnail-preview-old" class="img-fluid rounded-1 h-30 w-15 mt-2 shadow-sm"
-                                            src="{{ Storage::url($article->thumbnail) }}" alt="Thumbnail Preview">
+                                            src="{{ Storage::url($newsItem->thumbnail) }}" alt="Thumbnail Preview">
                                         <img id="thumbnail-preview-new" class="img-fluid rounded-1 h-30 w-15 mt-2 shadow-sm"
                                             style="display: none" alt="New Thumbnail Preview">
                                         <input type="file" id="thumbnail"
@@ -118,7 +118,7 @@
                                 <div class="form-group">
                                     <label class="form-label" for="content">Konten</label>
                                     <div class="form-control-wrap">
-                                        <textarea class="summernote-basic" name="content" id="content">{{ $article->content, old('content') }}</textarea>
+                                        <textarea class="summernote-basic" name="content" id="content">{{ $newsItem->content, old('content') }}</textarea>
                                         @error('content')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('thumbnail');
             $table->string('description');
             $table->text('content');
+            $table->enum('type', ['news', 'announcement']);
             $table->timestamps();
         });
     }

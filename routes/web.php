@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\LecturerController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\ResearchFieldController;
 
 /*
@@ -37,13 +38,13 @@ Route::prefix('admin')->group(function () {
       Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
       Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-      // Article
-      Route::get('/berita', [ArticleController::class, 'index'])->name('articles');
-      Route::get('/berita/tambah', [ArticleController::class, 'create'])->name('articles.create');
-      Route::post('/berita/tambah', [ArticleController::class, 'store'])->name('articles.store');
-      Route::get('/berita/{slug}/edit', [ArticleController::class, 'edit'])->name('articles.edit');
-      Route::put('/berita/{slug}/edit', [ArticleController::class, 'update'])->name('articles.update');
-      Route::delete('/berita/{slug}/delete', [ArticleController::class, 'delete'])->name('articles.delete');
+      // News
+      Route::get('/berita', [NewsController::class, 'index'])->name('news');
+      Route::get('/berita/tambah', [NewsController::class, 'create'])->name('news.create');
+      Route::post('/berita/tambah', [NewsController::class, 'store'])->name('news.store');
+      Route::get('/berita/{slug}/edit', [NewsController::class, 'edit'])->name('news.edit');
+      Route::put('/berita/{slug}/edit', [NewsController::class, 'update'])->name('news.update');
+      Route::delete('/berita/{slug}/delete', [NewsController::class, 'delete'])->name('news.delete');
 
       // Lecturer
       Route::get('/dosen', [LecturerController::class, 'index'])->name('lecturers');

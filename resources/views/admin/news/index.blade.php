@@ -44,37 +44,36 @@
                     <h3 class="nk-block-title page-title">Berita</h3>
                 </div>
                 <div class="nk-block-head-content">
-                    <a href="{{ route('articles.create') }}" class="btn btn-primary">
+                    <a href="{{ route('news.create') }}" class="btn btn-primary">
                         <em class="icon ni ni-plus me-1"></em>Tambah Berita</span>
                     </a>
                 </div>
             </div>
             <div class="row">
-                @foreach ($articles as $index => $article)
+                @foreach ($news as $index => $newsItem)
                     <div class="col-12 col-sm-6 col-md-4 mt-3">
                         <div class="card card-bordered">
-                            <img src="{{ Storage::url($article->thumbnail) }}" class="card-img-top thumbnail-image"
+                            <img src="{{ Storage::url($newsItem->thumbnail) }}" class="card-img-top thumbnail-image"
                                 alt="">
                             <div class="card-inner">
-                                <h5 class="card-title">{{ $article->title }}</h5>
-                                <p class="card-text">{{ $article->description }}</p>
+                                <h5 class="card-title">{{ $newsItem->title }}</h5>
+                                <p class="card-text">{{ $newsItem->description }}</p>
                                 <a href="#" class="btn btn-primary d-flex justify-content-center">Lihat
                                     Berita</a>
                             </div>
                             <div
                                 class="card-footer border-top text-muted d-flex justify-content-between align-items-center">
-                                <dev>{{ \Carbon\Carbon::parse($article->updated_at)->translatedFormat('d F Y') }}</dev>
+                                <dev>{{ \Carbon\Carbon::parse($newsItem->updated_at)->translatedFormat('d F Y') }}</dev>
                                 <div class="dropdown">
                                     <a class="text-soft dropdown-toggle btn btn-icon btn-trigger"
                                         data-bs-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
                                     <div class="dropdown-menu dropdown-menu-end dropdown-menu-xs">
                                         <ul class="link-list-plain">
-                                            <li><a href="{{ route('articles.edit', $article->slug) }}">Edit</a></li>
+                                            <li><a href="{{ route('news.edit', $newsItem->slug) }}">Edit</a></li>
                                             <li>
                                                 <a href="#" class="delete-link">Hapus</a>
-                                                <form class="delete-form"
-                                                    action="{{ route('articles.delete', $article->slug) }}" method="POST"
-                                                    style="display: none;">
+                                                <form class="delete-form" action="{{ route('news.delete', $newsItem->slug) }}"
+                                                    method="POST" style="display: none;">
                                                     @method('DELETE')
                                                     @csrf
                                                 </form>

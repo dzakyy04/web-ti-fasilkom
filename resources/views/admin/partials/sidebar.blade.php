@@ -24,7 +24,7 @@
                         </a>
                     </li>
                     <li class="nk-menu-item has-sub">
-                        <a href="{{ route('articles') }}" class="nk-menu-link">
+                        <a href="{{ route('news') }}" class="nk-menu-link">
                             <span class="nk-menu-icon"><em class="icon ni ni-article"></em></span>
                             <span class="nk-menu-text">Berita</span>
                         </a>

@@ -8,19 +8,19 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 
-class ArticleController extends Controller
+class NewsController extends Controller
 {
     public function index()
     {
         $title = 'Berita';
-        $articles = Article::get();
-        return view('admin.articles.index', compact('title', 'articles'));
+        $news = Article::where('type', 'news')->get();
+        return view('admin.news.index', compact('title', 'news'));
     }
 
     public function create()
     {
         $title = 'Tambah Berita';
-        return view('admin.articles.create', compact('title'));
+        return view('admin.news.create', compact('title'));
     }
 
     public function store(Request $request)
@@ -63,24 +63,25 @@ class ArticleController extends Controller
 
         $content = $dom->saveHTML();
 
-        $summernote = new Article();
+        $news = new Article();
 
-        $summernote->title = $request->title;
-        $summernote->slug = $uniqueSlug;
-        $summernote->thumbnail = $thumbnailPath;
-        $summernote->description = $request->description;
-        $summernote->content = $content;
+        $news->title = $request->title;
+        $news->slug = $uniqueSlug;
+        $news->thumbnail = $thumbnailPath;
+        $news->description = $request->description;
+        $news->content = $content;
+        $news->type = 'news';
 
-        $summernote->save();
+        $news->save();
 
-        return redirect()->route('articles')->with('success', 'Berita berhasil ditambahkan.');
+        return redirect()->route('news')->with('success', 'Berita berhasil ditambahkan.');
     }
 
     public function edit($slug)
     {
         $title = 'Edit Berita';
-        $article = Article::where('slug', $slug)->firstOrFail();
-        return view('admin.articles.edit', compact('title', 'article'));
+        $newsItem = Article::where('slug', $slug)->firstOrFail();
+        return view('admin.news.edit', compact('title', 'newsItem'));
     }
 
     public function update(Request $request, $slug)
@@ -93,12 +94,12 @@ class ArticleController extends Controller
             'content' => 'required',
         ]);
 
-        $article = Article::where('slug', $slug)->firstOrFail();
+        $news = Article::where('slug', $slug)->firstOrFail();
 
-        $oldContent = $article->content;
+        $oldContent = $news->content;
 
         $newSlug = Str::slug($request->title, '-');
-        $uniqueSlug = $this->makeUniqueSlug($newSlug, $article->id);
+        $uniqueSlug = $this->makeUniqueSlug($newSlug, $news->id);
 
         $dataToUpdate = [
             'title' => $request->title,
@@ -108,7 +109,7 @@ class ArticleController extends Controller
         ];
 
         if ($request->hasFile('thumbnail')) {
-            Storage::delete($article->thumbnail);
+            Storage::delete($news->thumbnail);
 
             $uploadedFile = $request->file('thumbnail');
             $originalName = $uploadedFile->getClientOriginalName();
@@ -162,22 +163,22 @@ class ArticleController extends Controller
             }
         }
 
-        $article->update($dataToUpdate);
+        $news->update($dataToUpdate);
 
-        return redirect()->route('articles')->with('success', 'Berita berhasil diperbarui.');
+        return redirect()->route('news')->with('success', 'Berita berhasil diperbarui.');
     }
 
     public function delete($slug)
     {
-        $article = Article::where('slug', $slug)->firstOrFail();
+        $news = Article::where('slug', $slug)->firstOrFail();
 
         // Delete thumbnail
-        Storage::delete($article->thumbnail);
+        Storage::delete($news->thumbnail);
 
         // Delete content images
         $dom = new \DomDocument();
         libxml_use_internal_errors(true);
-        $dom->loadHtml($article->content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        $dom->loadHtml($news->content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
         libxml_clear_errors();
         $images = $dom->getElementsByTagName('img');
 
@@ -187,9 +188,9 @@ class ArticleController extends Controller
             Storage::delete($imagePath);
         }
 
-        $article->delete();
+        $news->delete();
 
-        return redirect()->route('articles')->with('success', 'Berita berhasil dihapus.');
+        return redirect()->route('news')->with('success', 'Berita berhasil dihapus.');
     }
 
     private function makeUniqueSlug($slug, $currentSlug = null)
