@@ -30,6 +30,12 @@
                         </a>
                     </li>
                     <li class="nk-menu-item has-sub">
+                        <a href="{{ route('announcements') }}" class="nk-menu-link">
+                            <span class="nk-menu-icon"><em class="icon ni ni-bell"></em></span>
+                            <span class="nk-menu-text">Pengumuman</span>
+                        </a>
+                    </li>
+                    <li class="nk-menu-item has-sub">
                         <a href="{{ route('lecturers') }}" class="nk-menu-link">
                             <span class="nk-menu-icon"><em class="icon ni ni-users"></em></span>
                             <span class="nk-menu-text">Dosen</span>

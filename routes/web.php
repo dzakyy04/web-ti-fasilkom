@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AnnouncementController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\ArticleController;
@@ -45,6 +46,15 @@ Route::prefix('admin')->group(function () {
       Route::get('/berita/{slug}/edit', [NewsController::class, 'edit'])->name('news.edit');
       Route::put('/berita/{slug}/edit', [NewsController::class, 'update'])->name('news.update');
       Route::delete('/berita/{slug}/delete', [NewsController::class, 'delete'])->name('news.delete');
+
+      // Announcements
+      Route::get('/pengumuman', [AnnouncementController::class, 'index'])->name('announcements');
+      Route::get('/pengumuman/tambah', [AnnouncementController::class, 'create'])->name('announcements.create');
+      Route::post('/pengumuman/tambah', [AnnouncementController::class, 'store'])->name('announcements.store');
+      Route::get('/pengumuman/{slug}/edit', [AnnouncementController::class, 'edit'])->name('announcements.edit');
+      Route::put('/pengumuman/{slug}/edit', [AnnouncementController::class, 'update'])->name('announcements.update');
+      Route::delete('/pengumuman/{slug}/delete', [AnnouncementController::class, 'delete'])->name('announcements.delete');
+      
 
       // Lecturer
       Route::get('/dosen', [LecturerController::class, 'index'])->name('lecturers');
