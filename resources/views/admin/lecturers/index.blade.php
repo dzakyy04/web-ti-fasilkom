@@ -12,6 +12,31 @@
 @endpush
 
 @push('js')
+    <script>
+        $(document).ready(function() {
+            $('.js-select2').select2({
+                tags: true,
+                tokenSeparators: [','],
+                createTag: function(params) {
+                    var term = $.trim(params.term);
+                    if (term === '') {
+                        return null;
+                    }
+                    return {
+                        id: term,
+                        text: term,
+                        newTag: true
+                    };
+                },
+                insertTag: function(data, tag) {
+                    data.push(tag);
+                }
+            });
+
+            var select2Container = $('.js-select2').data('select2').$container;
+            select2Container.attr('data-placeholder', 'Pilih atau buat riset baru');
+        });
+    </script>
     <script src="{{ asset('assets/js/libs/datatable-btns.js?ver=3.0.3') }}"></script>
     <script src="{{ asset('assets/js/example-toastr.js?ver=3.0.3') }}"></script>
     <script>
@@ -411,23 +436,14 @@
                         <div class="form-group">
                             <label class="form-label" for="research_fields">Bidang Riset</label>
                             <div id="research_fields" class="mb-2">
-                                @if (old('research_fields'))
-                                    @foreach (old('research_fields') as $field)
-                                        <input type="text"
-                                            class="form-control mb-1 @error('research_fields.' . $loop->index) is-invalid @enderror"
-                                            name="research_fields[]" value="{{ $field }}"
-                                            placeholder="Masukkan bidang riset" required>
-                                        @error('research_fields.' . $loop->index)
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    @endforeach
-                                @else
-                                    <input type="text" class="form-control mb-1" name="research_fields[]"
-                                        placeholder="Masukkan bidang riset" required>
-                                @endif
+                                <select class="form-select js-select2" name="research_fields[]" multiple="multiple">
+                                    <option selected disabled>Pilih Jenis Bidang Riset</option>
+                                    <option value="Pemrosesan Bahasa Alami">Pemrosesan Bahasa Alami</option>
+                                    <option value="Sistem Terdistribusi">Sistem Terdistribusi</option>
+                                    <option value="Grafika dan Visualisasi">Grafika dan Visualisasi</option>
+                                    <option value="Sains Data dan Pengenalan Pola">Sains Data dan Pengenalan Pola</option>
+                                </select>
                             </div>
-                            <button type="button" class="btn btn-secondary btn-sm" id="addResearchField">Tambah Bidang
-                                Riset</button>
                         </div>
                         <div class="form-group d-flex justify-content-end">
                             <button type="submit" class="btn btn-primary"><em
