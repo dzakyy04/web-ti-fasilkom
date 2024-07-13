@@ -83,9 +83,14 @@
                     <input type="text" class="form-control mb-1" name="educations[${editEducationIndex}][degree]" placeholder="Masukkan gelar (contoh: S1)" required>
                     <input type="text" class="form-control mb-1" name="educations[${editEducationIndex}][institution]" placeholder="Masukkan institusi" required>
                     <input type="text" class="form-control mb-1" name="educations[${editEducationIndex}][major]" placeholder="Masukkan jurusan" required>
+                    <button type="button" class="btn btn-dim btn-danger btn-sm btn-remove-education mt-2"><em class="ni ni-cross me-1"></em>Batal Tambah Pendidikan</button>
                 </div>
             `);
                 editEducationIndex++;
+            });
+
+            $('#edit_educations').on('click', '.btn-remove-education', function() {
+                $(this).closest('.education').remove();
             });
 
             $('#edit_addResearchField').click(function() {
@@ -158,6 +163,7 @@
                             </div>
                         `);
                         });
+                        
 
                         // Set editEducationIndex based on the number of existing educations
                         editEducationIndex = response.educations.length;
@@ -166,10 +172,19 @@
                         $('#editForm #edit_research_fields').empty();
 
                         // Populate research field inputs
+                        // Mengisi input bidang riset
                         $.each(response.research_fields, function(index, researchField) {
                             $('#editForm #edit_research_fields').append(`
-                            <input type="text" class="form-control mb-1" name="research_fields[]" value="${researchField.name}" placeholder="Bidang Riset" required>
-                        `);
+                        <option value="${researchField.name}" selected>${researchField.name}</option>
+                    `);
+                        });
+
+                        // Inisialisasi select2
+                        $('#edit_research_fields').select2({
+                            tags: true,
+                            tokenSeparators: [','],
+                            placeholder: 'Pilih Bidang Riset',
+                            allowClear: true
                         });
                     }
                 });
@@ -554,9 +569,10 @@
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="edit_research_fields">Bidang Riset</label>
-                            <div id="edit_research_fields">
-                                <!-- Research fields will be populated dynamically via JavaScript -->
-                            </div>
+                            <select id="edit_research_fields" class="form-select js-select2" name="research_fields[]"
+                                multiple="multiple">
+                                <!-- Options akan ditambahkan secara dinamis melalui JavaScript -->
+                            </select>
                             <button type="button" class="btn btn-secondary btn-sm" id="edit_addResearchField">Tambah
                                 Bidang Riset</button>
                         </div>
