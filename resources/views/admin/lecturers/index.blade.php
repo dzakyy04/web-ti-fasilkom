@@ -59,12 +59,17 @@
             $('#addEducation').click(function() {
                 $('#educations').append(`
                 <div class="education mb-2">
-                    <input type="text" class="form-control mb-1" name="educations[${educationIndex}][degree]" placeholder="Masukkan gelar (contoh: S1)" required>
-                    <input type="text" class="form-control mb-1" name="educations[${educationIndex}][institution]" placeholder="Masukkan institusi" required>
-                    <input type="text" class="form-control mb-1" name="educations[${educationIndex}][major]" placeholder="Masukkan jurusan" required>
-                </div>
-            `);
+                        <input type="text" class="form-control mb-1" name="educations[${educationIndex}][degree]" placeholder="Masukkan gelar (contoh: S1)" required>
+                        <input type="text" class="form-control mb-1" name="educations[${educationIndex}][institution]" placeholder="Masukkan institusi" required>
+                        <input type="text" class="form-control mb-1" name="educations[${educationIndex}][major]" placeholder="Masukkan jurusan" required>
+                        <button type="button" class="btn btn-dim btn-danger btn-sm btn-remove-education mt-2"><em class="ni ni-cross me-1"></em>Batal Tambah Pendidikan</button>
+                    </div>
+                `);
                 educationIndex++;
+            });
+            
+            $('#educations').on('click', '.btn-remove-education', function() {
+                $(this).closest('.education').remove();
             });
 
             $('#addResearchField').click(function() {
@@ -417,6 +422,11 @@
                                             @error('educations.' . $index . '.major')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
+                                            @if ($index > 0)
+                                            <button type="button"
+                                                class="btn btn-danger btn-dim btn-sm btn-remove-education">Batal Tambah
+                                                Pendidikan</button>
+                                        @endif
                                         </div>
                                     @endforeach
                                 @else
@@ -430,8 +440,8 @@
                                     </div>
                                 @endif
                             </div>
-                            <button type="button" class="btn btn-secondary btn-sm" id="addEducation">Tambah
-                                Pendidikan</button>
+                            <button type="button" class="btn btn-secondary btn-sm" id="addEducation"><em
+                                class="ni ni-plus me-1"></em>Tambah Pendidikan</span></button>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="research_fields">Bidang Riset</label>
