@@ -39,12 +39,20 @@
     <script src="{{ asset('assets/js/libs/datatable-btns.js?ver=3.0.3') }}"></script>
     <script src="{{ asset('assets/js/example-toastr.js?ver=3.0.3') }}"></script>
     <script>
-        function previewPhoto(event) {
-            var preview = $('.photo-preview');
-            preview.show();
-            preview.attr('src', URL.createObjectURL(event.target.files[0]));
+        function previewNewPhoto(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('add_photo_preview');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block'; 
+                };
+                reader.readAsDataURL(file);
+            } else {
+                document.getElementById('add_photo_preview').style.display = 'none';
+            }
         }
-
 
         $(document).ready(function() {
             const datatableWrap = $(".datatable-wrap");
@@ -109,21 +117,24 @@
                 oldPreview.show();
             }
 
-            function previewPhoto(event) {
-                const [file] = event.target.files;
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        const preview = document.getElementById('photo-preview');
-                        preview.src = e.target.result;
-                    };
-                    reader.readAsDataURL(file);
-                }
-            }
-
             $('#edit_photo').change(function(event) {
-                previewPhoto(event);
-            });
+            previewPhoto(event);
+        });
+
+        function previewPhoto(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('photo-preview');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block'; 
+                };
+                reader.readAsDataURL(file);
+            } else {
+                document.getElementById('photo-preview').style.display = 'none'; 
+            }
+        }
 
             $('.edit-button').click(function() {
                 var lecturerId = $(this).data('id');
@@ -385,9 +396,9 @@
                         <div class="form-group">
                             <label class="form-label" for="photo">Foto</label>
                             <div class="form-control-wrap">
-                                <img class="photo-preview" src="#" alt="Photo Preview">
+                                <img id="add_photo_preview" src="#" alt="Photo Preview" style="display: none; max-width: 200px; max-height: 200px;">
                                 <input type="file" class="form-control @error('photo') is-invalid @enderror"
-                                    name="photo" id="photo" onchange="previewPhoto(event)" required>
+                                    name="photo" id="photo" onchange="previewNewPhoto(event)" required>
                                 @error('photo')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
