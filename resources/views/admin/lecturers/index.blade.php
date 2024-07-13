@@ -2,11 +2,10 @@
 
 @push('css')
     <style>
-        .photo-preview {
-            max-width: 200px;
+        #photo-preview {
             max-height: 200px;
+            max-width: 200px;
             margin: 10px 0;
-            display: none;
         }
     </style>
 @endpush
@@ -67,7 +66,7 @@
                 `);
                 educationIndex++;
             });
-            
+
             $('#educations').on('click', '.btn-remove-education', function() {
                 $(this).closest('.education').remove();
             });
@@ -99,6 +98,28 @@
                 $('#modalForm').modal('show');
             @endif
 
+            function previewOldPhoto(photoUrl) {
+                var oldPreview = $('#photo-preview');
+                oldPreview.attr('src', `{{ Storage::url('${photoUrl}') }}`);
+                oldPreview.show();
+            }
+
+            function previewPhoto(event) {
+                const [file] = event.target.files;
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const preview = document.getElementById('photo-preview');
+                        preview.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+
+            $('#edit_photo').change(function(event) {
+                previewPhoto(event);
+            });
+
             $('.edit-button').click(function() {
                 var lecturerId = $(this).data('id');
                 var url = "{{ route('lecturers.find', ':id') }}";
@@ -116,6 +137,13 @@
                         $('#editForm #edit_nip').val(response.nip);
                         $('#editForm #edit_nidn').val(response.nidn);
                         $('#editForm #edit_position').val(response.position);
+
+                        if (response.photo) {
+                            previewOldPhoto(response.photo.replace('public/', ''));
+                        } else {
+                            $('#photo-preview')
+                                .hide();
+                        }
 
                         // Clear existing education inputs
                         $('#editForm #edit_educations').empty();
@@ -423,10 +451,10 @@
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                             @if ($index > 0)
-                                            <button type="button"
-                                                class="btn btn-danger btn-dim btn-sm btn-remove-education">Batal Tambah
-                                                Pendidikan</button>
-                                        @endif
+                                                <button type="button"
+                                                    class="btn btn-danger btn-dim btn-sm btn-remove-education">Batal Tambah
+                                                    Pendidikan</button>
+                                            @endif
                                         </div>
                                     @endforeach
                                 @else
@@ -441,7 +469,7 @@
                                 @endif
                             </div>
                             <button type="button" class="btn btn-secondary btn-sm" id="addEducation"><em
-                                class="ni ni-plus me-1"></em>Tambah Pendidikan</span></button>
+                                    class="ni ni-plus me-1"></em>Tambah Pendidikan</span></button>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="research_fields">Bidang Riset</label>
@@ -479,6 +507,19 @@
                     <form id="editForm" action="" method="POST" enctype="multipart/form-data">
                         @method('PUT')
                         @csrf
+                        <div class="form-group">
+                            <div class="form-control-wrap">
+                                <div class="d-flex align-items-center justify-content-start">
+                                    <img id="photo-preview" class="img-fluid" src="#" alt="Photo Preview"
+                                        style="max-width: 200px; max-height: 200px;">
+                                </div>
+                                <div class="custom-file mt-3 position-relative">
+                                    <label class="form-label" for="edit_photo">Foto</label>
+                                    <input type="file" class="form-control @error('photo') is-invalid @enderror"
+                                        name="photo" id="edit_photo" onchange="previewPhoto(event)">
+                                </div>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label class="form-label" for="edit_name">Nama</label>
                             <div class="form-control-wrap">
