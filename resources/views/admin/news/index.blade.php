@@ -27,6 +27,10 @@
                 performSearch();
             });
 
+            $('#sortField, #sortDirection, #perPage').change(function() {
+                $('#search-form').submit();
+            });
+
             function performSearch() {
                 const query = $('#search-input').val().toLowerCase();
                 $('.news-item').each(function() {
@@ -58,7 +62,29 @@
             <div class="nk-block-head nk-block-head-sm col-md-12">
                 <form id="search-form" method="GET" action="{{ route('news') }}" class="mt-2 row g-2">
                     <div class="col-md-3">
-                        <input type="text" id="search-input" name="search" class="form-control" placeholder="Ketik untuk mencari" value="{{ request()->get('search') }}">
+                        <input type="text" id="search-input" name="search" class="form-control" placeholder="Ketik untuk mencari" value="{{ request()->get('search') }}" autocomplete="off">
+                    </div>
+                    <div class="col-md-3">
+                        <select id="sortField" name="sortField" class="form-select js-select2">
+                            <option value="title" {{ $sortField == 'title' ? 'selected' : '' }}>Judul</option>
+                            <option value="updated_at" {{ $sortField == 'updated_at' ? 'selected' : '' }}>Tanggal</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select id="sortDirection" name="sortDirection" class="form-select js-select2">
+                            <option value="asc" {{ $sortDirection == 'asc' ? 'selected' : '' }}>Ascending</option>
+                            <option value="desc" {{ $sortDirection == 'desc' ? 'selected' : '' }}>Descending</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select id="perPage" name="perPage" class="form-select js-select2">
+                            <option value="3" {{ $perPage == '3' ? 'selected' : '' }}>3</option>
+                            <option value="10" {{ $perPage == '10' ? 'selected' : '' }}>10</option>
+                            <option value="25" {{ $perPage == '25' ? 'selected' : '' }}>25</option>
+                            <option value="50" {{ $perPage == '50' ? 'selected' : '' }}>50</option>
+                            <option value="75" {{ $perPage == '75' ? 'selected' : '' }}>75</option>
+                            <option value="100" {{ $perPage == '100' ? 'selected' : '' }}>100</option>
+                        </select>
                     </div>
                 </form>
             </div>
@@ -96,6 +122,44 @@
                     </div>
                 @endforeach
             </div>
+            <nav>
+                <ul class="pagination mt-2">
+                    {{-- Previous Page Link --}}
+                    @if ($news->onFirstPage())
+                        <li class="page-item disabled" aria-disabled="true">
+                            <span class="page-link">Prev</span>
+                        </li>
+                    @else
+                        <li class="page-item">
+                            <a class="page-link" href="{{ $news->previousPageUrl() }}" rel="prev">Prev</a>
+                        </li>
+                    @endif
+
+                    {{-- Pagination Elements --}}
+                    @for ($i = 1; $i <= $news->lastPage(); $i++)
+                        @if ($i == $news->currentPage())
+                            <li class="page-item active" aria-current="page">
+                                <span class="page-link">{{ $i }}</span>
+                            </li>
+                        @else
+                            <li class="page-item">
+                                <a class="page-link" href="{{ $news->url($i) }}">{{ $i }}</a>
+                            </li>
+                        @endif
+                    @endfor
+
+                    {{-- Next Page Link --}}
+                    @if ($news->hasMorePages())
+                        <li class="page-item">
+                            <a class="page-link" href="{{ $news->nextPageUrl() }}" rel="next">Next</a>
+                        </li>
+                    @else
+                        <li class="page-item disabled" aria-disabled="true">
+                            <span class="page-link">Next</span>
+                        </li>
+                    @endif
+                </ul>
+            </nav>
         </div>
     </div>
 @endsection

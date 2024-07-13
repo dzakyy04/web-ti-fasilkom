@@ -10,12 +10,21 @@ use Illuminate\Support\Facades\Storage;
 
 class NewsController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $title = 'Berita';
-        $news = Article::where('type', 'news')->get();
-        return view('admin.news.index', compact('title', 'news'));
+        $sortField = $request->input('sortField', 'title');
+        $sortDirection = $request->input('sortDirection', 'asc');
+        $perPage = $request->input('perPage', 3);
+    
+        // Query data berita dengan filter dan sorting
+        $news = Article::where('type', 'news')
+            ->orderBy($sortField, $sortDirection)
+            ->paginate($perPage);
+    
+        return view('admin.news.index', compact('title', 'news', 'sortField', 'sortDirection', 'perPage'));
     }
+    
 
     public function create()
     {
