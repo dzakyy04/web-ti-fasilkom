@@ -29,6 +29,26 @@ class NewsController extends Controller
         ]);
     }
 
+    public function getBySlug($slug)
+    {
+        $article = Article::where('slug', $slug)
+            ->where('type', 'news')
+            ->firstOrFail();
+
+        $article->content = $this->processContent($article->content);
+        $article->thumbnail = $this->processThumbnail($article->thumbnail);
+
+        return response()->json([
+            'status' => [
+                'code' => 200,
+                'message' => 'Success'
+            ],
+            'data' => [
+                'news' => $article
+            ]
+        ]);
+    }
+
     private function processThumbnail($thumbnail)
     {
         // Ambil APP_URL dari .env
