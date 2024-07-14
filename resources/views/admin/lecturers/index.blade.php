@@ -195,7 +195,6 @@
                             tags: true,
                             tokenSeparators: [','],
                             placeholder: 'Pilih Bidang Riset',
-                            allowClear: true
                         });
                     }
                 });
@@ -501,7 +500,6 @@
                             <label class="form-label" for="research_fields">Bidang Riset</label>
                             <div id="research_fields" class="mb-2">
                                 <select class="form-select js-select2" name="research_fields[]" multiple="multiple">
-                                    <option selected disabled>Pilih Jenis Bidang Riset</option>
                                     <option value="Pemrosesan Bahasa Alami">Pemrosesan Bahasa Alami</option>
                                     <option value="Sistem Terdistribusi">Sistem Terdistribusi</option>
                                     <option value="Grafika dan Visualisasi">Grafika dan Visualisasi</option>
@@ -584,8 +582,6 @@
                                 multiple="multiple">
                                 <!-- Options akan ditambahkan secara dinamis melalui JavaScript -->
                             </select>
-                            <button type="button" class="btn btn-secondary btn-sm" id="edit_addResearchField">Tambah
-                                Bidang Riset</button>
                         </div>
                         <div class="form-group d-flex justify-content-end">
                             <button type="submit" class="btn btn-primary"><em
