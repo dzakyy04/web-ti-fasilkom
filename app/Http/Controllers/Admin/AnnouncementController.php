@@ -10,11 +10,14 @@ use Illuminate\Support\Facades\Storage;
 
 class AnnouncementController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $title = 'Pengumuman';
-        $announcements = Article::where('type', 'announcement')->get();
-        return view('admin.announcements.index', compact('title', 'announcements'));
+        $perPage = $request->input('perPage', 3);
+        $announcements = Article::where('type', 'announcement')
+            ->paginate($perPage);
+
+        return view('admin.announcements.index', compact('title', 'announcements', 'perPage'));
     }
 
     public function create()
