@@ -65,8 +65,8 @@
                         <div class="col-md-3">
                             <div id="DataTables_Table_0_filter" class="dataTables_filter">
                                 <label class="mb-0">
-                                    <input type="text" id="search-input" name="search" class="form-control form-control-sm"
-                                        placeholder="Ketik untuk mencari" value="{{ request()->get('search') }}" aria-controls="DataTables_Table_0">
+                                    <input type="text" id="search-input" class="form-control form-control-sm"
+                                        placeholder="Ketik untuk mencari" aria-controls="DataTables_Table_0">
                                 </label>
                             </div>
                         </div>
