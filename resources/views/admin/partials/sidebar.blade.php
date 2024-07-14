@@ -17,12 +17,18 @@
         <div class="nk-sidebar-content">
             <div class="nk-sidebar-menu" data-simplebar>
                 <ul class="nk-menu">
+                    <li class="nk-menu-heading">
+                        <h6 class="overline-title text-primary-alt">Dashboard</h6>
+                    </li><!-- .nk-menu-heading -->
                     <li class="nk-menu-item has-sub">
                         <a href="{{ route('dashboard') }}" class="nk-menu-link">
                             <span class="nk-menu-icon"><em class="icon ni ni-dashboard"></em></span>
                             <span class="nk-menu-text">Dashboard</span>
                         </a>
                     </li>
+                    <li class="nk-menu-heading">
+                        <h6 class="overline-title text-primary-alt">Artikel</h6>
+                    </li><!-- .nk-menu-heading -->
                     <li class="nk-menu-item has-sub">
                         <a href="{{ route('news') }}" class="nk-menu-link">
                             <span class="nk-menu-icon"><em class="icon ni ni-article"></em></span>
@@ -35,6 +41,9 @@
                             <span class="nk-menu-text">Pengumuman</span>
                         </a>
                     </li>
+                    <li class="nk-menu-heading">
+                        <h6 class="overline-title text-primary-alt">Akademik</h6>
+                    </li><!-- .nk-menu-heading -->
                     <li class="nk-menu-item has-sub">
                         <a href="{{ route('lecturers') }}" class="nk-menu-link">
                             <span class="nk-menu-icon"><em class="icon ni ni-users"></em></span>
