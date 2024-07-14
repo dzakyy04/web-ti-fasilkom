@@ -13,19 +13,12 @@ class NewsController extends Controller
     public function index(Request $request)
     {
         $title = 'Berita';
-        $sortField = $request->input('sortField', 'title');
-        $sortDirection = $request->input('sortDirection', 'asc');
         $perPage = $request->input('perPage', 3);
-    
-        // Query data berita dengan filter dan sorting
         $news = Article::where('type', 'news')
-            ->orderBy($sortField, $sortDirection)
             ->paginate($perPage);
-    
-        return view('admin.news.index', compact('title', 'news', 'sortField', 'sortDirection', 'perPage'));
-    }
-    
 
+        return view('admin.news.index', compact('title', 'news', 'perPage'));
+    }
     public function create()
     {
         $title = 'Tambah Berita';
