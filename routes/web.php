@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\LecturerController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\FacilityController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\ResearchFieldController;
 
@@ -54,7 +55,7 @@ Route::prefix('admin')->group(function () {
       Route::get('/pengumuman/{slug}/edit', [AnnouncementController::class, 'edit'])->name('announcements.edit');
       Route::put('/pengumuman/{slug}/edit', [AnnouncementController::class, 'update'])->name('announcements.update');
       Route::delete('/pengumuman/{slug}/delete', [AnnouncementController::class, 'delete'])->name('announcements.delete');
-      
+
 
       // Lecturer
       Route::get('/dosen', [LecturerController::class, 'index'])->name('lecturers');
@@ -62,5 +63,12 @@ Route::prefix('admin')->group(function () {
       Route::post('/dosen', [LecturerController::class, 'store'])->name('lecturers.store');
       Route::put('/dosen/{id}', [LecturerController::class, 'update'])->name('lecturers.update');
       Route::delete('/dosen/{id}', [LecturerController::class, 'delete'])->name('lecturers.delete');
+
+      // Facility
+      Route::get('/facility', [FacilityController::class, 'index'])->name('facilities');
+      Route::get('/facility/{id}', [FacilityController::class, 'findFacility'])->name('facilities.find');
+      Route::post('/facility', [FacilityController::class, 'store'])->name('facilities.store');
+      Route::put('/facility/{id}', [FacilityController::class, 'update'])->name('facilities.update');
+      Route::delete('/facility/{id}', [FacilityController::class, 'delete'])->name('facilities.delete');
    });
 });

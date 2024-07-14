@@ -46,7 +46,7 @@
                 reader.onload = function(e) {
                     const preview = document.getElementById('add_photo_preview');
                     preview.src = e.target.result;
-                    preview.style.display = 'block'; 
+                    preview.style.display = 'block';
                 };
                 reader.readAsDataURL(file);
             } else {
@@ -118,23 +118,23 @@
             }
 
             $('#edit_photo').change(function(event) {
-            previewPhoto(event);
-        });
+                previewPhoto(event);
+            });
 
-        function previewPhoto(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const preview = document.getElementById('photo-preview');
-                    preview.src = e.target.result;
-                    preview.style.display = 'block'; 
-                };
-                reader.readAsDataURL(file);
-            } else {
-                document.getElementById('photo-preview').style.display = 'none'; 
+            function previewPhoto(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const preview = document.getElementById('photo-preview');
+                        preview.src = e.target.result;
+                        preview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    document.getElementById('photo-preview').style.display = 'none';
+                }
             }
-        }
 
             $('.edit-button').click(function() {
                 var lecturerId = $(this).data('id');
@@ -174,7 +174,7 @@
                             </div>
                         `);
                         });
-                        
+
 
                         // Set editEducationIndex based on the number of existing educations
                         editEducationIndex = response.educations.length;
@@ -339,7 +339,7 @@
                     </a>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
+                    <div class="row align-items-center">
                         <div class="col-md-4 text-center mb-3">
                             <img src="" alt="" class="img-fluid" id="showPhoto" style="max-height: 300px;">
                         </div>
@@ -379,6 +379,7 @@
         </div>
     </div>
 
+
     {{-- Add Modal --}}
     <div class="modal fade" id="modalForm">
         <div class="modal-dialog" role="document">
@@ -393,14 +394,19 @@
                     <form action="{{ route('lecturers.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
-                            <label class="form-label" for="photo">Foto</label>
                             <div class="form-control-wrap">
-                                <img id="add_photo_preview" src="#" alt="Photo Preview" style="display: none; max-width: 200px; max-height: 200px;">
-                                <input type="file" class="form-control @error('photo') is-invalid @enderror"
-                                    name="photo" id="photo" onchange="previewNewPhoto(event)" required>
-                                @error('photo')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                <div class="d-flex align-items-center justify-content-start">
+                                    <img id="add_photo_preview" class="img-fluid" src="#" alt="Photo Preview"
+                                        style="display: none; max-width: 200px; max-height: 200px;">
+                                </div>
+                                <div class="custom-file position-relative mt-1">
+                                    <label class="form-label" for="edit_photo">Foto</label>
+                                    <input type="file" class="form-control @error('photo') is-invalid @enderror"
+                                        name="photo" id="photo" onchange="previewNewPhoto(event)" required>
+                                    @error('photo')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -537,7 +543,7 @@
                                     <img id="photo-preview" class="img-fluid" src="#" alt="Photo Preview"
                                         style="max-width: 200px; max-height: 200px;">
                                 </div>
-                                <div class="custom-file mt-3 position-relative">
+                                <div class="custom-file position-relative mt-1">
                                     <label class="form-label" for="edit_photo">Foto</label>
                                     <input type="file" class="form-control @error('photo') is-invalid @enderror"
                                         name="photo" id="edit_photo" onchange="previewPhoto(event)">

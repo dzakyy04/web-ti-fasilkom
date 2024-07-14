@@ -50,6 +50,12 @@
                             <span class="nk-menu-text">Dosen</span>
                         </a>
                     </li>
+                    <li class="nk-menu-item has-sub">
+                        <a href="{{ route('facilities') }}" class="nk-menu-link">
+                            <span class="nk-menu-icon"><em class="icon ni ni-building"></em></span>
+                            <span class="nk-menu-text">Sarana dan Prasarana</span>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
