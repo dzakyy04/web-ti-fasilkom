@@ -8,12 +8,12 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class NewsController extends Controller
+class AnnouncementController extends Controller
 {
     public function getAll()
     {
         try {
-            $articles = Article::where('type', 'news')->latest()->get();
+            $articles = Article::where('type', 'announcement')->latest()->get();
 
             $articles->transform(function ($article) {
                 $article->content = Helper::processContent($article->content);
@@ -27,7 +27,7 @@ class NewsController extends Controller
                     'message' => 'Success'
                 ],
                 'data' => [
-                    'news' => $articles
+                    'announcements' => $articles
                 ]
             ]);
         } catch (\Exception $e) {
@@ -44,7 +44,7 @@ class NewsController extends Controller
     {
         try {
             $article = Article::where('slug', $slug)
-                ->where('type', 'news')
+                ->where('type', 'announcement')
                 ->firstOrFail();
 
             $article->thumbnail = Helper::processThumbnail($article->thumbnail);
@@ -55,14 +55,14 @@ class NewsController extends Controller
                     'message' => 'Success'
                 ],
                 'data' => [
-                    'news' => $article
+                    'announcement' => $article
                 ]
             ]);
         } catch (ModelNotFoundException $e) {
             return response()->json([
                 'status' => [
                     'code' => 404,
-                    'message' => 'News not found.'
+                    'message' => 'Announcement not found.'
                 ]
             ], 404);
         } catch (\Exception $e) {
