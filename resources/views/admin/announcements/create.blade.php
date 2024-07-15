@@ -21,8 +21,17 @@
             preview.style.display = 'block';
             preview.src = URL.createObjectURL(event.target.files[0]);
         }
-    </script>
-    <script>
+
+        function formatDate(dateString) {
+            const options = {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            };
+            const date = new Date(dateString.replace(/-/g, '/'));
+            return date.toLocaleDateString('id-ID', options);
+        }
+
         $(document).ready(function() {
             $('#title').on('input', function() {
                 var title = $(this).val();
@@ -30,6 +39,37 @@
                 $('#slug').val(slug);
             });
         });
+
+        function previewContent() {
+            var title = $('#title').val();
+            var content = $('#content').val();
+            var thumbnail = $('#thumbnail').val();
+
+            // Check if required fields are empty
+            if (!title && !content && !thumbnail) {
+                $('#modalAlert').modal('show'); // Show the danger modal
+                return; // Stop further execution
+            }
+
+            var createdAt = formatDate('{{ now()->format('Y-m-d H:i:s') }}'); // Menggunakan now() untuk tanggal hari ini
+            var thumbnailSrc = thumbnail ? URL.createObjectURL($('#thumbnail')[0].files[0]) : '';
+
+            $('#previewTitle').text(title);
+            $('#previewCreatedAt').html('<i class="icon ni ni-calendar text-warning"></i> ' +
+            createdAt); // Memasukkan ikon kalender dan tanggal
+
+            var previewThumbnail = $('#previewThumbnail');
+            if (thumbnailSrc) {
+                previewThumbnail.attr('src', thumbnailSrc);
+                previewThumbnail.css('display', 'block');
+            } else {
+                previewThumbnail.attr('src', '');
+                previewThumbnail.css('display', 'none');
+            }
+
+            $('#previewContent').html(content);
+            $('#previewModal').modal('show');
+        }
     </script>
 @endpush
 
@@ -49,7 +89,7 @@
                                     <div class="form-control-wrap">
                                         <input type="text" id="title"
                                             class="form-control @error('title') is-invalid @enderror" name="title"
-                                            placeholder="Masukkan judul pengumuman" value="{{ old('title') }}" required>
+                                            placeholder="Masukkan judul berita" value="{{ old('title') }}" required>
                                         @error('title')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -72,25 +112,13 @@
                             </div>
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label class="form-label" for="description">Deskripsi</label>
-                                    <div class="form-control-wrap">
-                                        <textarea id="description" class="form-control no-resize @error('description') is-invalid @enderror" name="description"
-                                            placeholder="Masukkan deskripsi pengumuman" value="{{ old('description') }}" required></textarea>
-                                        @error('description')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-12">
-                                <div class="form-group">
                                     <label class="form-label" for="thumbnail">Thumbnail</label>
                                     <div class="form-control-wrap">
                                         <img id="thumbnail-preview" src="#" alt="Thumbnail Preview">
                                         <input type="file" id="thumbnail"
                                             class="form-control @error('thumbnail') is-invalid @enderror" name="thumbnail"
-                                            placeholder="Contoh: B/735-11/02/01/Smh" value="{{ old('thumbnail') }}"
-                                            required accept="image/*" onchange="previewThumbnail(event)">
+                                            placeholder="Contoh: B/735-11/02/01/Smh" value="{{ old('thumbnail') }}" required
+                                            accept="image/*" onchange="previewThumbnail(event)">
                                         @error('thumbnail')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -106,6 +134,8 @@
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
+                                    <button type="button" class="btn btn-primary mt-2" onclick="previewContent()"><em
+                                            class="icon ni ni-eye me-1"></em>Pratinjau</button>
                                 </div>
                             </div>
                             <div class="text-end">
@@ -115,6 +145,49 @@
                         </div>
                     </form>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="previewModal" tabindex="-1" role="dialog" aria-labelledby="previewModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="previewModalLabel">Pratinjau</h5>
+                    <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <em class="icon ni ni-cross"></em>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <h2 class="mb-1" id="previewTitle"></h2>
+                    <p class="mb-3 sub-text" id="previewCreatedAt"></p>
+                    <img class="img-fluid mb-3" id="previewThumbnail" class="w-full" src="" style="display: none;"
+                        alt="Thumbnail">
+                    <div id="previewContent"></div>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Tutup</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalAlert" tabindex="-1" role="dialog" aria-labelledby="modalAlertLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body modal-body-lg text-center">
+                    <div class="nk-modal">
+                        <em class="nk-modal-icon icon icon-circle icon-circle-xxl ni ni-cross bg-danger"></em>
+                        <h4 class="nk-modal-title">Data masih kosong!</h4>
+                        <div class="nk-modal-text">
+                            <p class="lead">Mohon lengkapi semua data sebelum melihat pratinjau.</p>
+                        </div>
+                        <div class="nk-modal-action mt-5">
+                            <button type="button" class="btn btn-lg btn-mw btn-light"
+                                data-bs-dismiss="modal">Tutup</button>
+                        </div>
+                    </div>
+                </div><!-- .modal-body -->
             </div>
         </div>
     </div>

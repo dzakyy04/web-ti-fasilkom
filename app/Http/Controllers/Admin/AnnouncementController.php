@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\Helper;
 use App\Models\Article;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -16,6 +17,10 @@ class AnnouncementController extends Controller
         $perPage = $request->input('perPage', 3);
         $announcements = Article::where('type', 'announcement')
             ->paginate($perPage);
+        $announcements->transform(function ($announcement) {
+            $announcement->content = Helper::processContent($announcement->content);
+            return $announcement;
+        });
 
         return view('admin.announcements.index', compact('title', 'announcements', 'perPage'));
     }
@@ -32,7 +37,6 @@ class AnnouncementController extends Controller
             'title' => 'required',
             'slug' => 'required|unique:articles',
             'thumbnail' => 'required|file|mimes:png,jpg,jpeg',
-            'description' => 'required',
             'content' => 'required',
         ]);
 
@@ -71,7 +75,6 @@ class AnnouncementController extends Controller
         $announcement->title = $request->title;
         $announcement->slug = $uniqueSlug;
         $announcement->thumbnail = $thumbnailPath;
-        $announcement->description = $request->description;
         $announcement->content = $content;
         $announcement->type = 'announcement';
 
@@ -93,7 +96,6 @@ class AnnouncementController extends Controller
             'title' => 'required',
             'slug' => 'required',
             'thumbnail' => 'file|mimes:png,jpg,jpeg',
-            'description' => 'required',
             'content' => 'required',
         ]);
 
@@ -107,7 +109,6 @@ class AnnouncementController extends Controller
         $dataToUpdate = [
             'title' => $request->title,
             'slug' => $uniqueSlug,
-            'description' => $request->description,
             'content' => $request->content,
         ];
 
@@ -211,9 +212,8 @@ class AnnouncementController extends Controller
 
     private function ensureValidHtml($content)
     {
-        // Ensure that the HTML is valid by wrapping it in a single root element if needed
-        if (strpos($content, '<html') === false) {
-            $content = '<html><body>' . $content . '</body></html>';
+        if (strpos($content, '<div') === false) {
+            $content = '<div id="article-content">' . $content . '</div>';
         }
         return $content;
     }

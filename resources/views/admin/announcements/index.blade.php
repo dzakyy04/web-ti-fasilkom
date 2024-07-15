@@ -111,13 +111,13 @@
                                 alt="">
                             <div class="card-inner">
                                 <h5 class="card-title announcements-title">{{ $announcement->title }}</h5>
-                                <p class="card-text announcements-desc">{{ $announcement->description }}</p>
+                                <p class="card-text announcements-desc">{{ $announcement->content }}</p>
                                 <a href="#" class="btn btn-primary d-flex justify-content-center">Lihat
                                     Pengumuman</a>
                             </div>
                             <div
                                 class="card-footer border-top text-muted d-flex justify-content-between align-items-center">
-                                <dev>{{ \Carbon\Carbon::parse($announcement->updated_at)->translatedFormat('d F Y') }}
+                                <dev>{{ \Carbon\Carbon::parse($announcement->created_at)->translatedFormat('d F Y') }}
                                 </dev>
                                 <div class="dropdown">
                                     <a class="text-soft dropdown-toggle btn btn-icon btn-trigger"
