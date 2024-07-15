@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\Helper;
 use App\Models\Article;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -16,6 +17,10 @@ class NewsController extends Controller
         $perPage = $request->input('perPage', 3);
         $news = Article::where('type', 'news')
             ->paginate($perPage);
+        $news->transform(function ($newsItem) {
+            $newsItem->content = Helper::processContent($newsItem->content);
+            return $newsItem;
+        });
 
         return view('admin.news.index', compact('title', 'news', 'perPage'));
     }
@@ -31,7 +36,6 @@ class NewsController extends Controller
             'title' => 'required',
             'slug' => 'required|unique:articles',
             'thumbnail' => 'required|file|mimes:png,jpg,jpeg',
-            'description' => 'required',
             'content' => 'required',
         ]);
 
@@ -70,7 +74,6 @@ class NewsController extends Controller
         $news->title = $request->title;
         $news->slug = $uniqueSlug;
         $news->thumbnail = $thumbnailPath;
-        $news->description = $request->description;
         $news->content = $content;
         $news->type = 'news';
 
@@ -92,7 +95,6 @@ class NewsController extends Controller
             'title' => 'required',
             'slug' => 'required',
             'thumbnail' => 'file|mimes:png,jpg,jpeg',
-            'description' => 'required',
             'content' => 'required',
         ]);
 
@@ -106,7 +108,6 @@ class NewsController extends Controller
         $dataToUpdate = [
             'title' => $request->title,
             'slug' => $uniqueSlug,
-            'description' => $request->description,
             'content' => $request->content,
         ];
 
@@ -210,9 +211,8 @@ class NewsController extends Controller
 
     private function ensureValidHtml($content)
     {
-        // Ensure that the HTML is valid by wrapping it in a single root element if needed
-        if (strpos($content, '<html') === false) {
-            $content = '<html><body>' . $content . '</body></html>';
+        if (strpos($content, '<div') === false) {
+            $content = '<div id="article-content">' . $content . '</div>';
         }
         return $content;
     }

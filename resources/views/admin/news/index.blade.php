@@ -97,12 +97,12 @@
                                 alt="">
                             <div class="card-inner">
                                 <h5 class="card-title news-title">{{ $newsItem->title }}</h5>
-                                <p class="card-text news-description">{{ $newsItem->description }}</p>
+                                <p class="card-text news-description">{{ $newsItem->content }}</p>
                                 <a href="#" class="btn btn-primary d-flex justify-content-center">Lihat Berita</a>
                             </div>
                             <div
                                 class="card-footer border-top text-muted d-flex justify-content-between align-items-center">
-                                <div>{{ \Carbon\Carbon::parse($newsItem->updated_at)->translatedFormat('d F Y') }}</div>
+                                <div>{{ \Carbon\Carbon::parse($newsItem->created_at)->translatedFormat('d F Y') }}</div>
                                 <div class="dropdown">
                                     <a class="text-soft dropdown-toggle btn btn-icon btn-trigger" data-bs-toggle="dropdown">
                                         <em class="icon ni ni-more-h"></em>

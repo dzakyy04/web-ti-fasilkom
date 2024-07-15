@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('title');
             $table->string('slug');
             $table->string('thumbnail');
-            $table->string('description');
             $table->text('content');
             $table->enum('type', ['news', 'announcement']);
             $table->timestamps();
