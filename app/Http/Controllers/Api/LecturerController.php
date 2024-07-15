@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\Lecturer;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class LecturerController extends Controller
 {
@@ -31,5 +32,36 @@ class LecturerController extends Controller
                 'lecturers' => $lecturers
             ]
         ]);
+    }
+
+    public function getById($id)
+    {
+        try {
+            $lecturer = Lecturer::with('educations', 'researchFields')->findOrFail($id);
+
+            return response()->json([
+                'status' => [
+                    'code' => 200,
+                    'message' => 'Success'
+                ],
+                'data' => [
+                    'lecturer' => $lecturer
+                ]
+            ]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'status' => [
+                    'code' => 404,
+                    'message' => 'Lecturer not found.'
+                ]
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => [
+                    'code' => 500,
+                    'message' => $e->getMessage()
+                ]
+            ], 500);
+        }
     }
 }

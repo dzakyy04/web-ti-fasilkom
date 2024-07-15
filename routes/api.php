@@ -22,6 +22,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/lecturers', [LecturerController::class, 'getAll']);
+Route::get('/lecturers/{id}', [LecturerController::class, 'getById']);
 
 Route::get('/news', [NewsController::class, 'getAll']);
 Route::get('/news/{slug}', [NewsController::class, 'getBySlug']);
