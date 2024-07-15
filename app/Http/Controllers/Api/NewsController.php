@@ -20,7 +20,7 @@ class NewsController extends Controller
 
             $news->transform(function ($newsItem) {
                 $newsItem->content = Helper::processContent($newsItem->content);
-                $newsItem->thumbnail = Helper::processThumbnail($newsItem->thumbnail);
+                $newsItem->thumbnail = Helper::convertImageUrl($newsItem->thumbnail);
                 return $newsItem;
             });
 
@@ -52,7 +52,7 @@ class NewsController extends Controller
                 ->where('type', 'news')
                 ->firstOrFail();
 
-            $newsItem->thumbnail = Helper::processThumbnail($newsItem->thumbnail);
+            $newsItem->thumbnail = Helper::convertImageUrl($newsItem->thumbnail);
             $mappedNews = $this->mapArticles(collect([$newsItem]));
 
             return response()->json([

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\Helper;
 use App\Models\Lecturer;
 use App\Traits\MapsResponse;
 use Illuminate\Http\Request;
@@ -26,6 +27,11 @@ class LecturerController extends Controller
             }
 
             $lecturers = $query->get();
+            $lecturers->transform(function ($lecturer) {
+                $lecturer->photo = Helper::convertImageUrl($lecturer->photo);
+                return $lecturer;
+            });
+
             $mappedLecturers = $this->mapLecturers($lecturers);
 
             return response()->json([
@@ -51,6 +57,7 @@ class LecturerController extends Controller
     {
         try {
             $lecturer = Lecturer::with('educations', 'researchFields')->findOrFail($id);
+            $lecturer->photo = Helper::convertImageUrl($lecturer->photo);
             $mappedLecturer = $this->mapLecturers(collect([$lecturer]));
 
             return response()->json([

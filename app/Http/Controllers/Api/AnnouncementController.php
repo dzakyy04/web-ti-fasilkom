@@ -20,7 +20,7 @@ class AnnouncementController extends Controller
 
             $announcements->transform(function ($announcement) {
                 $announcement->content = Helper::processContent($announcement->content);
-                $announcement->thumbnail = Helper::processThumbnail($announcement->thumbnail);
+                $announcement->thumbnail = Helper::convertImageUrl($announcement->thumbnail);
                 return $announcement;
             });
 
@@ -52,7 +52,7 @@ class AnnouncementController extends Controller
                 ->where('type', 'announcement')
                 ->firstOrFail();
 
-            $announcement->thumbnail = Helper::processThumbnail($announcement->thumbnail);
+            $announcement->thumbnail = Helper::convertImageUrl($announcement->thumbnail);
             $mappedAnnouncement = $this->mapArticles(collect([$announcement]));
 
             return response()->json([
