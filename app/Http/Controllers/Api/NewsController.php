@@ -4,22 +4,27 @@ namespace App\Http\Controllers\Api;
 
 use App\Helpers\Helper;
 use App\Models\Article;
+use App\Traits\MapsResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class NewsController extends Controller
 {
+    use MapsResponse;
+
     public function getAll()
     {
         try {
-            $articles = Article::where('type', 'news')->latest()->get();
+            $news = Article::where('type', 'news')->latest()->get();
 
-            $articles->transform(function ($article) {
-                $article->content = Helper::processContent($article->content);
-                $article->thumbnail = Helper::processThumbnail($article->thumbnail);
-                return $article;
+            $news->transform(function ($newsItem) {
+                $newsItem->content = Helper::processContent($newsItem->content);
+                $newsItem->thumbnail = Helper::convertImageUrl($newsItem->thumbnail);
+                return $newsItem;
             });
+
+            $mappedNews = $this->mapArticles($news);
 
             return response()->json([
                 'status' => [
@@ -27,7 +32,7 @@ class NewsController extends Controller
                     'message' => 'Success'
                 ],
                 'data' => [
-                    'news' => $articles
+                    'berita' => $mappedNews
                 ]
             ]);
         } catch (\Exception $e) {
@@ -43,11 +48,12 @@ class NewsController extends Controller
     public function getBySlug($slug)
     {
         try {
-            $article = Article::where('slug', $slug)
+            $newsItem = Article::where('slug', $slug)
                 ->where('type', 'news')
                 ->firstOrFail();
 
-            $article->thumbnail = Helper::processThumbnail($article->thumbnail);
+            $newsItem->thumbnail = Helper::convertImageUrl($newsItem->thumbnail);
+            $mappedNews = $this->mapArticles(collect([$newsItem]));
 
             return response()->json([
                 'status' => [
@@ -55,14 +61,14 @@ class NewsController extends Controller
                     'message' => 'Success'
                 ],
                 'data' => [
-                    'news' => $article
+                    'berita' => $mappedNews
                 ]
             ]);
         } catch (ModelNotFoundException $e) {
             return response()->json([
                 'status' => [
                     'code' => 404,
-                    'message' => 'News not found.'
+                    'message' => 'Berita tidak ditemukan.'
                 ]
             ], 404);
         } catch (\Exception $e) {

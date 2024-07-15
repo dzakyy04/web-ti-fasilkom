@@ -4,18 +4,16 @@ namespace App\Helpers;
 
 class Helper
 {
-    public static function processThumbnail($thumbnail)
+    public static function convertImageUrl($image)
     {
-        // Ambil APP_URL dari .env
         $appUrl = env('APP_URL');
 
-        // Ubah URL thumbnail jika ada
-        if (isset($thumbnail)) {
-            $thumbnail = str_replace('public/', 'storage/', $thumbnail);
-            $thumbnail = $appUrl . '/' . $thumbnail;
+        if (isset($image)) {
+            $image = str_replace('public/', 'storage/', $image);
+            $image = $appUrl . '/' . $image;
         }
 
-        return $thumbnail;
+        return $image;
     }
 
     public static function processContent($content)
