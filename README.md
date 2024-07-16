@@ -38,8 +38,12 @@ Buat symbolic link
 
     php artisan storage:link
 
+Generate dokumentasi API
+
+    php artisan l5-swagger:generate
+
 Mulai local development server
 
     php artisan serve
 
-Anda sekarang dapat mengakses server di [http://localhost:8000](http://localhost:8000) dan dokumentasi API di [http://localhost:8000/docs](http://localhost:8000/docs)
+Anda sekarang dapat mengakses server di [http://localhost:8000](http://localhost:8000) dan dokumentasi API di [http://localhost:8000/docs](http://localhost:8000/documentation)
