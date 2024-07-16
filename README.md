@@ -46,4 +46,4 @@ Mulai local development server
 
     php artisan serve
 
-Anda sekarang dapat mengakses server di [http://localhost:8000](http://localhost:8000) dan dokumentasi API di [http://localhost:8000/docs](http://localhost:8000/documentation)
+Anda sekarang dapat mengakses server di [http://localhost:8000](http://localhost:8000) dan dokumentasi API di [http://localhost:8000/documentation](http://localhost:8000/documentation)
