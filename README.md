@@ -34,6 +34,10 @@ Jalankan migrasi database (**Atur koneksi database di .env sebelum melakukan mig
 
     php artisan migrate
 
+Jalankan seeder untuk mengisi database dengan data awal
+
+    php artisan db:seed
+
 Buat symbolic link
 
     php artisan storage:link
