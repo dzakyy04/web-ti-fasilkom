@@ -16,7 +16,7 @@ Clone repositori
 
 Masuk ke folder repositori
 
-    cd srifoton2023-be
+    cd web-ti-fasilkom
 
 Install semua dependensi menggunakan Composer
 
