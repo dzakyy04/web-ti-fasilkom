@@ -46,4 +46,16 @@ trait MapsResponse
             ];
         })->toArray();
     }
+
+    public function mapFacilities(Collection $facilities)
+    {
+        return $facilities->map(function ($facility) {
+            return [
+                'id' => $facility->id,
+                'nama' => $facility->name,
+                'lokasi' => $facility->location,
+                'foto' => $facility->photo,
+            ];
+        })->toArray();
+    }
 }

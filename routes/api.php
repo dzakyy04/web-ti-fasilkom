@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AnnouncementController;
+use App\Http\Controllers\Api\FacilityController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\NewsController;
@@ -28,3 +29,5 @@ Route::get('/berita', [NewsController::class, 'getAll']);
 Route::get('/berita/{slug}', [NewsController::class, 'getBySlug']);
 Route::get('/pengumuman', [AnnouncementController::class, 'getAll']);
 Route::get('/pengumuman/{slug}', [AnnouncementController::class, 'getBySlug']);
+
+Route::get('/sarana-prasarana', [FacilityController::class, 'getAll']);

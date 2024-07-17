@@ -65,10 +65,10 @@ Route::prefix('admin')->group(function () {
       Route::delete('/dosen/{id}', [LecturerController::class, 'delete'])->name('lecturers.delete');
 
       // Facility
-      Route::get('/facility', [FacilityController::class, 'index'])->name('facilities');
-      Route::get('/facility/{id}', [FacilityController::class, 'findFacility'])->name('facilities.find');
-      Route::post('/facility', [FacilityController::class, 'store'])->name('facilities.store');
-      Route::put('/facility/{id}', [FacilityController::class, 'update'])->name('facilities.update');
-      Route::delete('/facility/{id}', [FacilityController::class, 'delete'])->name('facilities.delete');
+      Route::get('/sarana-prasarana', [FacilityController::class, 'index'])->name('facilities');
+      Route::get('/sarana-prasarana/{id}', [FacilityController::class, 'findFacility'])->name('facilities.find');
+      Route::post('/sarana-prasarana', [FacilityController::class, 'store'])->name('facilities.store');
+      Route::put('/sarana-prasarana/{id}', [FacilityController::class, 'update'])->name('facilities.update');
+      Route::delete('/sarana-prasarana/{id}', [FacilityController::class, 'delete'])->name('facilities.delete');
    });
 });
