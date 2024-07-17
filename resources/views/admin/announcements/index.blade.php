@@ -35,6 +35,49 @@
         });
     </script>
     <script>
+        function previewThumbnail(event) {
+            var preview = document.getElementById('thumbnail-preview');
+            preview.style.display = 'block';
+            preview.src = URL.createObjectURL(event.target.files[0]);
+        }
+
+        function formatDate(dateString) {
+            const options = {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            };
+            const date = new Date(dateString.replace(/-/g, '/'));
+            return date.toLocaleDateString('id-ID', options);
+        }
+
+        $(document).ready(function() {
+            $('#title').on('input', function() {
+                var title = $(this).val();
+                var slug = title.toLowerCase().replace(/\s+/g, '-');
+                $('#slug').val(slug);
+            });
+        });
+
+        function previewContent(title, content, thumbnail, createdAt) {
+            var formattedDate = formatDate(createdAt);
+
+            $('#previewTitle').text(title);
+            $('#previewCreatedAt').html('<i class="icon ni ni-calendar text-warning"></i> ' + formattedDate);
+
+            var previewThumbnail = $('#previewThumbnail');
+            if (thumbnail) {
+                previewThumbnail.attr('src', thumbnail);
+                previewThumbnail.show();
+            } else {
+                previewThumbnail.hide();
+            }
+
+            $('#previewContent').html(content);
+            $('#previewModal').modal('show');
+        }
+    </script>
+    <script>
         $(document).ready(function() {
             $('#search-input').on('input', function() {
                 performSearch();
@@ -112,8 +155,14 @@
                             <div class="card-inner">
                                 <h5 class="card-title announcements-title">{{ $announcement->title }}</h5>
                                 <p class="card-text announcements-desc">{{ $announcement->content }}</p>
-                                <a href="#" class="btn btn-primary d-flex justify-content-center">Lihat
-                                    Pengumuman</a>
+                                <button type="button" class="btn btn-primary w-100 d-flex justify-content-center"
+                                    onclick="previewContent(
+                                    '{{ $announcement->title }}',
+                                    '{{ $announcement->content }}',
+                                    '{{ Storage::url($announcement->thumbnail) }}',
+                                    '{{ $announcement->created_at }}'
+                                )">Lihat
+                                    Pengumuman</button>
                             </div>
                             <div
                                 class="card-footer border-top text-muted d-flex justify-content-between align-items-center">
@@ -181,6 +230,29 @@
                     @endif
                 </ul>
             </nav>
+        </div>
+    </div>
+    <div class="modal fade" id="previewModal" tabindex="-1" role="dialog" aria-labelledby="previewModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="previewModalLabel">Lihat Pengumuman</h5>
+                    <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <em class="icon ni ni-cross"></em>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <h2 class="mb-1" id="previewTitle"></h2>
+                    <p class="mb-3 sub-text" id="previewCreatedAt"></p>
+                    <img class="img-fluid mb-3" id="previewThumbnail" class="w-full" src=""
+                        style="display: none;" alt="Thumbnail">
+                    <div id="previewContent"></div>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Tutup</a>
+                </div>
+            </div>
         </div>
     </div>
 @endsection

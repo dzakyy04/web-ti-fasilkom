@@ -89,7 +89,7 @@
                                     <div class="form-control-wrap">
                                         <input type="text" id="title"
                                             class="form-control @error('title') is-invalid @enderror" name="title"
-                                            placeholder="Masukkan judul berita" value="{{ old('title') }}" required>
+                                            placeholder="Masukkan judul pengumuman" value="{{ old('title') }}" required>
                                         @error('title')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -102,7 +102,7 @@
                                     <div class="form-control-wrap">
                                         <input type="text" id="slug"
                                             class="form-control @error('slug') is-invalid @enderror" name="slug"
-                                            placeholder="Otomatis terisi berdasarkan judul" value="{{ old('slug') }}"
+                                            placeholder="Otomatis terisi berdasarkan pengumuman" value="{{ old('slug') }}"
                                             required>
                                         @error('slug')
                                             <div class="invalid-feedback">{{ $message }}</div>
