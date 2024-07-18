@@ -133,7 +133,6 @@
                                 <div class="form-control-select">
                                     <select id="perPage" name="perPage" aria-controls="DataTables_Table_0"
                                         class="custom-select custom-select-sm form-control form-control-sm">
-                                        <option value="3" {{ $perPage == '3' ? 'selected' : '' }}>3</option>
                                         <option value="10" {{ $perPage == '10' ? 'selected' : '' }}>10</option>
                                         <option value="25" {{ $perPage == '25' ? 'selected' : '' }}>25</option>
                                         <option value="50" {{ $perPage == '50' ? 'selected' : '' }}>50</option>

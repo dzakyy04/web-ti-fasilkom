@@ -14,8 +14,9 @@ class NewsController extends Controller
     public function index(Request $request)
     {
         $title = 'Berita';
-        $perPage = $request->input('perPage', 3);
+        $perPage = $request->input('perPage', 10);
         $news = Article::where('type', 'news')
+            ->orderBy('created_at', 'desc')
             ->paginate($perPage);
         $news->transform(function ($newsItem) {
             $newsItem->content = Helper::processContent($newsItem->content);

@@ -14,8 +14,9 @@ class AnnouncementController extends Controller
     public function index(Request $request)
     {
         $title = 'Pengumuman';
-        $perPage = $request->input('perPage', 3);
+        $perPage = $request->input('perPage', 10);
         $announcements = Article::where('type', 'announcement')
+            ->orderBy('created_at', 'desc')
             ->paginate($perPage);
         $announcements->transform(function ($announcement) {
             $announcement->content = Helper::processContent($announcement->content);
