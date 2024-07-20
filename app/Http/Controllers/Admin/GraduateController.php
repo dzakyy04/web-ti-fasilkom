@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Graduate;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class GraduateController extends Controller
 {
@@ -171,7 +173,7 @@ class GraduateController extends Controller
         return redirect()->route('graduates.support-competencies')->with('success', 'Kompetensi pendukung berhasil dihapus.');
     }
 
-    public function findGraduatesSupportCompetency($id)
+    public function findSupportCompetency($id)
     {
         $graduate = Graduate::first();
         if (!$graduate) {
@@ -187,6 +189,129 @@ class GraduateController extends Controller
 
         return response()->json($competency);
     }
-    
 
+    public function indexGraduateCompetency()
+    {
+        $title = 'Kompetensi Lulusan';
+        $graduateCompetencies = Graduate::first()->graduate_competencies ?? [];
+        return view('admin.graduates.graduate.index', compact('graduateCompetencies', 'title'));
+    }
+
+    public function storeGraduateCompetency(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
+            'photo' => 'required|image|max:2048',
+        ]);
+
+        $graduate = Graduate::first();
+        if (!$graduate) {
+            $graduate = new Graduate();
+            $graduate->graduate_competencies = [];
+        }
+
+        $photoExtension = $request->file('photo')->getClientOriginalExtension();
+        $photoPath = $request->file('photo')->storeAs('public/kompetensi-lulusan/foto', $request->name . '.' . $photoExtension);
+
+        $graduateCompetencies = $graduate->graduate_competencies ?? [];
+        $id = uniqid();
+        $graduateCompetencies[] = array_merge($request->only('name', 'description'), ['photo' => $photoPath, 'id' => $id]);
+        $graduate->graduate_competencies = $graduateCompetencies;
+        $graduate->save();
+
+        return redirect()->route('graduates.graduate-competencies')->with('success', 'Kompetensi lulusan berhasil ditambahkan.');
+    }
+
+    public function findGraduateCompetency($id)
+    {
+        $graduate = Graduate::first();
+        if (!$graduate) {
+            return response()->json(['error' => 'Graduate not found'], 404);
+        }
+
+        $graduateCompetencies = $graduate->graduate_competencies;
+        $competency = collect($graduateCompetencies)->firstWhere('id', $id);
+
+        if (!$competency) {
+            return response()->json(['error' => 'Support Competency not found'], 404);
+        }
+
+        return response()->json($competency);
+    }
+    
+    public function updateGraduateCompetency(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
+            'photo' => 'nullable|image|max:2048',
+        ]);
+    
+        $graduate = Graduate::first();
+        if (!$graduate) {
+            return redirect()->back()->with('error', 'Graduate not found');
+        }
+    
+        $graduateCompetencies = $graduate->graduate_competencies ?? [];
+        $index = collect($graduateCompetencies)->search(function ($competency) use ($id) {
+            return $competency['id'] == $id;
+        });
+    
+        if ($index === false) {
+            return redirect()->back()->with('error', 'Graduate Competency not found');
+        }
+    
+        $competency = &$graduateCompetencies[$index];
+        $competency['name'] = $request->name;
+        $competency['description'] = $request->description;
+    
+        if ($request->hasFile('photo')) {
+            if (isset($competency['photo'])) {
+                Storage::delete($competency['photo']);
+            }
+    
+            $photoExtension = $request->file('photo')->getClientOriginalExtension();
+            $photoPath = $request->file('photo')->storeAs('public/kompetensi-lulusan/foto', $request->name . '.' . $photoExtension);
+            $competency['photo'] = $photoPath;
+        }
+    
+        $graduate->graduate_competencies = $graduateCompetencies;
+        $graduate->save();
+    
+        return redirect()->route('graduates.graduate-competencies')->with('success', 'Kompetensi lulusan berhasil diperbarui.');
+    }    
+
+    public function deleteGraduateCompetency($id)
+    {
+        $graduate = Graduate::first();
+        if (!$graduate) {
+            return redirect()->back()->with('error', 'Graduate not found');
+        }
+    
+        $graduateCompetencies = $graduate->graduate_competencies ?? [];
+        $index = collect($graduateCompetencies)->search(function ($competency) use ($id) {
+            return $competency['id'] == $id;
+        });
+    
+        if ($index === false) {
+            return redirect()->back()->with('error', 'Graduate Competency not found');
+        }
+    
+        // Get the competency to delete
+        $competency = $graduateCompetencies[$index];
+    
+        // Remove the photo if it exists
+        if (isset($competency['photo'])) {
+            Storage::delete($competency['photo']);
+        }
+    
+        // Remove the competency from the array
+        array_splice($graduateCompetencies, $index, 1);
+        $graduate->graduate_competencies = $graduateCompetencies;
+        $graduate->save();
+    
+        return redirect()->route('graduates.graduate-competencies')->with('success', 'Kompetensi lulusan berhasil dihapus.');
+    }
+    
 }
