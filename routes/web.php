@@ -78,5 +78,12 @@ Route::prefix('admin')->group(function () {
       Route::post('/kompetensi-utama', [GraduateController::class, 'storeMainCompetency'])->name('graduates.main-competencies.store');
       Route::put('/kompetensi-utama/{id}', [GraduateController::class, 'updateMainCompetency'])->name('graduates.main-competencies.update');
       Route::delete('/kompetensi-utama/{id}', [GraduateController::class, 'deleteMainCompetency'])->name('graduates.main-competencies.delete');
+
+      // Kompetensi Pendukung
+      Route::get('/kompetensi-pendukung', [GraduateController::class, 'indexSupportCompetency'])->name('graduates.support-competencies');
+      Route::get('/kompetensi-pendukung/{id}', [GraduateController::class, 'findGraduatesSupportCompetency'])->name('graduates.support-competencies.find');
+      Route::post('/kompetensi-pendukung', [GraduateController::class, 'storeSupportCompetency'])->name('graduates.support-competencies.store');
+      Route::put('/kompetensi-pendukung/{id}', [GraduateController::class, 'updateSupportCompetency'])->name('graduates.support-competencies.update');
+      Route::delete('/kompetensi-pendukung/{id}', [GraduateController::class, 'deleteSupportCompetency'])->name('graduates.support-competencies.delete');
    });
 });

@@ -64,8 +64,14 @@
                         <ul class="nk-menu-sub" style="display: block;">
                             <li class="nk-menu-item">
                                 <a href="{{ route('graduates.main-competencies') }}" class="nk-menu-link">
-                                    <span class="nk-menu-icon"><em class="icon ni ni-target"></em></span>
+                                    <span class="nk-menu-icon"><em class="icon ni ni-bullet"></em></span>
                                     <span class="nk-menu-text">Kompetensi Utama</span>
+                                </a>
+                            </li>
+                            <li class="nk-menu-item">
+                                <a href="{{ route('graduates.support-competencies') }}" class="nk-menu-link">
+                                    <span class="nk-menu-icon"><em class="icon ni ni-bullet"></em></span>
+                                    <span class="nk-menu-text">Kompetensi Pendukung</span>
                                 </a>
                             </li>
                         </ul>
