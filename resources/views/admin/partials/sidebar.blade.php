@@ -89,7 +89,7 @@
                         </a>
                         <ul class="nk-menu-sub" style="display: block;">
                             <li class="nk-menu-item">
-                                <a href="{{ route('graduates.main-competencies') }}" class="nk-menu-link">
+                                <a href="{{ route('leaders') }}" class="nk-menu-link">
                                     <span class="nk-menu-icon"><em class="icon ni ni-star"></em></span>
                                     <span class="nk-menu-text">Pimpinan</span>
                                 </a>

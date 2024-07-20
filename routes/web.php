@@ -4,13 +4,12 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AnnouncementController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AuthController;
-use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\LecturerController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\FacilityController;
 use App\Http\Controllers\Admin\GraduateController;
 use App\Http\Controllers\Admin\NewsController;
-use App\Http\Controllers\Admin\ResearchFieldController;
+use App\Http\Controllers\Admin\LeaderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -94,11 +93,18 @@ Route::prefix('admin')->group(function () {
       Route::put('/kompetensi-lulusan/{id}', [GraduateController::class, 'updateGraduateCompetency'])->name('graduates.graduate-competencies.update');
       Route::delete('/kompetensi-lulusan/{id}', [GraduateController::class, 'deleteGraduateCompetency'])->name('graduates.graduate-competencies.delete');
 
-      // Admin
-      Route::get('/admin', [AdminController::class, 'index'])->name('admins');
-      Route::get('/admin/{id}', [AdminController::class, 'findAdmin'])->name('admins.find');
-      Route::post('/admin', [AdminController::class, 'store'])->name('admins.store');
-      Route::put('/admin/{id}', [AdminController::class, 'update'])->name('admins.update');
-      Route::delete('/admin/{id}', [AdminController::class, 'delete'])->name('admins.delete');
+      // Struktur Organisasi Admin
+      Route::get('/struktur-organisasi/admin', [AdminController::class, 'index'])->name('admins');
+      Route::get('/struktur-organisasi/admin/{id}', [AdminController::class, 'findAdmin'])->name('admins.find');
+      Route::post('/struktur-organisasi/admin', [AdminController::class, 'store'])->name('admins.store');
+      Route::put('/struktur-organisasi/admin/{id}', [AdminController::class, 'update'])->name('admins.update');
+      Route::delete('/struktur-organisasi/admin/{id}', [AdminController::class, 'delete'])->name('admins.delete');
+
+      // Struktur Organisasi Pimpinan
+      Route::get('/struktur-organisasi/pimpinan', [LeaderController::class, 'index'])->name('leaders');
+      Route::get('/struktur-organisasi/pimpinan/{id}', [LeaderController::class, 'findLeader'])->name('leaders.find');
+      Route::post('/struktur-organisasi/pimpinan', [LeaderController::class, 'store'])->name('leaders.store');
+      Route::put('/struktur-organisasi/pimpinan/{id}', [LeaderController::class, 'update'])->name('leaders.update');
+      Route::delete('/struktur-organisasi/pimpinan/{id}', [LeaderController::class, 'delete'])->name('leaders.delete');
    });
 });

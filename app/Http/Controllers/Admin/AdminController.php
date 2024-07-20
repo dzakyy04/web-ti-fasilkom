@@ -15,7 +15,7 @@ class AdminController extends Controller
     {
         $title = 'Admin';
         $admins = Admin::get();
-        return view('admin.admin.index', compact('title', 'admins'));
+        return view('admin.organization-structure.admin.index', compact('title', 'admins'));
     }
 
     public function store(Request $request)
@@ -23,7 +23,7 @@ class AdminController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'location' => 'required|in:Kampus Indralaya,Kampus Palembang',
-            'photo' => 'required|image|max:2048',
+            'photo' => 'required|image|max:4096',
         ]);
 
         $timestamp = Carbon::now()->format('Ymd_His');
