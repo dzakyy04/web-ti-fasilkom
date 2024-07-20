@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AnnouncementController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AuthController;
@@ -92,5 +93,12 @@ Route::prefix('admin')->group(function () {
       Route::post('/kompetensi-lulusan', [GraduateController::class, 'storeGraduateCompetency'])->name('graduates.graduate-competencies.store');
       Route::put('/kompetensi-lulusan/{id}', [GraduateController::class, 'updateGraduateCompetency'])->name('graduates.graduate-competencies.update');
       Route::delete('/kompetensi-lulusan/{id}', [GraduateController::class, 'deleteGraduateCompetency'])->name('graduates.graduate-competencies.delete');
+
+      // Admin
+      Route::get('/admin', [AdminController::class, 'index'])->name('admins');
+      Route::get('/admin/{id}', [AdminController::class, 'findAdmin'])->name('admins.find');
+      Route::post('/admin', [AdminController::class, 'store'])->name('admins.store');
+      Route::put('/admin/{id}', [AdminController::class, 'update'])->name('admins.update');
+      Route::delete('/admin/{id}', [AdminController::class, 'delete'])->name('admins.delete');
    });
 });

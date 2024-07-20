@@ -82,6 +82,26 @@
                             </li>
                         </ul>
                     </li>
+                    <li class="nk-menu-item has-sub active">
+                        <a href="#" class="nk-menu-link nk-menu-toggle">
+                            <span class="nk-menu-icon"><em class="icon ni ni-network"></em></span>
+                            <span class="nk-menu-text">Struktur Organisasi</span>
+                        </a>
+                        <ul class="nk-menu-sub" style="display: block;">
+                            <li class="nk-menu-item">
+                                <a href="{{ route('graduates.main-competencies') }}" class="nk-menu-link">
+                                    <span class="nk-menu-icon"><em class="icon ni ni-star"></em></span>
+                                    <span class="nk-menu-text">Pimpinan</span>
+                                </a>
+                            </li>
+                            <li class="nk-menu-item">
+                                <a href="{{ route('admins') }}" class="nk-menu-link">
+                                    <span class="nk-menu-icon"><em class="icon ni ni-account-setting"></em></span>
+                                    <span class="nk-menu-text">Administrator</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>
