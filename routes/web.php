@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\LecturerController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\FacilityController;
+use App\Http\Controllers\Admin\GraduateController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\ResearchFieldController;
 
@@ -70,5 +71,12 @@ Route::prefix('admin')->group(function () {
       Route::post('/sarana-prasarana', [FacilityController::class, 'store'])->name('facilities.store');
       Route::put('/sarana-prasarana/{id}', [FacilityController::class, 'update'])->name('facilities.update');
       Route::delete('/sarana-prasarana/{id}', [FacilityController::class, 'delete'])->name('facilities.delete');
+
+      // Kompetensi Utama
+      Route::get('/kompetensi-utama', [GraduateController::class, 'indexMainCompetency'])->name('graduates.main-competencies');
+      Route::get('/kompetensi-utama/{id}', [GraduateController::class, 'findGraduatesMainCompetency'])->name('graduates.main-competencies.find');
+      Route::post('/kompetensi-utama', [GraduateController::class, 'storeMainCompetency'])->name('graduates.main-competencies.store');
+      Route::put('/kompetensi-utama/{id}', [GraduateController::class, 'updateMainCompetency'])->name('graduates.main-competencies.update');
+      Route::delete('/kompetensi-utama/{id}', [GraduateController::class, 'deleteMainCompetency'])->name('graduates.main-competencies.delete');
    });
 });

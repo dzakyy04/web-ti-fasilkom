@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('graduates', function (Blueprint $table) {
             $table->id();
-            $table->json('main_competencies');
-            $table->json('support_competencies');
-            $table->json('graduate_competencies');
+            $table->json('main_competencies')->nullable();
+            $table->json('support_competencies')->nullable();
+            $table->json('graduate_competencies')->nullable();
             $table->timestamps();
         });
     }
@@ -29,6 +29,10 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('graduates');
+        Schema::table('graduates', function (Blueprint $table) {
+            $table->dropColumn('main_competencies');
+            $table->dropColumn('support_competencies');
+            $table->dropColumn('graduate_competencies');
+        });
     }
 };

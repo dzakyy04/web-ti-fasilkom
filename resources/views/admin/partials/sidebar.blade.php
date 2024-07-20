@@ -56,6 +56,20 @@
                             <span class="nk-menu-text">Sarana dan Prasarana</span>
                         </a>
                     </li>
+                    <li class="nk-menu-item has-sub active">
+                        <a href="#" class="nk-menu-link nk-menu-toggle">
+                            <span class="nk-menu-icon"><em class="icon ni ni-award"></em></span>
+                            <span class="nk-menu-text">Lulusan</span>
+                        </a>
+                        <ul class="nk-menu-sub" style="display: block;">
+                            <li class="nk-menu-item">
+                                <a href="{{ route('graduates.main-competencies') }}" class="nk-menu-link">
+                                    <span class="nk-menu-icon"><em class="icon ni ni-target"></em></span>
+                                    <span class="nk-menu-text">Kompetensi Utama</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>

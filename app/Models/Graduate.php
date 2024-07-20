@@ -9,5 +9,15 @@ class Graduate extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
+    protected $fillable = [
+        'main_competencies',
+        'support_competencies',
+        'graduate_competencies',
+    ];
+
+    protected $casts = [
+        'main_competencies' => 'array',
+        'support_competencies' => 'array',
+        'graduate_competencies' => 'array',
+    ];
 }
