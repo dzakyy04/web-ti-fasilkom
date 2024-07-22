@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\LecturerController;
+use App\Http\Controllers\Api\OrganizationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,3 +32,4 @@ Route::get('/pengumuman', [AnnouncementController::class, 'getAll']);
 Route::get('/pengumuman/{slug}', [AnnouncementController::class, 'getBySlug']);
 
 Route::get('/sarana-prasarana', [FacilityController::class, 'getAll']);
+Route::get('/struktur-jabatan', [OrganizationController::class, 'getAll']);

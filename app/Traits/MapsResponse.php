@@ -58,4 +58,28 @@ trait MapsResponse
             ];
         })->toArray();
     }
+
+    public function mapLeaders(Collection $leaders)
+    {
+        return $leaders->map(function ($leader) {
+            return [
+                'id' => $leader->id,
+                'nama' => $leader->name,
+                'jabatan' => $leader->position,
+                'deskripsi' => $leader->description,
+                'foto' => $leader->photo,
+            ];
+        })->toArray();
+    }
+
+    public function mapAdmins(Collection $admins) {
+        return $admins->map(function ($admin) {
+            return [
+                'id' => $admin->id,
+                'name' => $admin->name,
+                'foto' => $admin->photo,
+                'location' => $admin->lokasi
+            ];
+        })->toArray();
+    }
 }
