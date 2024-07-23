@@ -15,16 +15,26 @@ class NewsController extends Controller
     {
         $title = 'Berita';
         $perPage = $request->input('perPage', 10);
-        $news = Article::where('type', 'news')
-            ->orderBy('created_at', 'desc')
-            ->paginate($perPage);
+        $query = Article::where('type', 'news')->orderBy('created_at', 'desc');
+    
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('content', 'like', "%{$search}%");
+            });
+        }
+    
+        $news = $query->paginate($perPage);
+    
         $news->transform(function ($newsItem) {
             $newsItem->content = Helper::processContent($newsItem->content);
             return $newsItem;
         });
-
+    
         return view('admin.news.index', compact('title', 'news', 'perPage'));
     }
+    
     public function create()
     {
         $title = 'Tambah Berita';
