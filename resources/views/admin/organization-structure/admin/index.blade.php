@@ -128,7 +128,6 @@
                     url: url,
                     type: 'GET',
                     success: function(response) {
-                        console.log(response);
                         let photoUrl = response.photo.replace('public/', '');
                         $('#showModal').modal('show');
                         $('#showPhoto').attr('src', `{{ Storage::url('${photoUrl}') }}`);
