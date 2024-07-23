@@ -41,22 +41,51 @@
             preview.src = URL.createObjectURL(event.target.files[0]);
         }
 
-        function formatDate(dateString) {
-            const options = {
-                day: 'numeric',
-                month: 'short',
-                year: 'numeric'
-            };
-            const date = new Date(dateString.replace(/-/g, '/'));
-            return date.toLocaleDateString('id-ID', options);
-        }
-
         $(document).ready(function() {
             $('#title').on('input', function() {
                 var title = $(this).val();
                 var slug = title.toLowerCase().replace(/\s+/g, '-');
                 $('#slug').val(slug);
             });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            const datatableWrap = $(".datatable-wrap");
+            const wrappingDiv = $("<div>").addClass("w-100").css("overflow-x", "scroll");
+            datatableWrap.children().appendTo(wrappingDiv);
+            datatableWrap.append(wrappingDiv);
+
+            $('.delete-link').click(function(event) {
+                event.preventDefault();
+                $('.delete-form').submit();
+            });
+
+            $('#search-input').on('input', function() {
+                performSearch();
+            });
+
+            $('#sortField, #sortDirection, #perPage').change(function() {
+                performSearch();
+            });
+
+            function performSearch() {
+                const query = $('#search-input').val();
+                const perPage = $('#perPage').val();
+
+                $.ajax({
+                    url: '{{ route('announcements') }}',
+                    type: 'GET',
+                    data: {
+                        search: query,
+                        perPage: perPage
+                    },
+                    success: function(data) {
+                        $('#announcements-content').html($(data).find('#announcements-content').html());
+                        $('.pagination').html($(data).find('.pagination').html());
+                    }
+                });
+            }
         });
 
         function previewContent(title, content, thumbnail, createdAt) {
@@ -76,30 +105,16 @@
             $('#previewContent').html(content);
             $('#previewModal').modal('show');
         }
-    </script>
-    <script>
-        $(document).ready(function() {
-            $('#search-input').on('input', function() {
-                performSearch();
-            });
 
-            $('#sortField, #sortDirection, #perPage').change(function() {
-                $('#search-form').submit();
-            });
-
-            function performSearch() {
-                const query = $('#search-input').val().toLowerCase();
-                $('.announcements-item').each(function() {
-                    const title = $(this).find('.announcements-title').text().toLowerCase();
-                    const description = $(this).find('.announcements-description').text().toLowerCase();
-                    if (title.includes(query) || description.includes(query)) {
-                        $(this).show();
-                    } else {
-                        $(this).hide();
-                    }
-                });
-            }
-        });
+        function formatDate(dateString) {
+            const options = {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            };
+            const date = new Date(dateString.replace(/-/g, '/'));
+            return date.toLocaleDateString('id-ID', options);
+        }
     </script>
 @endpush
 
@@ -117,7 +132,7 @@
                 </div>
             </div>
             <div class="col-md-12">
-                <form id="search-form" method="GET" action="{{ route('news') }}" class="mt-3 align-items-center">
+                <form id="search-form" method="GET" action="{{ route('announcements') }}" class="mt-3 align-items-center">
                     <div class="row justify-content-between align-items-center g-2">
                         <div class="col-md-3">
                             <div id="DataTables_Table_0_filter" class="dataTables_filter">

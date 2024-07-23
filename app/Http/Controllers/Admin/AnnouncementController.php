@@ -15,14 +15,23 @@ class AnnouncementController extends Controller
     {
         $title = 'Pengumuman';
         $perPage = $request->input('perPage', 10);
-        $announcements = Article::where('type', 'announcement')
-            ->orderBy('created_at', 'desc')
-            ->paginate($perPage);
+        $query = Article::where('type', 'announcement')->orderBy('created_at', 'desc');
+    
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('content', 'like', "%{$search}%");
+            });
+        }
+    
+        $announcements = $query->paginate($perPage);
+    
         $announcements->transform(function ($announcement) {
             $announcement->content = Helper::processContent($announcement->content);
             return $announcement;
         });
-
+    
         return view('admin.announcements.index', compact('title', 'announcements', 'perPage'));
     }
 
