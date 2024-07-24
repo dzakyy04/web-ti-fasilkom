@@ -297,12 +297,7 @@
                         <div class="form-group">
                             <label class="form-label" for="description">Deskripsi</label>
                             <div class="form-control-wrap">
-                                <textarea class="form-control no-resize @error('description') is-invalid @enderror" rows="5" name="description" value="{{ old('description') }}"
-                                    id="description" required>
-                            </textarea>
-                                @error('description')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                <textarea class="form-control no-resize" name="description" placeholder="Masukkan deskripsi" id="description" value="{{ old('description') }}" required></textarea>
                             </div>
                         </div>
                         <div class="form-group d-flex justify-content-end">
@@ -357,12 +352,7 @@
                         <div class="form-group">
                             <label class="form-label" for="edit_description">Deskripsi</label>
                             <div class="form-control-wrap">
-                                <textarea class="form-control no-resize @error('description') is-invalid @enderror" rows="5" name="description"
-                                    id="edit_description" required>
-                            </textarea>
-                                @error('description')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                <textarea class="form-control no-resize" name="description" placeholder="Masukkan deskripsi" id="edit_description" value="{{ old('description') }}" required></textarea>
                             </div>
                         </div>
                         <div class="form-group d-flex justify-content-end">

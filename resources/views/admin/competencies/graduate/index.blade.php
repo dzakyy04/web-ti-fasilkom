@@ -69,7 +69,7 @@
     
             $('.edit-button').click(function() {
                 var competencyId = $(this).data('id');
-                var url = "{{ route('graduates.graduate-competencies.find', ':id') }}";
+                var url = "{{ route('graduate-competencies.find', ':id') }}";
                 url = url.replace(':id', competencyId);
     
                 // Fetch data via AJAX
@@ -79,13 +79,13 @@
                     success: function(response) {
                         $('#editModal').modal('show');
                         $('#editForm').attr('action',
-                            "{{ route('graduates.graduate-competencies.update', ':id') }}"
+                            "{{ route('graduate-competencies.update', ':id') }}"
                             .replace(':id', competencyId));
                         $('#edit_name').val(response.name);
                         $('#edit_description').val(response.description);
     
-                        if (response.photo) {
-                            var photoUrl = response.photo.replace('public/', '/storage/');
+                        if (response.icon) {
+                            var photoUrl = response.icon.replace('public/', '/storage/');
                             $('#photo-preview').attr('src', photoUrl).show();
                         } else {
                             $('#photo-preview').hide();
@@ -99,7 +99,7 @@
     
             $('.delete-button').click(function() {
                 var competencyId = $(this).data('id');
-                var url = "{{ route('graduates.graduate-competencies.find', ':id') }}";
+                var url = "{{ route('graduate-competencies.find', ':id') }}";
                 url = url.replace(':id', competencyId);
     
                 // Fetch data via AJAX
@@ -109,7 +109,7 @@
                     success: function(response) {
                         $('#deleteModal').modal('show');
                         $('#deleteForm').attr('action',
-                            "{{ route('graduates.graduate-competencies.delete', ':id') }}".replace(
+                            "{{ route('graduate-competencies.delete', ':id') }}".replace(
                                 ':id', competencyId));
                         $("#deleteText").text(
                             "Apakah anda yakin ingin menghapus kompetensi lulusan " + response.name + "?");
@@ -122,7 +122,7 @@
     
             $('.show-button').click(function() {
                 var competencyId = $(this).data('id');
-                var url = "{{ route('graduates.graduate-competencies.find', ':id') }}";
+                var url = "{{ route('graduate-competencies.find', ':id') }}";
                 url = url.replace(':id', competencyId);
     
                 // Fetch data via AJAX
@@ -133,8 +133,8 @@
                         $('#showModal').modal('show');
                         $('#showName').text(response.name);
                         $('#showDescription').text(response.description);
-                        if (response.photo) {
-                            var photoUrl = response.photo.replace('public/', '/storage/');
+                        if (response.icon) {
+                            var photoUrl = response.icon.replace('public/', '/storage/');
                             $('#showPhoto').attr('src', photoUrl).show();
                         } else {
                             $('#showPhoto').hide();
@@ -187,22 +187,22 @@
                             <tr class="text-center align-middle">
                                 <td>{{ $index + 1 }}</td>
                                 <td>
-                                    <img src="{{ Storage::url($competency['photo']) }}" alt="" class="img-fluid"
+                                    <img src="{{ Storage::url($competency->icon) }}" alt="" class="img-fluid"
                                         style="width: 100px;">
                                 </td>
-                                <td>{{ $competency['name'] ?? 'N/A' }}</td>
-                                <td>{{ $competency['description'] ?? 'N/A' }}</td>
+                                <td>{{ $competency->name }}</td>
+                                <td>{{ $competency->description }}</td>
                                 <td>
                                     <button type="button" class="btn btn-primary btn-xs rounded-pill show-button"
-                                        data-id="{{ $competency['id'] }}">
+                                        data-id="{{ $competency->id }}">
                                         <em class="ni ni-eye"></em>
                                     </button>
                                     <button type="button" class="btn btn-warning btn-xs rounded-pill edit-button"
-                                        data-id="{{ $competency['id'] }}">
+                                        data-id="{{ $competency->id }}">
                                         <em class="ni ni-edit"></em>
                                     </button>
                                     <button class="btn btn-danger btn-xs rounded-pill delete-button"
-                                        data-id="{{ $competency['id'] }}">
+                                        data-id="{{ $competency->id }}">
                                         <em class="ni ni-trash"></em>
                                     </button>
                                 </td>
@@ -225,7 +225,7 @@
                     </a>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('graduates.graduate-competencies.store') }}" method="POST"
+                    <form action="{{ route('graduate-competencies.store') }}" method="POST"
                         enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
@@ -235,10 +235,10 @@
                                         style="display: none; max-width: 200px; max-height: 200px;">
                                 </div>
                                 <div class="custom-file position-relative mt-1">
-                                    <label class="form-label" for="edit_photo">Foto</label>
-                                    <input type="file" class="form-control @error('photo') is-invalid @enderror"
-                                        name="photo" id="photo" onchange="previewNewPhoto(event)" required>
-                                    @error('photo')
+                                    <label class="form-label" for="icon">Icon</label>
+                                    <input type="file" class="form-control @error('icon') is-invalid @enderror"
+                                        name="icon" id="icon" onchange="previewNewPhoto(event)" required>
+                                    @error('icon')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
@@ -256,14 +256,9 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="name">Deskripsi</label>
+                            <label class="form-label" for="description">Deskripsi</label>
                             <div class="form-control-wrap">
-                                <input type="text" class="form-control @error('description') is-invalid @enderror"
-                                    name="description" id="description" value="{{ old('description') }}"
-                                    placeholder="Masukkan nama" required>
-                                @error('description')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                <textarea class="form-control no-resize" name="description" placeholder="Masukkan deskripsi" id="description" value="{{ old('description') }}" required></textarea>
                             </div>
                         </div>
                         <div class="form-group d-flex justify-content-end">
@@ -297,7 +292,7 @@
                             </div>
                             <div class="custom-file position-relative mt-1">
                                 <label class="form-label" for="edit_photo">Foto</label>
-                                <input type="file" class="form-control @error('photo') is-invalid @enderror" name="photo" id="edit_photo" onchange="previewPhoto(event)">
+                                <input type="file" class="form-control @error('icon') is-invalid @enderror" name="icon" id="edit_photo" onchange="previewPhoto(event)">
                             </div>
                         </div>
                     </div>
@@ -310,7 +305,7 @@
                     <div class="form-group">
                         <label class="form-label" for="edit_description">Deskripsi</label>
                         <div class="form-control-wrap">
-                            <input type="text" class="form-control" name="description" id="edit_description" required>
+                            <textarea class="form-control no-resize" name="description" placeholder="Masukkan deskripsi" id="edit_description" value="{{ old('description') }}" required></textarea>
                         </div>
                     </div>
                     <div class="form-group d-flex justify-content-end">

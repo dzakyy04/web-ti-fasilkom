@@ -23,7 +23,7 @@ class FacilityController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'location' => 'required|in:Indralaya,Palembang',
-            'photo' => 'required|image|max:2048',
+            'photo' => 'required|image',
         ]);
 
         $timestamp = Carbon::now()->format('Ymd_His');
@@ -51,7 +51,7 @@ class FacilityController extends Controller
         $facility = Facility::findOrFail($id);
 
         $validator = Validator::make($request->all(), [
-            'photo' => 'nullable|image|max:2048',
+            'photo' => 'nullable|image',
             'name' => 'required|string|max:255',
             'location' => 'required|string|max:20|',
         ]);

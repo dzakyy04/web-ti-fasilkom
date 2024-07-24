@@ -63,19 +63,19 @@
                         </a>
                         <ul class="nk-menu-sub" style="display: none;">
                             <li class="nk-menu-item">
-                                <a href="{{ route('graduates.main-competencies') }}" class="nk-menu-link">
+                                <a href="{{ route('main-competencies') }}" class="nk-menu-link">
                                     <span class="nk-menu-icon"><em class="icon ni ni-bullet"></em></span>
                                     <span class="nk-menu-text">Kompetensi Utama</span>
                                 </a>
                             </li>
                             <li class="nk-menu-item">
-                                <a href="{{ route('graduates.support-competencies') }}" class="nk-menu-link">
+                                <a href="{{ route('support-competencies') }}" class="nk-menu-link">
                                     <span class="nk-menu-icon"><em class="icon ni ni-bullet"></em></span>
                                     <span class="nk-menu-text">Kompetensi Pendukung</span>
                                 </a>
                             </li>
                             <li class="nk-menu-item">
-                                <a href="{{ route('graduates.graduate-competencies') }}" class="nk-menu-link">
+                                <a href="{{ route('graduate-competencies') }}" class="nk-menu-link">
                                     <span class="nk-menu-icon"><em class="icon ni ni-bullet"></em></span>
                                     <span class="nk-menu-text">Kompetensi Lulusan</span>
                                 </a>

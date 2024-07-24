@@ -51,7 +51,7 @@ class AdminController extends Controller
         $admin = Admin::findOrFail($id);
 
         $validator = Validator::make($request->all(), [
-            'photo' => 'nullable|image|max:2048',
+            'photo' => 'nullable|image',
             'name' => 'required|string|max:255',
             'location' => 'required|string|max:30|',
         ]);

@@ -7,9 +7,12 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\LecturerController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\FacilityController;
+use App\Http\Controllers\Admin\GraduateCompetencyController;
 use App\Http\Controllers\Admin\GraduateController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\LeaderController;
+use App\Http\Controllers\Admin\MainCompetencyController;
+use App\Http\Controllers\Admin\SupportCompetencyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -72,26 +75,26 @@ Route::prefix('admin')->group(function () {
       Route::put('/sarana-prasarana/{id}', [FacilityController::class, 'update'])->name('facilities.update');
       Route::delete('/sarana-prasarana/{id}', [FacilityController::class, 'delete'])->name('facilities.delete');
 
-      // Kompetensi Utama
-      Route::get('/kompetensi-utama', [GraduateController::class, 'indexMainCompetency'])->name('graduates.main-competencies');
-      Route::get('/kompetensi-utama/{id}', [GraduateController::class, 'findGraduatesMainCompetency'])->name('graduates.main-competencies.find');
-      Route::post('/kompetensi-utama', [GraduateController::class, 'storeMainCompetency'])->name('graduates.main-competencies.store');
-      Route::put('/kompetensi-utama/{id}', [GraduateController::class, 'updateMainCompetency'])->name('graduates.main-competencies.update');
-      Route::delete('/kompetensi-utama/{id}', [GraduateController::class, 'deleteMainCompetency'])->name('graduates.main-competencies.delete');
+      // Main Competency
+      Route::get('/kompetensi-utama', [MainCompetencyController::class, 'index'])->name('main-competencies');
+      Route::get('/kompetensi-utama/{id}', [MainCompetencyController::class, 'findMainCompetency'])->name('main-competencies.find');
+      Route::post('/kompetensi-utama', [MainCompetencyController::class, 'store'])->name('main-competencies.store');
+      Route::put('/kompetensi-utama/{id}', [MainCompetencyController::class, 'update'])->name('main-competencies.update');
+      Route::delete('/kompetensi-utama/{id}', [MainCompetencyController::class, 'delete'])->name('main-competencies.delete');
 
       // Kompetensi Pendukung
-      Route::get('/kompetensi-pendukung', [GraduateController::class, 'indexSupportCompetency'])->name('graduates.support-competencies');
-      Route::get('/kompetensi-pendukung/{id}', [GraduateController::class, 'findSupportCompetency'])->name('graduates.support-competencies.find');
-      Route::post('/kompetensi-pendukung', [GraduateController::class, 'storeSupportCompetency'])->name('graduates.support-competencies.store');
-      Route::put('/kompetensi-pendukung/{id}', [GraduateController::class, 'updateSupportCompetency'])->name('graduates.support-competencies.update');
-      Route::delete('/kompetensi-pendukung/{id}', [GraduateController::class, 'deleteSupportCompetency'])->name('graduates.support-competencies.delete');
+      Route::get('/kompetensi-pendukung', [SupportCompetencyController::class, 'index'])->name('support-competencies');
+      Route::get('/kompetensi-pendukung/{id}', [SupportCompetencyController::class, 'findSupportCompetency'])->name('support-competencies.find');
+      Route::post('/kompetensi-pendukung', [SupportCompetencyController::class, 'store'])->name('support-competencies.store');
+      Route::put('/kompetensi-pendukung/{id}', [SupportCompetencyController::class, 'update'])->name('support-competencies.update');
+      Route::delete('/kompetensi-pendukung/{id}', [SupportCompetencyController::class, 'delete'])->name('support-competencies.delete');
 
       // Kompetensi Lulusan
-      Route::get('/kompetensi-lulusan', [GraduateController::class, 'indexGraduateCompetency'])->name('graduates.graduate-competencies');
-      Route::get('/kompetensi-lulusan/{id}', [GraduateController::class, 'findGraduateCompetency'])->name('graduates.graduate-competencies.find');
-      Route::post('/kompetensi-lulusan', [GraduateController::class, 'storeGraduateCompetency'])->name('graduates.graduate-competencies.store');
-      Route::put('/kompetensi-lulusan/{id}', [GraduateController::class, 'updateGraduateCompetency'])->name('graduates.graduate-competencies.update');
-      Route::delete('/kompetensi-lulusan/{id}', [GraduateController::class, 'deleteGraduateCompetency'])->name('graduates.graduate-competencies.delete');
+      Route::get('/kompetensi-lulusan', [GraduateCompetencyController::class, 'index'])->name('graduate-competencies');
+      Route::get('/kompetensi-lulusan/{id}', [GraduateCompetencyController::class, 'findGraduateCompetency'])->name('graduate-competencies.find');
+      Route::post('/kompetensi-lulusan', [GraduateCompetencyController::class, 'store'])->name('graduate-competencies.store');
+      Route::put('/kompetensi-lulusan/{id}', [GraduateCompetencyController::class, 'update'])->name('graduate-competencies.update');
+      Route::delete('/kompetensi-lulusan/{id}', [GraduateCompetencyController::class, 'delete'])->name('graduate-competencies.delete');
 
       // Struktur Organisasi Admin
       Route::get('/struktur-organisasi/admin', [AdminController::class, 'index'])->name('admins');

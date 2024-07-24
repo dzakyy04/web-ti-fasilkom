@@ -69,7 +69,7 @@
 
             $('.edit-button').click(function() {
                 var competencyId = $(this).data('id');
-                var url = "{{ route('graduates.support-competencies.find', ':id') }}";
+                var url = "{{ route('support-competencies.find', ':id') }}";
                 url = url.replace(':id', competencyId);
 
                 // Fetch data via AJAX
@@ -79,7 +79,7 @@
                     success: function(response) {
                         $('#editModal').modal('show');
                         $('#editForm').attr('action',
-                            "{{ route('graduates.support-competencies.update', ':id') }}"
+                            "{{ route('support-competencies.update', ':id') }}"
                             .replace(
                                 ':id', competencyId));
                         $('#edit_name').val(response.name);
@@ -94,7 +94,7 @@
 
             $('.delete-button').click(function() {
                 var competencyId = $(this).data('id');
-                var url = "{{ route('graduates.support-competencies.find', ':id') }}";
+                var url = "{{ route('support-competencies.find', ':id') }}";
                 url = url.replace(':id', competencyId);
 
                 // Fetch data via AJAX
@@ -104,10 +104,10 @@
                     success: function(response) {
                         $('#deleteModal').modal('show');
                         $('#deleteForm').attr('action',
-                            "{{ route('graduates.support-competencies.delete', ':id') }}".replace(
+                            "{{ route('support-competencies.delete', ':id') }}".replace(
                                 ':id', competencyId));
                         $("#deleteText").text(
-                            "Apakah anda yakin ingin menghapus kompetensi utama " + response
+                            "Apakah anda yakin ingin menghapus kompetensi pendukung " + response
                             .name + "?");
                     },
                     error: function() {
@@ -118,7 +118,7 @@
 
             $('.show-button').click(function() {
                 var competencyId = $(this).data('id');
-                var url = "{{ route('graduates.support-competencies.find', ':id') }}";
+                var url = "{{ route('support-competencies.find', ':id') }}";
                 url = url.replace(':id', competencyId);
 
                 // Fetch data via AJAX
@@ -174,19 +174,19 @@
                         @foreach ($supportCompetencies as $index => $competency)
                             <tr class="text-center align-middle">
                                 <td>{{ $index + 1 }}</td>
-                                <td>{{ $competency['name'] ?? 'N/A' }}</td>
-                                <td>{{ $competency['description'] ?? 'N/A' }}</td>
+                                <td>{{ $competency->name }}</td>
+                                <td>{{ $competency->description }}</td>
                                 <td>
                                     <button type="button" class="btn btn-primary btn-xs rounded-pill show-button"
-                                        data-id="{{ $competency['id'] }}">
+                                        data-id="{{ $competency->id }}">
                                         <em class="ni ni-eye"></em>
                                     </button>
                                     <button type="button" class="btn btn-warning btn-xs rounded-pill edit-button"
-                                        data-id="{{ $competency['id'] }}">
+                                        data-id="{{ $competency->id }}">
                                         <em class="ni ni-edit"></em>
                                     </button>
                                     <button class="btn btn-danger btn-xs rounded-pill delete-button"
-                                        data-id="{{ $competency['id'] }}">
+                                        data-id="{{ $competency->id }}">
                                         <em class="ni ni-trash"></em>
                                     </button>
                                 </td>
@@ -241,8 +241,7 @@
                     </a>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('graduates.support-competencies.store') }}" method="POST"
-                        enctype="multipart/form-data">
+                    <form action="{{ route('support-competencies.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
                             <label class="form-label" for="name">Nama</label>
@@ -256,14 +255,10 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="name">Deskripsi</label>
+                            <label class="form-label" for="description">Deskripsi</label>
                             <div class="form-control-wrap">
-                                <input type="text" class="form-control @error('description') is-invalid @enderror"
-                                    name="description" id="description" value="{{ old('description') }}"
-                                    placeholder="Masukkan nama" required>
-                                @error('description')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                <textarea class="form-control no-resize" name="description" placeholder="Masukkan deskripsi" id="description"
+                                    value="{{ old('description') }}" required></textarea>
                             </div>
                         </div>
                         <div class="form-group d-flex justify-content-end">
@@ -298,8 +293,7 @@
                         <div class="form-group">
                             <label class="form-label" for="edit_description">Deskripsi</label>
                             <div class="form-control-wrap">
-                                <input type="text" class="form-control" name="description" id="edit_description"
-                                    required>
+                                <textarea class="form-control no-resize" name="description" placeholder="Masukkan deskripsi" id="edit_description" value="{{ old('description') }}" required></textarea>
                             </div>
                         </div>
                         <div class="form-group d-flex justify-content-end">

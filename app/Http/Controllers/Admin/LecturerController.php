@@ -23,7 +23,7 @@ class LecturerController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'photo' => 'required|image|max:2048',
+            'photo' => 'required|image',
             'name' => 'required|string|max:255',
             'nip' => 'required|string|max:20|unique:lecturers,nip',
             'nidn' => 'nullable|string|max:20|unique:lecturers,nidn',
@@ -68,7 +68,7 @@ class LecturerController extends Controller
         $lecturer = Lecturer::findOrFail($id);
 
         $validator = Validator::make($request->all(), [
-            'photo' => 'nullable|image|max:2048',
+            'photo' => 'nullable|image',
             'name' => 'required|string|max:255',
             'nip' => 'required|string|max:20|unique:lecturers,nip,' . $id,
             'nidn' => 'nullable|string|max:20|unique:lecturers,nidn,' . $id,
