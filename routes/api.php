@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AnnouncementController;
+use App\Http\Controllers\Api\CompetencyController;
 use App\Http\Controllers\Api\FacilityController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -33,3 +34,4 @@ Route::get('/pengumuman/{slug}', [AnnouncementController::class, 'getBySlug']);
 
 Route::get('/sarana-prasarana', [FacilityController::class, 'getAll']);
 Route::get('/struktur-jabatan', [OrganizationController::class, 'getAll']);
+Route::get('/profil-lulusan', [CompetencyController::class, 'getAll']);

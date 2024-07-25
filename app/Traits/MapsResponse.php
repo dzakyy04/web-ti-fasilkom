@@ -72,7 +72,8 @@ trait MapsResponse
         })->toArray();
     }
 
-    public function mapAdmins(Collection $admins) {
+    public function mapAdmins(Collection $admins)
+    {
         return $admins->map(function ($admin) {
             return [
                 'id' => $admin->id,
@@ -80,6 +81,25 @@ trait MapsResponse
                 'foto' => $admin->photo,
                 'location' => $admin->lokasi
             ];
+        })->toArray();
+    }
+
+    public function mapCompetencies(Collection $competencies, string $type)
+    {
+        return $competencies->map(function ($competency) use ($type) {
+            $mappedCompetency = [];
+
+            if ($type === 'support' || $type === 'graduate') {
+                $mappedCompetency['nama'] = $competency->name;
+            }
+
+            $mappedCompetency['deskripsi'] = $competency->description;
+
+            if ($type === 'graduate') {
+                $mappedCompetency['icon'] = $competency->icon;
+            }
+
+            return $mappedCompetency;
         })->toArray();
     }
 }
