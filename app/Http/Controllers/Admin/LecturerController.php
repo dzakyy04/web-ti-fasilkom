@@ -24,14 +24,14 @@ class LecturerController extends Controller
     {
         $request->validate([
             'photo' => 'required|image',
-            'name' => 'required|string|max:255',
+            'name' => 'required|string',
             'nip' => 'required|string|max:20|unique:lecturers,nip',
             'nidn' => 'nullable|string|max:20|unique:lecturers,nidn',
-            'position' => 'nullable|string|max:255',
-            'educations.*.degree' => 'required|string|max:255',
-            'educations.*.institution' => 'required|string|max:255',
-            'educations.*.major' => 'required|string|max:255',
-            'research_fields.*' => 'required|string|max:255',
+            'position' => 'nullable|string',
+            'educations.*.degree' => 'required|string',
+            'educations.*.institution' => 'required|string',
+            'educations.*.major' => 'required|string',
+            'research_fields.*' => 'required|string',
         ]);
 
         $photoExtension = $request->file('photo')->getClientOriginalExtension();
@@ -69,14 +69,14 @@ class LecturerController extends Controller
 
         $validator = Validator::make($request->all(), [
             'photo' => 'nullable|image',
-            'name' => 'required|string|max:255',
+            'name' => 'required|string',
             'nip' => 'required|string|max:20|unique:lecturers,nip,' . $id,
             'nidn' => 'nullable|string|max:20|unique:lecturers,nidn,' . $id,
-            'position' => 'nullable|string|max:255',
-            'educations.*.degree' => 'required|string|max:255',
-            'educations.*.institution' => 'required|string|max:255',
-            'educations.*.major' => 'required|string|max:255',
-            'research_fields.*' => 'required|string|max:255',
+            'position' => 'nullable|string',
+            'educations.*.degree' => 'required|string',
+            'educations.*.institution' => 'required|string',
+            'educations.*.major' => 'required|string',
+            'research_fields.*' => 'required|string',
         ]);
 
         if ($validator->fails()) {

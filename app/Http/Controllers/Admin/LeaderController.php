@@ -21,9 +21,9 @@ class LeaderController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'position' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
+            'name' => 'required|string',
+            'position' => 'required|string',
+            'description' => 'required|string',
             'photo' => 'required|image',
         ]);
 
@@ -54,9 +54,9 @@ class LeaderController extends Controller
 
         $validator = Validator::make($request->all(), [
             'photo' => 'nullable|image',
-            'name' => 'required|string|max:255',
-            'position' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
+            'name' => 'required|string',
+            'position' => 'required|string',
+            'description' => 'required|string',
         ]);
 
         if ($validator->fails()) {

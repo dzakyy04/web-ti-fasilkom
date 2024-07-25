@@ -21,7 +21,7 @@ class FacilityController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string',
             'location' => 'required|in:Indralaya,Palembang',
             'photo' => 'required|image',
         ]);
@@ -52,7 +52,7 @@ class FacilityController extends Controller
 
         $validator = Validator::make($request->all(), [
             'photo' => 'nullable|image',
-            'name' => 'required|string|max:255',
+            'name' => 'required|string',
             'location' => 'required|string|max:20|',
         ]);
 

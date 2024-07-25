@@ -21,7 +21,7 @@ class AdminController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string',
             'location' => 'required|in:Kampus Indralaya,Kampus Palembang',
             'photo' => 'required|image|max:4096',
         ]);
@@ -52,7 +52,7 @@ class AdminController extends Controller
 
         $validator = Validator::make($request->all(), [
             'photo' => 'nullable|image',
-            'name' => 'required|string|max:255',
+            'name' => 'required|string',
             'location' => 'required|string|max:30|',
         ]);
 

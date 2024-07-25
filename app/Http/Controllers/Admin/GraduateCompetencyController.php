@@ -19,8 +19,8 @@ class GraduateCompetencyController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
+            'name' => 'required|string',
+            'description' => 'required|string',
             'icon' => 'nullable|image',
         ]);
 
@@ -44,8 +44,8 @@ class GraduateCompetencyController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
+            'name' => 'required|string',
+            'description' => 'required|string',
             'icon' => 'nullable|image',
         ]);
 
