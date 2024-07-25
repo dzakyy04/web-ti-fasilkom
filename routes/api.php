@@ -34,4 +34,4 @@ Route::get('/pengumuman/{slug}', [AnnouncementController::class, 'getBySlug']);
 
 Route::get('/sarana-prasarana', [FacilityController::class, 'getAll']);
 Route::get('/struktur-jabatan', [OrganizationController::class, 'getAll']);
-Route::get('/profil-lulusan', [CompetencyController::class, 'getAll']);
+Route::get('/kompetensi', [CompetencyController::class, 'getAll']);
