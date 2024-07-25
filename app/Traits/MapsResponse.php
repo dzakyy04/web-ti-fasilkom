@@ -79,7 +79,7 @@ trait MapsResponse
                 'id' => $admin->id,
                 'name' => $admin->name,
                 'foto' => $admin->photo,
-                'location' => $admin->lokasi
+                'lokasi' => $admin->location
             ];
         })->toArray();
     }
