@@ -7,6 +7,11 @@
             max-width: 200px;
             margin: 10px 0;
         }
+        .thumbnail-image {
+            height: 350px;
+            object-fit: cover;
+            width: 100%;
+        }
     </style>
 @endpush
 
@@ -148,61 +153,66 @@
 @endpush
 
 @section('content')
-    <div class="col-md-12">
-        <div class="nk-block nk-block-lg">
-            <div class="nk-block-between">
-                <div class="nk-block-head-content">
-                    <h3 class="nk-block-title page-title">Admin</h3>
+<div class="nk-content-body">
+    <div class="nk-block-head nk-block-head-sm">
+        <div class="nk-block-between">
+            <div class="nk-block-head-content">
+                <h3 class="nk-block-title page-title">Admin</h3>
+            </div><!-- .nk-block-head-content -->
+            <div class="nk-block-head-content">
+                <div class="toggle-wrap nk-block-tools-toggle">
+                    <a href="#" class="btn btn-icon btn-trigger toggle-expand me-n1" data-target="pageMenu"><em
+                            class="icon ni ni-more-v"></em></a>
+                    <div class="toggle-expand-content" data-content="pageMenu">
+                        <ul class="nk-block-tools g-3">
+                            <li class="nk-block-tools-opt">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#modalForm">
+                                    <em class="icon ni ni-plus me-1"></em>Tambah Admin</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="nk-block-head-content">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalForm">
-                        <em class="icon ni ni-plus me-1"></em>Tambah Admin</span>
-                    </button>
-                </div>
-            </div>
-            <div class="mt-3">
-                <table class="datatable-init nk-tb-list nk-tb-ulist table table-hover table-bordered table-responsive-md"
-                    data-auto-responsive="false">
-                    <thead>
-                        <tr class="table-light nk-tb-item nk-tb-head">
-                            <th class="text-nowrap text-center align-middle">No</th>
-                            <th class="text-nowrap text-center align-middle">Foto</th>
-                            <th class="text-nowrap text-center align-middle">Nama</th>
-                            <th class="text-nowrap text-center align-middle">Lokasi</th>
-                            <th class="text-nowrap text-center no-export align-middle">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($admins as $index => $admin)
-                            <tr class="text-center align-middle">
-                                <td>{{ $index + 1 }}</td>
-                                <td>
-                                    <img src="{{ Storage::url($admin->photo) }}" alt="" class="img-fluid"
-                                        style="width: 100px;">
-                                </td>
-                                <td>{{ $admin->name }}</td>
-                                <td>{{ $admin->location }}</td>
-                                <td>
-                                    <button type="button" class="btn btn-primary btn-xs rounded-pill show-button"
-                                        data-id="{{ $admin->id }}">
-                                        <em class="ni ni-eye"></em>
-                                    </button>
-                                    <button type="button" class="btn btn-warning btn-xs rounded-pill edit-button"
-                                        data-id="{{ $admin->id }}">
-                                        <em class="ni ni-edit"></em>
-                                    </button>
-                                    <button class="btn btn-danger btn-xs rounded-pill delete-button"
-                                        data-id="{{ $admin->id }}">
-                                        <em class="ni ni-trash"></em>
-                                    </button>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>
+    <div class="nk-block">
+        <div id="admins-content" class="row g-gs">
+            @foreach ($admins as $index => $admin)
+                <div class="col-xxl-3 col-lg-4 col-sm-6 admins-item">
+                    <div class="card card-bordered product-card">
+                        <div class="product-thumb">
+                            <img src="{{ Storage::url($admin->photo) }}" class="card-img-top thumbnail-image"
+                                alt="">
+                            <ul class="product-badges">
+                                <li><span class="badge bg-primary">{{ $admin->location }}</span></li>
+                            </ul>
+                            <ul class="product-actions mb-3">
+                                <li> <button class="btn btn-primary rounded-pill show-button"
+                                        data-id="{{ $admin->id }}">
+                                        <em class="ni ni-eye"></em>
+                                    </button></li>
+                                <li> <button class="btn btn-warning rounded-pill edit-button"
+                                        data-id="{{ $admin->id }}">
+                                        <em class="ni ni-edit"></em>
+                                    </button></li>
+                                <li> <button class="btn btn-danger rounded-pill delete-button"
+                                        data-id="{{ $admin->id }}">
+                                        <em class="ni ni-trash"></em>
+                                    </button></li>
+                            </ul>
+                        </div>
+                        <div class="card-inner text-center">
+                            <h5 class="product-title">{{ $admin->name }}</h5>
+                            <p class="product-tags">{{ $admin->location }}</p>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+</div>
 
     {{-- Show Modal --}}
     <div class="modal fade" id="showModal">
