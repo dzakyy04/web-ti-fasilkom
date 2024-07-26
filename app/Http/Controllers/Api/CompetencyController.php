@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\Helper;
 use App\Models\Competency;
 use App\Traits\MapsResponse;
 use Illuminate\Http\Request;
@@ -82,6 +83,11 @@ class CompetencyController extends Controller
         $mainCompetencies = Competency::where('type', 'main')->get();
         $supportCompetencies = Competency::where('type', 'support')->get();
         $graduateCompetencies = Competency::where('type', 'graduate')->get();
+
+        $graduateCompetencies->transform(function ($competency) {
+            $competency->icon = Helper::convertImageUrl($competency->icon);
+            return $competency;
+        });
 
         $mappedMainCompetencies = $this->mapCompetencies($mainCompetencies, 'main');
         $mappedSupportCompetencies = $this->mapCompetencies($supportCompetencies, 'support');
