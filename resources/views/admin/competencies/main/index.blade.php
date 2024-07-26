@@ -170,7 +170,7 @@
                         @foreach ($mainCompetencies as $index => $competency)
                             <tr class="text-center align-middle">
                                 <td>{{ $index + 1 }}</td>
-                                <td>{{ $competency->description }}</td>
+                                <td class="text-start">{{ $competency->description }}</td>
                                 <td>
                                     <button type="button" class="btn btn-primary btn-xs rounded-pill show-button"
                                         data-id="{{ $competency->id }}">

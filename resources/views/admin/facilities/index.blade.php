@@ -178,7 +178,7 @@
                                 <td>{{ $index + 1 }}</td>
                                 <td>
                                     <img src="{{ Storage::url($facility->photo) }}" alt="" class="img-fluid"
-                                        style="width: 100px;">
+                                        style="width: 200px;">
                                 </td>
                                 <td>{{ $facility->name }}</td>
                                 <td>{{ $facility->location }}</td>

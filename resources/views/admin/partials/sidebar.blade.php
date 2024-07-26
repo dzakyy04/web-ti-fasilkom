@@ -1,4 +1,4 @@
-<div class="nk-sidebar nk-sidebar-fixed is-dark " data-content="sidebarMenu">
+<div class="nk-sidebar nk-sidebar-fixed is-dark" data-content="sidebarMenu">
     <div class="nk-sidebar-element nk-sidebar-head">
         <div class="nk-menu-trigger">
             <a href="#" class="nk-nav-toggle nk-quick-nav-icon d-xl-none" data-target="sidebarMenu"><em
@@ -45,6 +45,26 @@
                         <h6 class="overline-title text-primary-alt">Akademik</h6>
                     </li><!-- .nk-menu-heading -->
                     <li class="nk-menu-item has-sub">
+                        <a href="#" class="nk-menu-link nk-menu-toggle">
+                            <span class="nk-menu-icon"><em class="icon ni ni-network"></em></span>
+                            <span class="nk-menu-text">Struktur Organisasi</span>
+                        </a>
+                        <ul class="nk-menu-sub" style="display: none;">
+                            <li class="nk-menu-item">
+                                <a href="{{ route('leaders') }}" class="nk-menu-link">
+                                    <span class="nk-menu-icon"><em class="icon ni ni-star"></em></span>
+                                    <span class="nk-menu-text">Pimpinan</span>
+                                </a>
+                            </li>
+                            <li class="nk-menu-item">
+                                <a href="{{ route('admins') }}" class="nk-menu-link">
+                                    <span class="nk-menu-icon"><em class="icon ni ni-account-setting"></em></span>
+                                    <span class="nk-menu-text">Admin</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nk-menu-item has-sub">
                         <a href="{{ route('lecturers') }}" class="nk-menu-link">
                             <span class="nk-menu-icon"><em class="icon ni ni-users"></em></span>
                             <span class="nk-menu-text">Dosen</span>
@@ -59,7 +79,7 @@
                     <li class="nk-menu-item has-sub">
                         <a href="#" class="nk-menu-link nk-menu-toggle">
                             <span class="nk-menu-icon"><em class="icon ni ni-award"></em></span>
-                            <span class="nk-menu-text">Lulusan</span>
+                            <span class="nk-menu-text">Kompetensi Lulusan</span>
                         </a>
                         <ul class="nk-menu-sub" style="display: none;">
                             <li class="nk-menu-item">
@@ -78,26 +98,6 @@
                                 <a href="{{ route('graduate-competencies') }}" class="nk-menu-link">
                                     <span class="nk-menu-icon"><em class="icon ni ni-bullet"></em></span>
                                     <span class="nk-menu-text">Kompetensi Lulusan</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nk-menu-item has-sub">
-                        <a href="#" class="nk-menu-link nk-menu-toggle">
-                            <span class="nk-menu-icon"><em class="icon ni ni-network"></em></span>
-                            <span class="nk-menu-text">Struktur Organisasi</span>
-                        </a>
-                        <ul class="nk-menu-sub" style="display: none;">
-                            <li class="nk-menu-item">
-                                <a href="{{ route('leaders') }}" class="nk-menu-link">
-                                    <span class="nk-menu-icon"><em class="icon ni ni-star"></em></span>
-                                    <span class="nk-menu-text">Pimpinan</span>
-                                </a>
-                            </li>
-                            <li class="nk-menu-item">
-                                <a href="{{ route('admins') }}" class="nk-menu-link">
-                                    <span class="nk-menu-icon"><em class="icon ni ni-account-setting"></em></span>
-                                    <span class="nk-menu-text">Admin</span>
                                 </a>
                             </li>
                         </ul>

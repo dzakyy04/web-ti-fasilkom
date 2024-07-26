@@ -28,30 +28,30 @@
                 document.getElementById('add_photo_preview').style.display = 'none';
             }
         }
-    
+
         $(document).ready(function() {
             const datatableWrap = $(".datatable-wrap");
             const wrappingDiv = $("<div>").addClass("w-100").css("overflow-x", "scroll");
             datatableWrap.children().appendTo(wrappingDiv);
             datatableWrap.append(wrappingDiv);
-    
+
             let educationIndex = {{ old('educations') ? count(old('educations')) : 1 }};
             let editEducationIndex = 0;
-    
+
             @if ($errors->any())
                 $('#modalForm').modal('show');
             @endif
-    
+
             function previewOldPhoto(photoUrl) {
                 var oldPreview = $('#photo-preview');
                 oldPreview.attr('src', `{{ Storage::url('${photoUrl}') }}`);
                 oldPreview.show();
             }
-    
+
             $('#edit_photo').change(function(event) {
                 previewPhoto(event);
             });
-    
+
             function previewPhoto(event) {
                 const file = event.target.files[0];
                 if (file) {
@@ -66,12 +66,12 @@
                     document.getElementById('photo-preview').style.display = 'none';
                 }
             }
-    
+
             $('.edit-button').click(function() {
                 var competencyId = $(this).data('id');
                 var url = "{{ route('graduate-competencies.find', ':id') }}";
                 url = url.replace(':id', competencyId);
-    
+
                 // Fetch data via AJAX
                 $.ajax({
                     url: url,
@@ -83,7 +83,7 @@
                             .replace(':id', competencyId));
                         $('#edit_name').val(response.name);
                         $('#edit_description').val(response.description);
-    
+
                         if (response.icon) {
                             var photoUrl = response.icon.replace('public/', '/storage/');
                             $('#photo-preview').attr('src', photoUrl).show();
@@ -96,12 +96,12 @@
                     }
                 });
             });
-    
+
             $('.delete-button').click(function() {
                 var competencyId = $(this).data('id');
                 var url = "{{ route('graduate-competencies.find', ':id') }}";
                 url = url.replace(':id', competencyId);
-    
+
                 // Fetch data via AJAX
                 $.ajax({
                     url: url,
@@ -112,19 +112,20 @@
                             "{{ route('graduate-competencies.delete', ':id') }}".replace(
                                 ':id', competencyId));
                         $("#deleteText").text(
-                            "Apakah anda yakin ingin menghapus kompetensi lulusan " + response.name + "?");
+                            "Apakah anda yakin ingin menghapus kompetensi lulusan " +
+                            response.name + "?");
                     },
                     error: function() {
                         alert('Failed to fetch data');
                     }
                 });
             });
-    
+
             $('.show-button').click(function() {
                 var competencyId = $(this).data('id');
                 var url = "{{ route('graduate-competencies.find', ':id') }}";
                 url = url.replace(':id', competencyId);
-    
+
                 // Fetch data via AJAX
                 $.ajax({
                     url: url,
@@ -146,7 +147,7 @@
                 });
             });
         });
-    
+
         @if (session()->has('success'))
             let message = @json(session('success'));
             NioApp.Toast(`<h5>Berhasil</h5><p>${message}</p>`, 'success', {
@@ -154,7 +155,6 @@
             });
         @endif
     </script>
-    
 @endpush
 
 @section('content')
@@ -176,7 +176,7 @@
                     <thead>
                         <tr class="table-light nk-tb-item nk-tb-head">
                             <th class="text-nowrap text-center align-middle">No</th>
-                            <th class="text-nowrap text-center align-middle">Foto</th>
+                            <th class="text-nowrap text-center align-middle">Icon</th>
                             <th class="text-nowrap text-center align-middle">Nama</th>
                             <th class="text-nowrap text-center align-middle">Deskripsi</th>
                             <th class="text-nowrap text-center no-export align-middle">Aksi</th>
@@ -188,10 +188,10 @@
                                 <td>{{ $index + 1 }}</td>
                                 <td>
                                     <img src="{{ Storage::url($competency->icon) }}" alt="" class="img-fluid"
-                                        style="width: 100px;">
+                                        style="width: 50px;">
                                 </td>
                                 <td>{{ $competency->name }}</td>
-                                <td>{{ $competency->description }}</td>
+                                <td class="text-start">{{ $competency->description }}</td>
                                 <td>
                                     <button type="button" class="btn btn-primary btn-xs rounded-pill show-button"
                                         data-id="{{ $competency->id }}">
@@ -225,8 +225,7 @@
                     </a>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('graduate-competencies.store') }}" method="POST"
-                        enctype="multipart/form-data">
+                    <form action="{{ route('graduate-competencies.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
                             <div class="form-control-wrap">
@@ -258,7 +257,57 @@
                         <div class="form-group">
                             <label class="form-label" for="description">Deskripsi</label>
                             <div class="form-control-wrap">
-                                <textarea class="form-control no-resize" name="description" placeholder="Masukkan deskripsi" id="description" value="{{ old('description') }}" required></textarea>
+                                <textarea class="form-control no-resize" name="description" placeholder="Masukkan deskripsi" id="description"
+                                    value="{{ old('description') }}" required></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary"><em class="ni ni-save me-1"></em>Simpan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Edit Modal --}}
+    <div class="modal fade" id="editModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Kompetensi Lulusan</h5>
+                    <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <em class="icon ni ni-cross"></em>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <form id="editForm" action="" method="POST" enctype="multipart/form-data">
+                        @method('PUT')
+                        @csrf
+                        <div class="form-group">
+                            <div class="form-control-wrap">
+                                <div class="d-flex align-items-center justify-content-start">
+                                    <img id="photo-preview" class="img-fluid" src="#" alt="Photo Preview"
+                                        style="max-width: 200px; max-height: 200px; display: none;">
+                                </div>
+                                <div class="custom-file position-relative mt-1">
+                                    <label class="form-label" for="edit_photo">Foto</label>
+                                    <input type="file" class="form-control @error('icon') is-invalid @enderror"
+                                        name="icon" id="edit_photo" onchange="previewPhoto(event)">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="edit_name">Nama</label>
+                            <div class="form-control-wrap">
+                                <input type="text" class="form-control" name="name" id="edit_name" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="edit_description">Deskripsi</label>
+                            <div class="form-control-wrap">
+                                <textarea class="form-control no-resize" name="description" placeholder="Masukkan deskripsi" id="edit_description"
+                                    value="{{ old('description') }}" required></textarea>
                             </div>
                         </div>
                         <div class="form-group d-flex justify-content-end">
@@ -271,75 +320,30 @@
         </div>
     </div>
 
-{{-- Edit Modal --}}
-<div class="modal fade" id="editModal">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Edit Kompetensi Lulusan</h5>
-                <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <em class="icon ni ni-cross"></em>
-                </a>
-            </div>
-            <div class="modal-body">
-                <form id="editForm" action="" method="POST" enctype="multipart/form-data">
-                    @method('PUT')
-                    @csrf
-                    <div class="form-group">
-                        <div class="form-control-wrap">
-                            <div class="d-flex align-items-center justify-content-start">
-                                <img id="photo-preview" class="img-fluid" src="#" alt="Photo Preview" style="max-width: 200px; max-height: 200px; display: none;">
-                            </div>
-                            <div class="custom-file position-relative mt-1">
-                                <label class="form-label" for="edit_photo">Foto</label>
-                                <input type="file" class="form-control @error('icon') is-invalid @enderror" name="icon" id="edit_photo" onchange="previewPhoto(event)">
-                            </div>
+    {{-- Delete Modal --}}
+    <div class="modal fade" id="deleteModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Hapus Kompetensi Lulusan</h5>
+                    <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <em class="icon ni ni-cross"></em>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <form id="deleteForm" action="" method="POST">
+                        @method('DELETE')
+                        @csrf
+                        <p id="deleteText">Apakah anda yakin ingin menghapus kompetensi lulusan ini?</p>
+                        <div class="form-group d-flex justify-content-end">
+                            <button type="submit" class="btn btn-danger"><em
+                                    class="ni ni-trash me-1"></em>Hapus</button>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="edit_name">Nama</label>
-                        <div class="form-control-wrap">
-                            <input type="text" class="form-control" name="name" id="edit_name" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="edit_description">Deskripsi</label>
-                        <div class="form-control-wrap">
-                            <textarea class="form-control no-resize" name="description" placeholder="Masukkan deskripsi" id="edit_description" value="{{ old('description') }}" required></textarea>
-                        </div>
-                    </div>
-                    <div class="form-group d-flex justify-content-end">
-                        <button type="submit" class="btn btn-primary"><em class="ni ni-save me-1"></em>Simpan</button>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-{{-- Delete Modal --}}
-<div class="modal fade" id="deleteModal">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Hapus Kompetensi Lulusan</h5>
-                <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <em class="icon ni ni-cross"></em>
-                </a>
-            </div>
-            <div class="modal-body">
-                <form id="deleteForm" action="" method="POST">
-                    @method('DELETE')
-                    @csrf
-                    <p id="deleteText">Apakah anda yakin ingin menghapus kompetensi lulusan ini?</p>
-                    <div class="form-group d-flex justify-content-end">
-                        <button type="submit" class="btn btn-danger"><em class="ni ni-trash me-1"></em>Hapus</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 
     {{-- Show Modal --}}
     <div class="modal fade" id="showModal">
@@ -354,7 +358,8 @@
                 <div class="modal-body">
                     <div class="row align-items-center">
                         <div class="col-md-4 text-center mb-3">
-                            <img src="" alt="" class="img-fluid" id="showPhoto" style="max-height: 300px;">
+                            <img src="" alt="" class="img-fluid" id="showPhoto"
+                                style="max-height: 300px;">
                         </div>
                         <div class="col-md-8">
                             <table class="table table-bordered">

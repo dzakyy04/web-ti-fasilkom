@@ -107,7 +107,8 @@
                             "{{ route('support-competencies.delete', ':id') }}".replace(
                                 ':id', competencyId));
                         $("#deleteText").text(
-                            "Apakah anda yakin ingin menghapus kompetensi pendukung " + response
+                            "Apakah anda yakin ingin menghapus kompetensi pendukung " +
+                            response
                             .name + "?");
                     },
                     error: function() {
@@ -175,7 +176,7 @@
                             <tr class="text-center align-middle">
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ $competency->name }}</td>
-                                <td>{{ $competency->description }}</td>
+                                <td class="text-start">{{ $competency->description }}</td>
                                 <td>
                                     <button type="button" class="btn btn-primary btn-xs rounded-pill show-button"
                                         data-id="{{ $competency->id }}">
@@ -293,7 +294,8 @@
                         <div class="form-group">
                             <label class="form-label" for="edit_description">Deskripsi</label>
                             <div class="form-control-wrap">
-                                <textarea class="form-control no-resize" name="description" placeholder="Masukkan deskripsi" id="edit_description" value="{{ old('description') }}" required></textarea>
+                                <textarea class="form-control no-resize" name="description" placeholder="Masukkan deskripsi" id="edit_description"
+                                    value="{{ old('description') }}" required></textarea>
                             </div>
                         </div>
                         <div class="form-group d-flex justify-content-end">
