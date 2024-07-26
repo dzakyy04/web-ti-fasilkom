@@ -41,6 +41,13 @@ class NewsController extends Controller
         return view('admin.news.create', compact('title'));
     }
 
+    public function findNews($slug)
+    {
+        $news = Article::where('type', 'news')->where('slug', $slug)->firstOrFail();
+
+        return response()->json($news);
+    }
+
     public function store(Request $request)
     {
         $request->validate([

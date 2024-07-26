@@ -30,7 +30,8 @@
 
             $('.delete-link').click(function(event) {
                 event.preventDefault();
-                $('.delete-form').submit();
+                const slug = $(this).data('slug');
+                $('#delete-form-' + slug).submit();
             });
 
             $('#search-input').on('input', function() {
@@ -60,22 +61,31 @@
             }
         });
 
-        function previewContent(title, content, thumbnail, createdAt) {
-            var formattedDate = formatDate(createdAt);
+        function previewContent(newsSlug) {
+            $.ajax({
+                url: '{{ route('news.find', '') }}/' + newsSlug,
+                type: 'GET',
+                success: function(data) {
+                    console.log(data);
+                    var formattedDate = formatDate(data.created_at);
 
-            $('#previewTitle').text(title);
-            $('#previewCreatedAt').html('<i class="icon ni ni-calendar text-warning"></i> ' + formattedDate);
+                    $('#previewTitle').text(data.title);
+                    $('#previewCreatedAt').html('<i class="icon ni ni-calendar text-warning"></i> ' +
+                        formattedDate);
 
-            var previewThumbnail = $('#previewThumbnail');
-            if (thumbnail) {
-                previewThumbnail.attr('src', thumbnail);
-                previewThumbnail.show();
-            } else {
-                previewThumbnail.hide();
-            }
+                    var previewThumbnail = $('#previewThumbnail');
+                    if (data.thumbnail) {
+                        var thumbnailUrl = '{{ Storage::url('') }}' + data.thumbnail.replace('public/', '');
+                        previewThumbnail.attr('src', thumbnailUrl);
+                        previewThumbnail.show();
+                    } else {
+                        previewThumbnail.hide();
+                    }
 
-            $('#previewContent').html(content);
-            $('#previewModal').modal('show');
+                    $('#previewContent').html(data.content);
+                    $('#previewModal').modal('show');
+                }
+            });
         }
 
         function formatDate(dateString) {
@@ -84,7 +94,11 @@
                 month: 'short',
                 year: 'numeric'
             };
-            const date = new Date(dateString.replace(/-/g, '/'));
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) {
+                // handle invalid date case
+                return "Invalid Date";
+            }
             return date.toLocaleDateString('id-ID', options);
         }
     </script>
@@ -142,13 +156,7 @@
                                 <h5 class="card-title news-title">{{ $newsItem->title }}</h5>
                                 <p class="card-text news-desc">{{ $newsItem->content }}</p>
                                 <button type="button" class="btn btn-primary w-100 d-flex justify-content-center"
-                                    onclick="previewContent(
-                                    '{{ $newsItem->title }}',
-                                    '{{ $newsItem->content }}',
-                                    '{{ Storage::url($newsItem->thumbnail) }}',
-                                    '{{ $newsItem->created_at }}'
-                                )">Lihat
-                                    Berita</button>
+                                    onclick="previewContent('{{ $newsItem->slug }}')">Lihat Berita</button>
                             </div>
                             <div
                                 class="card-footer border-top text-muted d-flex justify-content-between align-items-center">
@@ -161,8 +169,11 @@
                                         <ul class="link-list-plain">
                                             <li><a href="{{ route('news.edit', $newsItem->slug) }}">Edit</a></li>
                                             <li>
-                                                <a href="#" class="delete-link">Hapus</a>
-                                                <form class="delete-form" action="{{ route('news.delete', $newsItem->slug) }}" method="POST" style="display: none;">
+                                                <a href="#" class="delete-link"
+                                                    data-slug="{{ $newsItem->slug }}">Hapus</a>
+                                                <form id="delete-form-{{ $newsItem->slug }}" class="delete-form"
+                                                    action="{{ route('news.delete', $newsItem->slug) }}" method="POST"
+                                                    style="display: none;">
                                                     @method('DELETE')
                                                     @csrf
                                                 </form>
@@ -212,7 +223,8 @@
             </nav>
         </div>
     </div>
-    <div class="modal fade" id="previewModal" tabindex="-1" role="dialog" aria-labelledby="previewModalLabel" aria-hidden="true">
+    <div class="modal fade" id="previewModal" tabindex="-1" role="dialog" aria-labelledby="previewModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -224,8 +236,12 @@
                 <div class="modal-body">
                     <h2 class="mb-1" id="previewTitle"></h2>
                     <p class="mb-3 sub-text" id="previewCreatedAt"></p>
-                    <img class="img-fluid mb-3" id="previewThumbnail" class="w-full" src="" style="display: none;" alt="Thumbnail">
+                    <img class="img-fluid mb-3" id="previewThumbnail" class="w-full" src=""
+                        style="display: none;" alt="Thumbnail">
                     <div id="previewContent"></div>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Tutup</a>
                 </div>
             </div>
         </div>

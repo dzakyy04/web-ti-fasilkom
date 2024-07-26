@@ -27,11 +27,6 @@
             const wrappingDiv = $("<div>").addClass("w-100").css("overflow-x", "scroll");
             datatableWrap.children().appendTo(wrappingDiv);
             datatableWrap.append(wrappingDiv);
-
-            $('.delete-link').click(function(event) {
-                event.preventDefault();
-                $('.delete-form').submit();
-            });
         });
     </script>
     <script>
@@ -58,7 +53,8 @@
 
             $('.delete-link').click(function(event) {
                 event.preventDefault();
-                $('.delete-form').submit();
+                const slug = $(this).data('slug');
+                $('#delete-form-' + slug).submit();
             });
 
             $('#search-input').on('input', function() {
@@ -88,22 +84,31 @@
             }
         });
 
-        function previewContent(title, content, thumbnail, createdAt) {
-            var formattedDate = formatDate(createdAt);
+        function previewContent(newsSlug) {
+            $.ajax({
+                url: '{{ route('announcements.find', '') }}/' + newsSlug,
+                type: 'GET',
+                success: function(data) {
+                    console.log(data);
+                    var formattedDate = formatDate(data.created_at);
 
-            $('#previewTitle').text(title);
-            $('#previewCreatedAt').html('<i class="icon ni ni-calendar text-warning"></i> ' + formattedDate);
+                    $('#previewTitle').text(data.title);
+                    $('#previewCreatedAt').html('<i class="icon ni ni-calendar text-warning"></i> ' +
+                        formattedDate);
 
-            var previewThumbnail = $('#previewThumbnail');
-            if (thumbnail) {
-                previewThumbnail.attr('src', thumbnail);
-                previewThumbnail.show();
-            } else {
-                previewThumbnail.hide();
-            }
+                    var previewThumbnail = $('#previewThumbnail');
+                    if (data.thumbnail) {
+                        var thumbnailUrl = '{{ Storage::url('') }}' + data.thumbnail.replace('public/', '');
+                        previewThumbnail.attr('src', thumbnailUrl);
+                        previewThumbnail.show();
+                    } else {
+                        previewThumbnail.hide();
+                    }
 
-            $('#previewContent').html(content);
-            $('#previewModal').modal('show');
+                    $('#previewContent').html(data.content);
+                    $('#previewModal').modal('show');
+                }
+            });
         }
 
         function formatDate(dateString) {
@@ -112,7 +117,11 @@
                 month: 'short',
                 year: 'numeric'
             };
-            const date = new Date(dateString.replace(/-/g, '/'));
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) {
+                // handle invalid date case
+                return "Invalid Date";
+            }
             return date.toLocaleDateString('id-ID', options);
         }
     </script>
@@ -170,13 +179,7 @@
                                 <h5 class="card-title announcements-title">{{ $announcement->title }}</h5>
                                 <p class="card-text announcements-desc">{{ $announcement->content }}</p>
                                 <button type="button" class="btn btn-primary w-100 d-flex justify-content-center"
-                                    onclick="previewContent(
-                                    '{{ $announcement->title }}',
-                                    '{{ $announcement->content }}',
-                                    '{{ Storage::url($announcement->thumbnail) }}',
-                                    '{{ $announcement->created_at }}'
-                                )">Lihat
-                                    Pengumuman</button>
+                                    onclick="previewContent('{{ $announcement->slug }}')">Lihat Pengumuman</button>
                             </div>
                             <div
                                 class="card-footer border-top text-muted d-flex justify-content-between align-items-center">
@@ -190,10 +193,11 @@
                                             <li><a href="{{ route('announcements.edit', $announcement->slug) }}">Edit</a>
                                             </li>
                                             <li>
-                                                <a href="#" class="delete-link">Hapus</a>
-                                                <form class="delete-form"
-                                                    action="{{ route('announcements.delete', $announcement->slug) }}"
-                                                    method="POST" style="display: none;">
+                                                <a href="#" class="delete-link"
+                                                    data-slug="{{ $announcement->slug }}">Hapus</a>
+                                                <form id="delete-form-{{ $announcement->slug }}" class="delete-form"
+                                                    action="{{ route('announcements.delete', $announcement->slug) }}" method="POST"
+                                                    style="display: none;">
                                                     @method('DELETE')
                                                     @csrf
                                                 </form>
@@ -269,4 +273,5 @@
             </div>
         </div>
     </div>
+    
 @endsection

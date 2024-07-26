@@ -35,6 +35,13 @@ class AnnouncementController extends Controller
         return view('admin.announcements.index', compact('title', 'announcements', 'perPage'));
     }
 
+    public function findAnnouncements($slug)
+    {
+        $announcements = Article::where('type', 'announcement')->where('slug', $slug)->firstOrFail();
+
+        return response()->json($announcements);
+    }
+
     public function create()
     {
         $title = 'Tambah Pengumuman';

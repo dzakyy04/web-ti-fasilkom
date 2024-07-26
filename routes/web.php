@@ -47,6 +47,7 @@ Route::prefix('admin')->group(function () {
       // News
       Route::get('/berita', [NewsController::class, 'index'])->name('news');
       Route::get('/berita/tambah', [NewsController::class, 'create'])->name('news.create');
+      Route::get('/berita/{slug}', [NewsController::class, 'findNews'])->name('news.find');
       Route::post('/berita/tambah', [NewsController::class, 'store'])->name('news.store');
       Route::get('/berita/{slug}/edit', [NewsController::class, 'edit'])->name('news.edit');
       Route::put('/berita/{slug}/edit', [NewsController::class, 'update'])->name('news.update');
@@ -55,6 +56,7 @@ Route::prefix('admin')->group(function () {
       // Announcements
       Route::get('/pengumuman', [AnnouncementController::class, 'index'])->name('announcements');
       Route::get('/pengumuman/tambah', [AnnouncementController::class, 'create'])->name('announcements.create');
+      Route::get('/pengumuman/{slug}', [AnnouncementController::class, 'findAnnouncements'])->name('announcements.find');
       Route::post('/pengumuman/tambah', [AnnouncementController::class, 'store'])->name('announcements.store');
       Route::get('/pengumuman/{slug}/edit', [AnnouncementController::class, 'edit'])->name('announcements.edit');
       Route::put('/pengumuman/{slug}/edit', [AnnouncementController::class, 'update'])->name('announcements.update');
