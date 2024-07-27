@@ -80,29 +80,38 @@ class CompetencyController extends Controller
      */
     public function getAll()
     {
-        $mainCompetencies = Competency::where('type', 'main')->get();
-        $supportCompetencies = Competency::where('type', 'support')->get();
-        $graduateCompetencies = Competency::where('type', 'graduate')->get();
+        try {
+            $mainCompetencies = Competency::where('type', 'main')->get();
+            $supportCompetencies = Competency::where('type', 'support')->get();
+            $graduateCompetencies = Competency::where('type', 'graduate')->get();
 
-        $graduateCompetencies->transform(function ($competency) {
-            $competency->icon = Helper::convertImageUrl($competency->icon);
-            return $competency;
-        });
+            $graduateCompetencies->transform(function ($competency) {
+                $competency->icon = Helper::convertImageUrl($competency->icon);
+                return $competency;
+            });
 
-        $mappedMainCompetencies = $this->mapCompetencies($mainCompetencies, 'main');
-        $mappedSupportCompetencies = $this->mapCompetencies($supportCompetencies, 'support');
-        $mappedGraduateCompetencies = $this->mapCompetencies($graduateCompetencies, 'graduate');
+            $mappedMainCompetencies = $this->mapCompetencies($mainCompetencies, 'main');
+            $mappedSupportCompetencies = $this->mapCompetencies($supportCompetencies, 'support');
+            $mappedGraduateCompetencies = $this->mapCompetencies($graduateCompetencies, 'graduate');
 
-        return response()->json([
-            'status' => [
-                'code' => 200,
-                'message' => 'Success'
-            ],
-            'data' => [
-                'kompetensiUtama' => $mappedMainCompetencies,
-                'kompetensiPendukung' => $mappedSupportCompetencies,
-                'kompetensiLulusan' => $mappedGraduateCompetencies
-            ]
-        ]);
+            return response()->json([
+                'status' => [
+                    'code' => 200,
+                    'message' => 'Success'
+                ],
+                'data' => [
+                    'kompetensiUtama' => $mappedMainCompetencies,
+                    'kompetensiPendukung' => $mappedSupportCompetencies,
+                    'kompetensiLulusan' => $mappedGraduateCompetencies
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => [
+                    'code' => 500,
+                    'message' => $e->getMessage()
+                ]
+            ], 500);
+        }
     }
 }
