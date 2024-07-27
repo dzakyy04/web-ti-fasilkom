@@ -129,7 +129,7 @@
                                 <div class="form-group">
                                     <label class="form-label" for="content">Konten</label>
                                     <div class="form-control-wrap">
-                                        <textarea class="summernote-basic" name="content" id="content"></textarea>
+                                        <textarea class="summernote-basic @error('content') is-invalid @enderror" name="content" id="content">{{ old('content') }}</textarea>
                                         @error('content')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror

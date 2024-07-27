@@ -129,7 +129,7 @@
                                 <div class="form-group">
                                     <label class="form-label" for="content">Konten</label>
                                     <div class="form-control-wrap">
-                                        <textarea class="summernote-basic" name="content" id="content"></textarea>
+                                        <textarea class="summernote-basic @error('content') is-invalid @enderror" name="content" id="content">{{ old('content') }}</textarea>
                                         @error('content')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -137,7 +137,7 @@
                                     <button type="button" class="btn btn-primary mt-2" onclick="previewContent()"><em
                                             class="icon ni ni-eye me-1"></em>Pratinjau</button>
                                 </div>
-                            </div>
+                            </div>                            
                             <div class="text-end">
                                 <button type="submit" class="btn btn-primary"><em class="ni ni-save me-1"></em>
                                     Simpan</button>
