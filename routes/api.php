@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AnnouncementController;
 use App\Http\Controllers\Api\CompetencyController;
 use App\Http\Controllers\Api\FacilityController;
+use App\Http\Controllers\Api\InformationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\NewsController;
@@ -35,3 +36,5 @@ Route::get('/pengumuman/{slug}', [AnnouncementController::class, 'getBySlug']);
 Route::get('/sarana-prasarana', [FacilityController::class, 'getAll']);
 Route::get('/struktur-jabatan', [OrganizationController::class, 'getAll']);
 Route::get('/kompetensi', [CompetencyController::class, 'getAll']);
+Route::get('/informasi-jurusan', [InformationController::class, 'getAll']);
+

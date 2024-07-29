@@ -102,4 +102,15 @@ trait MapsResponse
             return $mappedCompetency;
         })->toArray();
     }
+
+    public function mapMissions(Collection $visionMission)
+    {
+        return $visionMission->map(function ($mission) {
+            return [
+                'icon' => $mission->icon,
+                'judul' => $mission->title,
+                'deskripsi' => $mission->description,
+            ];
+        })->toArray();
+    }
 }
