@@ -57,7 +57,7 @@
                                 </a>
                             </li>
                             <li class="nk-menu-item">
-                                <a href="{{ route('admins') }}" class="nk-menu-link">
+                                <a href="{{ route('visions') }}" class="nk-menu-link">
                                     <span class="nk-menu-icon"><em class="icon ni ni-files"></em></span>
                                     <span class="nk-menu-text">Visi</span>
                                 </a>

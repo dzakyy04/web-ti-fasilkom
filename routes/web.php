@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\LeaderController;
 use App\Http\Controllers\Admin\MainCompetencyController;
 use App\Http\Controllers\Admin\SupportCompetencyController;
+use App\Http\Controllers\Admin\VisionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -119,5 +120,14 @@ Route::prefix('admin')->group(function () {
       Route::post('/informasi-jurusan/informasi', [InformationController::class, 'store'])->name('informations.store');
       Route::put('/informasi-jurusan/informasi/{id}', [InformationController::class, 'update'])->name('informations.update');
       Route::delete('/informasi-jurusan/informasi/{id}', [InformationController::class, 'delete'])->name('informations.delete');
+
+      // Informasi Jurusan Visi
+      Route::get('/informasi-jurusan/visi', [VisionController::class, 'index'])->name('visions');
+      Route::get('/informasi-jurusan/visi/{id}', [VisionController::class, 'findVision'])->name('visions.find');
+      Route::post('/informasi-jurusan/visi', [VisionController::class, 'store'])->name('visions.store');
+      Route::put('/informasi-jurusan/visi/{id}', [VisionController::class, 'update'])->name('visions.update');
+      Route::delete('/informasi-jurusan/visi/{id}', [VisionController::class, 'delete'])->name('visions.delete');
+
+
    });
 });
