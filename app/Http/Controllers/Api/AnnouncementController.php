@@ -20,6 +20,20 @@ class AnnouncementController extends Controller
      *   operationId="getAllPengumuman",
      *   summary="Dapatkan Semua Pengumuman",
      *   description="Mengambil semua pengumuman",
+     *   @OA\Parameter(
+     *     name="halaman",
+     *     in="query",
+     *     description="Nomor halaman",
+     *     required=false,
+     *     @OA\Schema(type="integer", default=1)
+     *   ),
+     *   @OA\Parameter(
+     *     name="batas",
+     *     in="query",
+     *     description="Jumlah item per halaman",
+     *     required=false,
+     *     @OA\Schema(type="integer", default=10)
+     *   ),
      *   @OA\Response(
      *     response=200,
      *     description="Berhasil",
@@ -47,6 +61,14 @@ class AnnouncementController extends Controller
      *             @OA\Property(property="tanggalDibuat", type="string", format="date-time", example="{tanggal pembuatan}"),
      *             @OA\Property(property="tanggalDiperbarui", type="string", format="date-time", example="{tanggal pembaruan}")
      *           )
+     *         ),
+     *         @OA\Property(
+     *           property="paginasi",
+     *           type="object",
+     *           @OA\Property(property="halamanSekarang", type="integer", example="{halaman sekarang}"),
+     *           @OA\Property(property="halamanTerakhir", type="integer", example="{halaman terakhir}"),
+     *           @OA\Property(property="batasPerHalaman", type="integer", example="{batas per halaman}"),
+     *           @OA\Property(property="totalItem", type="integer", example="{total item}")
      *         )
      *       )
      *     )
@@ -66,18 +88,23 @@ class AnnouncementController extends Controller
      *   )
      * )
      */
-    public function getAll()
+    public function getAll(Request $request)
     {
         try {
-            $announcements = Article::where('type', 'announcement')->latest()->get();
+            $limit = $request->input('batas', 10);
+            $page = $request->input('halaman', 1);
 
-            $announcements->transform(function ($announcement) {
+            $announcements = Article::where('type', 'announcement')
+                ->latest()
+                ->paginate($limit, ['*'], 'halaman', $page);
+
+            $announcements->getCollection()->transform(function ($announcement) {
                 $announcement->content = Helper::processContent($announcement->content);
                 $announcement->thumbnail = Helper::convertImageUrl($announcement->thumbnail);
                 return $announcement;
             });
 
-            $mappedAnnouncements = $this->mapArticles($announcements);
+            $mappedAnnouncements = $this->mapArticles($announcements->getCollection());
 
             return response()->json([
                 'status' => [
@@ -85,7 +112,13 @@ class AnnouncementController extends Controller
                     'message' => 'Success'
                 ],
                 'data' => [
-                    'pengumuman' => $mappedAnnouncements
+                    'pengumuman' => $mappedAnnouncements,
+                    'paginasi' => [
+                        'halamanSekarang' => $announcements->currentPage(),
+                        'halamanTerakhir' => $announcements->lastPage(),
+                        'batasPerHalaman' => $announcements->perPage(),
+                        'totalItem' => $announcements->total()
+                    ]
                 ]
             ]);
         } catch (\Exception $e) {

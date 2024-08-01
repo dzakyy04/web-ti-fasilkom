@@ -20,6 +20,20 @@ class NewsController extends Controller
      *   operationId="getAllBerita",
      *   summary="Dapatkan Semua Berita",
      *   description="Mengambil semua berita",
+     *   @OA\Parameter(
+     *     name="halaman",
+     *     in="query",
+     *     description="Nomor halaman",
+     *     required=false,
+     *     @OA\Schema(type="integer", default=1)
+     *   ),
+     *   @OA\Parameter(
+     *     name="batas",
+     *     in="query",
+     *     description="Jumlah item per halaman",
+     *     required=false,
+     *     @OA\Schema(type="integer", default=10)
+     *   ),
      *   @OA\Response(
      *     response=200,
      *     description="Berhasil",
@@ -47,6 +61,14 @@ class NewsController extends Controller
      *             @OA\Property(property="tanggalDibuat", type="string", format="date-time", example="{tanggal pembuatan}"),
      *             @OA\Property(property="tanggalDiperbarui", type="string", format="date-time", example="{tanggal pembaruan}")
      *           )
+     *         ),
+     *         @OA\Property(
+     *           property="paginasi",
+     *           type="object",
+     *           @OA\Property(property="halamanSekarang", type="integer", example="{halaman sekarang}"),
+     *           @OA\Property(property="halamanTerakhir", type="integer", example="{halaman terakhir}"),
+     *           @OA\Property(property="batasPerHalaman", type="integer", example="{batas per halaman}"),
+     *           @OA\Property(property="totalItem", type="integer", example="{total item}")
      *         )
      *       )
      *     )
@@ -66,18 +88,23 @@ class NewsController extends Controller
      *   )
      * )
      */
-    public function getAll()
+    public function getAll(Request $request)
     {
         try {
-            $news = Article::where('type', 'news')->latest()->get();
+            $limit = $request->input('batas', 10);
+            $page = $request->input('halaman', 1);
 
-            $news->transform(function ($newsItem) {
+            $news = Article::where('type', 'news')
+                ->latest()
+                ->paginate($limit, ['*'], 'halaman', $page);
+
+            $news->getCollection()->transform(function ($newsItem) {
                 $newsItem->content = Helper::processContent($newsItem->content);
                 $newsItem->thumbnail = Helper::convertImageUrl($newsItem->thumbnail);
                 return $newsItem;
             });
 
-            $mappedNews = $this->mapArticles($news);
+            $mappedNews = $this->mapArticles($news->getCollection());
 
             return response()->json([
                 'status' => [
@@ -85,7 +112,13 @@ class NewsController extends Controller
                     'message' => 'Success'
                 ],
                 'data' => [
-                    'berita' => $mappedNews
+                    'berita' => $mappedNews,
+                    'paginasi' => [
+                        'halamanSekarang' => $news->currentPage(),
+                        'halamanTerakhir' => $news->lastPage(),
+                        'batasPerHalaman' => $news->perPage(),
+                        'totalItem' => $news->total()
+                    ]
                 ]
             ]);
         } catch (\Exception $e) {
