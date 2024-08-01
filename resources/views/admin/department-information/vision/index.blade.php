@@ -69,7 +69,7 @@
 
             $('.edit-button').click(function() {
                 var competencyId = $(this).data('id');
-                var url = "{{ route('informations.find', ':id') }}";
+                var url = "{{ route('visions.find', ':id') }}";
                 url = url.replace(':id', competencyId);
 
                 // Fetch data via AJAX
@@ -79,9 +79,10 @@
                     success: function(response) {
                         $('#editModal').modal('show');
                         $('#editForm').attr('action',
-                            "{{ route('informations.update', ':id') }}"
+                            "{{ route('visions.update', ':id') }}"
                             .replace(
                                 ':id', competencyId));
+                        $('#edit_title').val(response.title);
                         $('#edit_description').val(response.description);
                     },
                     error: function() {
@@ -93,7 +94,7 @@
 
             $('.delete-button').click(function() {
                 var competencyId = $(this).data('id');
-                var url = "{{ route('informations.find', ':id') }}";
+                var url = "{{ route('visions.find', ':id') }}";
                 url = url.replace(':id', competencyId);
 
                 // Fetch data via AJAX
@@ -103,10 +104,12 @@
                     success: function(response) {
                         $('#deleteModal').modal('show');
                         $('#deleteForm').attr('action',
-                            "{{ route('informations.delete', ':id') }}".replace(
+                            "{{ route('visions.delete', ':id') }}".replace(
                                 ':id', competencyId));
                         $("#deleteText").text(
-                            "Apakah anda yakin ingin menghapus informasi jurusan ini ?");
+                            "Apakah anda yakin ingin menghapus visi " +
+                            response
+                            .title + "?");
                     },
                     error: function() {
                         alert('Failed to fetch data');
@@ -116,7 +119,7 @@
 
             $('.show-button').click(function() {
                 var competencyId = $(this).data('id');
-                var url = "{{ route('informations.find', ':id') }}";
+                var url = "{{ route('visions.find', ':id') }}";
                 url = url.replace(':id', competencyId);
 
                 // Fetch data via AJAX
@@ -125,6 +128,7 @@
                     type: 'GET',
                     success: function(response) {
                         $('#showModal').modal('show');
+                        $('#showName').text(response.title);
                         $('#showDescription').text(response.description);
                     },
                     error: function() {
@@ -148,11 +152,11 @@
         <div class="nk-block nk-block-lg">
             <div class="nk-block-between">
                 <div class="nk-block-head-content">
-                    <h3 class="nk-block-title page-title">Informasi</h3>
+                    <h3 class="nk-block-title page-title">{{ $title }}</h3>
                 </div>
                 <div class="nk-block-head-content">
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalForm">
-                        <em class="icon ni ni-plus me-1"></em>Tambah Informasi</span>
+                        <em class="icon ni ni-plus me-1"></em>Tambah Visi
                     </button>
                 </div>
             </div>
@@ -162,26 +166,28 @@
                     <thead>
                         <tr class="table-light nk-tb-item nk-tb-head">
                             <th class="text-nowrap text-center align-middle">No</th>
+                            <th class="text-nowrap text-center align-middle">Judul</th>
                             <th class="text-nowrap text-center align-middle">Deskripsi</th>
                             <th class="text-nowrap text-center no-export align-middle">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($informations as $index => $information)
+                        @foreach ($visions as $index => $vision)
                             <tr class="text-center align-middle">
                                 <td>{{ $index + 1 }}</td>
-                                <td>{{ $information->description }}</td>
+                                <td>{{ $vision->title }}</td>
+                                <td class="text-start">{{ $vision->description }}</td>
                                 <td>
                                     <button type="button" class="btn btn-primary btn-xs rounded-pill show-button"
-                                        data-id="{{ $information->id }}">
+                                        data-id="{{ $vision->id }}">
                                         <em class="ni ni-eye"></em>
                                     </button>
                                     <button type="button" class="btn btn-warning btn-xs rounded-pill edit-button"
-                                        data-id="{{ $information->id }}">
+                                        data-id="{{ $vision->id }}">
                                         <em class="ni ni-edit"></em>
                                     </button>
                                     <button class="btn btn-danger btn-xs rounded-pill delete-button"
-                                        data-id="{{ $information->id }}">
+                                        data-id="{{ $vision->id }}">
                                         <em class="ni ni-trash"></em>
                                     </button>
                                 </td>
@@ -198,7 +204,7 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Detail Informasi</h5>
+                    <h5 class="modal-title">Detail Visi</h5>
                     <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <em class="icon ni ni-cross"></em>
                     </a>
@@ -208,6 +214,10 @@
                         <div class="col-md-12">
                             <table class="table table-bordered">
                                 <tbody>
+                                    <tr>
+                                        <td class="fw-bold">Judul</td>
+                                        <td id="showName"></td>
+                                    </tr>
                                     <tr>
                                         <td class="fw-bold">Deskripsi</td>
                                         <td id="showDescription"></td>
@@ -226,14 +236,25 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Tambah Informasi</h5>
+                    <h5 class="modal-title">Tambah Visi</h5>
                     <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <em class="icon ni ni-cross"></em>
                     </a>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('informations.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('visions.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
+                        <div class="form-group">
+                            <label class="form-label" for="title">Judul</label>
+                            <div class="form-control-wrap">
+                                <input type="text" class="form-control @error('title') is-invalid @enderror"
+                                    name="title" id="title" value="{{ old('title') }}" placeholder="Masukkan judul"
+                                    required>
+                                @error('title')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label class="form-label" for="description">Deskripsi</label>
                             <div class="form-control-wrap">
@@ -255,7 +276,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Edit Informasi</h5>
+                    <h5 class="modal-title">Edit Visi</h5>
                     <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <em class="icon ni ni-cross"></em>
                     </a>
@@ -264,6 +285,12 @@
                     <form id="editForm" action="" method="POST">
                         @method('PUT')
                         @csrf
+                        <div class="form-group">
+                            <label class="form-label" for="edit_title">Judul</label>
+                            <div class="form-control-wrap">
+                                <input type="text" class="form-control" name="title" id="edit_title" required>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label class="form-label" for="edit_description">Deskripsi</label>
                             <div class="form-control-wrap">
@@ -287,13 +314,13 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Hapus Informasi</h5>
+                    <h5 class="modal-title">Hapus Visi</h5>
                     <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <em class="icon ni ni-cross"></em>
                     </a>
                 </div>
                 <div class="modal-body">
-                    <p id="deleteText">Apakah anda yakin ingin menghapus informasi?</p>
+                    <p id="deleteText">Apakah anda yakin ingin menghapus visi?</p>
                     <form id="deleteForm" action="" method="POST">
                         @method('DELETE')
                         @csrf
