@@ -7,6 +7,7 @@
             max-width: 200px;
             margin: 10px 0;
         }
+
         .thumbnail-image {
             height: 350px;
             object-fit: cover;
@@ -72,32 +73,77 @@
                 }
             }
 
+            @if ($errors->any())
+                @if (session('edit_competency_id') && old('_method') == 'PUT')
+                    $('#editModal').modal('show');
+                    var competencyId = "{{ session('edit_competency_id') }}";
+                    var url = "{{ route('admins.find', ':id') }}".replace(':id', competencyId);
+
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        success: function(response) {
+                            $('#editForm').attr('action',
+                                "{{ route('admins.update', ':id') }}".replace(':id',
+                                    competencyId));
+
+                            const oldName = "{{ old('name') }}";
+                            const oldDescription = "{{ old('description') }}";
+
+                            $('#edit_name').val(oldName ? oldName : response.name);
+                            $('#edit_description').val(oldDescription ? oldDescription : response
+                                .description);
+                        },
+                        error: function() {
+                            alert('Failed to fetch data');
+                        }
+                    });
+                @else
+                    $('#modalForm').modal('show');
+                @endif
+            @endif
+
             $('.edit-button').click(function() {
-                var lecturerId = $(this).data('id');
-                var url = "{{ route('admins.find', ':id') }}";
-                url = url.replace(':id', lecturerId);
-
-                // Fetch admin data via AJAX
+                var competencyId = $(this).data('id');
+                var url = "{{ route('admins.find', ':id') }}".replace(':id', competencyId);
                 $.ajax({
-                    url: url,
+                    url: "{{ route('admins.session', ':id') }}".replace(':id',
+                        competencyId),
                     type: 'GET',
-                    success: function(response) {
-                        $('#editModal').modal('show');
-                        $('#editForm').attr('action', "{{ route('admins.update', ':id') }}"
-                            .replace(':id', lecturerId));
-                        $('#editForm #edit_name').val(response.name);
-                        if (response.location === 'Kampus Indralaya') {
-                            $('#editForm #editCustomRadio1').prop('checked', true);
-                        } else if (response.location === 'Kampus Palembang') {
-                            $('#editForm #editCustomRadio2').prop('checked', true);
-                        }
+                    success: function() {
+                        $.ajax({
+                            url: url,
+                            type: 'GET',
+                            success: function(response) {
+                                $('#editModal').modal('show');
+                                $('#editForm').attr('action',
+                                    "{{ route('admins.update', ':id') }}"
+                                    .replace(':id', competencyId));
+                                $('#editForm #edit_name').val(response.name);
+                                if (response.location === 'Kampus Indralaya') {
+                                    $('#editForm #editCustomRadio1').prop('checked',
+                                        true);
+                                } else if (response.location ===
+                                    'Kampus Palembang') {
+                                    $('#editForm #editCustomRadio2').prop('checked',
+                                        true);
+                                }
 
-                        if (response.photo) {
-                            previewOldPhoto(response.photo.replace('public/', ''));
-                        } else {
-                            $('#photo-preview')
-                                .hide();
-                        }
+                                if (response.photo) {
+                                    previewOldPhoto(response.photo.replace(
+                                        'public/', ''));
+                                } else {
+                                    $('#photo-preview')
+                                        .hide();
+                                }
+                            },
+                            error: function() {
+                                alert('Failed to fetch data');
+                            }
+                        });
+                    },
+                    error: function() {
+                        alert('Failed to store competency ID in session');
                     }
                 });
             });
@@ -153,66 +199,66 @@
 @endpush
 
 @section('content')
-<div class="nk-content-body">
-    <div class="nk-block-head nk-block-head-sm">
-        <div class="nk-block-between">
-            <div class="nk-block-head-content">
-                <h3 class="nk-block-title page-title">Admin</h3>
-            </div><!-- .nk-block-head-content -->
-            <div class="nk-block-head-content">
-                <div class="toggle-wrap nk-block-tools-toggle">
-                    <a href="#" class="btn btn-icon btn-trigger toggle-expand me-n1" data-target="pageMenu"><em
-                            class="icon ni ni-more-v"></em></a>
-                    <div class="toggle-expand-content" data-content="pageMenu">
-                        <ul class="nk-block-tools g-3">
-                            <li class="nk-block-tools-opt">
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                    data-bs-target="#modalForm">
-                                    <em class="icon ni ni-plus me-1"></em>Tambah Admin</span>
-                                </button>
-                            </li>
-                        </ul>
+    <div class="nk-content-body">
+        <div class="nk-block-head nk-block-head-sm">
+            <div class="nk-block-between">
+                <div class="nk-block-head-content">
+                    <h3 class="nk-block-title page-title">Admin</h3>
+                </div><!-- .nk-block-head-content -->
+                <div class="nk-block-head-content">
+                    <div class="toggle-wrap nk-block-tools-toggle">
+                        <a href="#" class="btn btn-icon btn-trigger toggle-expand me-n1" data-target="pageMenu"><em
+                                class="icon ni ni-more-v"></em></a>
+                        <div class="toggle-expand-content" data-content="pageMenu">
+                            <ul class="nk-block-tools g-3">
+                                <li class="nk-block-tools-opt">
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#modalForm">
+                                        <em class="icon ni ni-plus me-1"></em>Tambah Admin</span>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="nk-block">
-        <div id="admins-content" class="row g-gs">
-            @foreach ($admins as $index => $admin)
-                <div class="col-xxl-3 col-lg-4 col-sm-6 admins-item">
-                    <div class="card card-bordered product-card">
-                        <div class="product-thumb">
-                            <img src="{{ Storage::url($admin->photo) }}" class="card-img-top thumbnail-image"
-                                alt="">
-                            <ul class="product-badges">
-                                <li><span class="badge bg-primary">{{ $admin->location }}</span></li>
-                            </ul>
-                            <ul class="product-actions mb-3">
-                                <li> <button class="btn btn-primary rounded-pill show-button"
-                                        data-id="{{ $admin->id }}">
-                                        <em class="ni ni-eye"></em>
-                                    </button></li>
-                                <li> <button class="btn btn-warning rounded-pill edit-button"
-                                        data-id="{{ $admin->id }}">
-                                        <em class="ni ni-edit"></em>
-                                    </button></li>
-                                <li> <button class="btn btn-danger rounded-pill delete-button"
-                                        data-id="{{ $admin->id }}">
-                                        <em class="ni ni-trash"></em>
-                                    </button></li>
-                            </ul>
-                        </div>
-                        <div class="card-inner text-center">
-                            <h5 class="product-title">{{ $admin->name }}</h5>
-                            <p class="product-tags">{{ $admin->location }}</p>
+        <div class="nk-block">
+            <div id="admins-content" class="row g-gs">
+                @foreach ($admins as $index => $admin)
+                    <div class="col-xxl-3 col-lg-4 col-sm-6 admins-item">
+                        <div class="card card-bordered product-card">
+                            <div class="product-thumb">
+                                <img src="{{ Storage::url($admin->photo) }}" class="card-img-top thumbnail-image"
+                                    alt="">
+                                <ul class="product-badges">
+                                    <li><span class="badge bg-primary">{{ $admin->location }}</span></li>
+                                </ul>
+                                <ul class="product-actions mb-3">
+                                    <li> <button class="btn btn-primary rounded-pill show-button"
+                                            data-id="{{ $admin->id }}">
+                                            <em class="ni ni-eye"></em>
+                                        </button></li>
+                                    <li> <button class="btn btn-warning rounded-pill edit-button"
+                                            data-id="{{ $admin->id }}">
+                                            <em class="ni ni-edit"></em>
+                                        </button></li>
+                                    <li> <button class="btn btn-danger rounded-pill delete-button"
+                                            data-id="{{ $admin->id }}">
+                                            <em class="ni ni-trash"></em>
+                                        </button></li>
+                                </ul>
+                            </div>
+                            <div class="card-inner text-center">
+                                <h5 class="product-title">{{ $admin->name }}</h5>
+                                <p class="product-tags">{{ $admin->location }}</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-            @endforeach
+                @endforeach
+            </div>
         </div>
     </div>
-</div>
 
     {{-- Show Modal --}}
     <div class="modal fade" id="showModal">
@@ -295,18 +341,22 @@
                                 <div class="col-md-3 col-sm-6">
                                     <div class="preview-block">
                                         <div class="custom-control custom-control-sm custom-radio">
-                                            <input type="radio" id="customRadio1" name="location" value="Kampus Indralaya"
-                                                autocomplete="off" required class="custom-control-input">
-                                            <label class="custom-control-label" for="customRadio1">Kampus Indralaya</label>
+                                            <input type="radio" id="customRadio1" name="location"
+                                                value="Kampus Indralaya" autocomplete="off" required
+                                                class="custom-control-input">
+                                            <label class="custom-control-label" for="customRadio1">Kampus
+                                                Indralaya</label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-3 col-sm-6">
                                     <div class="preview-block">
                                         <div class="custom-control custom-control-sm custom-radio">
-                                            <input type="radio" id="customRadio2" name="location" value="Kampus Palembang"
-                                                autocomplete="off" required class="custom-control-input">
-                                            <label class="custom-control-label" for="customRadio2">Kampus Palembang</label>
+                                            <input type="radio" id="customRadio2" name="location"
+                                                value="Kampus Palembang" autocomplete="off" required
+                                                class="custom-control-input">
+                                            <label class="custom-control-label" for="customRadio2">Kampus
+                                                Palembang</label>
                                         </div>
                                     </div>
                                 </div>
@@ -364,7 +414,8 @@
                                             <input type="radio" id="editCustomRadio1" name="location"
                                                 value="Kampus Indralaya" autocomplete="off" required
                                                 class="custom-control-input">
-                                            <label class="custom-control-label" for="editCustomRadio1">Kampus Indralaya</label>
+                                            <label class="custom-control-label" for="editCustomRadio1">Kampus
+                                                Indralaya</label>
                                         </div>
                                     </div>
                                 </div>
@@ -374,7 +425,8 @@
                                             <input type="radio" id="editCustomRadio2" name="location"
                                                 value="Kampus Palembang" autocomplete="off" required
                                                 class="custom-control-input">
-                                            <label class="custom-control-label" for="editCustomRadio2">Kampus Palembang</label>
+                                            <label class="custom-control-label" for="editCustomRadio2">Kampus
+                                                Palembang</label>
                                         </div>
                                     </div>
                                 </div>

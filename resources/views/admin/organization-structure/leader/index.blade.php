@@ -73,29 +73,73 @@
                 }
             }
 
-            $('.edit-button').click(function() {
-                var lecturerId = $(this).data('id');
-                var url = "{{ route('leaders.find', ':id') }}";
-                url = url.replace(':id', lecturerId);
+            @if ($errors->any())
+                @if (session('edit_competency_id') && old('_method') == 'PUT')
+                    $('#editModal').modal('show');
+                    var competencyId = "{{ session('edit_competency_id') }}";
+                    var url = "{{ route('leaders.find', ':id') }}".replace(':id', competencyId);
 
-                // Fetch admin data via AJAX
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    success: function(response) {
-                        $('#editModal').modal('show');
-                        $('#editForm').attr('action', "{{ route('leaders.update', ':id') }}"
-                            .replace(':id', lecturerId));
-                        $('#editForm #edit_name').val(response.name);
-                        $('#editForm #edit_position').val(response.position);
-                        $('#editForm #edit_description').val(response.description);
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        success: function(response) {
+                            $('#editForm').attr('action',
+                                "{{ route('leaders.update', ':id') }}".replace(':id',
+                                    competencyId));
 
-                        if (response.photo) {
-                            previewOldPhoto(response.photo.replace('public/', ''));
-                        } else {
-                            $('#photo-preview')
-                                .hide();
+                            const oldName = "{{ old('name') }}";
+                            const oldDescription = "{{ old('description') }}";
+
+                            $('#edit_name').val(oldName ? oldName : response.name);
+                            $('#edit_description').val(oldDescription ? oldDescription : response
+                                .description);
+                        },
+                        error: function() {
+                            alert('Failed to fetch data');
                         }
+                    });
+                @else
+                    $('#modalForm').modal('show');
+                @endif
+            @endif
+
+            $('.edit-button').click(function() {
+                var competencyId = $(this).data('id');
+                var url = "{{ route('leaders.find', ':id') }}".replace(':id', competencyId);
+                $.ajax({
+                    url: "{{ route('leaders.session', ':id') }}".replace(':id',
+                        competencyId),
+                    type: 'GET',
+                    success: function() {
+                        $.ajax({
+                            url: url,
+                            type: 'GET',
+                            success: function(response) {
+                                $('#editModal').modal('show');
+                                $('#editForm').attr('action',
+                                    "{{ route('leaders.update', ':id') }}"
+                                    .replace(':id', competencyId));
+                                $('#editForm #edit_name').val(response.name);
+                                $('#editForm #edit_position').val(response
+                                .position);
+                                $('#editForm #edit_description').val(response
+                                    .description);
+
+                                if (response.photo) {
+                                    previewOldPhoto(response.photo.replace(
+                                        'public/', ''));
+                                } else {
+                                    $('#photo-preview')
+                                        .hide();
+                                }
+                            },
+                            error: function() {
+                                alert('Failed to fetch data');
+                            }
+                        });
+                    },
+                    error: function() {
+                        alert('Failed to store competency ID in session');
                     }
                 });
             });
@@ -354,7 +398,8 @@
                         <div class="form-group">
                             <label class="form-label" for="description">Deskripsi</label>
                             <div class="form-control-wrap">
-                                <textarea class="form-control no-resize @error('description') is-invalid @enderror" name="description" id="description" placeholder="Masukkan deskripsi">{{ old('description') }}</textarea>
+                                <textarea class="form-control no-resize @error('description') is-invalid @enderror" name="description"
+                                    id="description" placeholder="Masukkan deskripsi">{{ old('description') }}</textarea>
                                 @error('description')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror

@@ -92,4 +92,10 @@ class LeaderController extends Controller
         $leader->delete();
         return redirect()->route('leaders')->with('success', 'Data pimpinan berhasil dihapus.');
     }
+
+    public function sessionLeader($id)
+    {
+        session(['edit_competency_id' => $id]);
+        return response()->json(['status' => 'success']);
+    }
 }

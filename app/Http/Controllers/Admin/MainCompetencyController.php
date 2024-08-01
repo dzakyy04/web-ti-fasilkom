@@ -57,4 +57,9 @@ class MainCompetencyController extends Controller
         $mainCompetency = Competency::where('type', 'main')->findOrFail($id);
         return response()->json($mainCompetency);
     }
+    public function sessionMainCompetency($id)
+    {
+        session(['edit_competency_id' => $id]);
+        return response()->json(['status' => 'success']);
+    }
 }

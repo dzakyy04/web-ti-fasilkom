@@ -35,13 +35,6 @@
             datatableWrap.children().appendTo(wrappingDiv);
             datatableWrap.append(wrappingDiv);
 
-            let educationIndex = {{ old('educations') ? count(old('educations')) : 1 }};
-            let editEducationIndex = 0;
-
-            @if ($errors->any())
-                $('#modalForm').modal('show');
-            @endif
-
             function previewOldPhoto(photoUrl) {
                 var oldPreview = $('#photo-preview');
                 oldPreview.attr('src', `{{ Storage::url('${photoUrl}') }}`);
@@ -67,84 +60,131 @@
                 }
             }
 
+            @if ($errors->any())
+                @if (session('edit_competency_id') && old('_method') == 'PUT')
+                    $('#editModal').modal('show');
+                    var competencyId = "{{ session('edit_competency_id') }}";
+                    var url = "{{ route('missions.find', ':id') }}".replace(':id', competencyId);
+
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        success: function(response) {
+                            $('#editForm').attr('action',
+                                "{{ route('missions.update', ':id') }}".replace(':id',
+                                    competencyId));
+
+                            const oldName = "{{ old('name') }}";
+                            const oldDescription = "{{ old('description') }}";
+
+                            $('#edit_name').val(oldName ? oldName : response.title);
+                            $('#edit_description').val(oldDescription ? oldDescription : response
+                                .description);
+
+                            if (response.icon) {
+                                var photoUrl = response.icon.replace('public/', '/storage/');
+                                $('#photo-preview').attr('src', photoUrl).show();
+                            } else {
+                                $('#photo-preview').hide();
+                            }
+                        },
+                        error: function() {
+                            alert('Failed to fetch data');
+                        }
+                    });
+                @else
+                    $('#modalForm').modal('show');
+                @endif
+            @endif
+
             $('.edit-button').click(function() {
                 var competencyId = $(this).data('id');
-                var url = "{{ route('missions.find', ':id') }}";
-                url = url.replace(':id', competencyId);
-
-                // Fetch data via AJAX
+                var url = "{{ route('missions.find', ':id') }}".replace(':id', competencyId);
                 $.ajax({
-                    url: url,
+                    url: "{{ route('missions.session', ':id') }}".replace(':id',
+                        competencyId),
                     type: 'GET',
-                    success: function(response) {
-                        $('#editModal').modal('show');
-                        $('#editForm').attr('action',
-                            "{{ route('missions.update', ':id') }}"
-                            .replace(':id', competencyId));
-                        $('#edit_name').val(response.title);
-                        $('#edit_description').val(response.description);
+                    success: function() {
+                        $.ajax({
+                            url: url,
+                            type: 'GET',
+                            success: function(response) {
+                                $('#editModal').modal('show');
+                                $('#editForm').attr('action',
+                                    "{{ route('missions.update', ':id') }}"
+                                    .replace(':id', competencyId));
+                                $('#edit_name').val(response.title);
+                                $('#edit_description').val(response.description);
 
-                        if (response.icon) {
-                            var photoUrl = response.icon.replace('public/', '/storage/');
-                            $('#photo-preview').attr('src', photoUrl).show();
-                        } else {
-                            $('#photo-preview').hide();
-                        }
+                                if (response.icon) {
+                                    var photoUrl = response.icon.replace('public/',
+                                        '/storage/');
+                                    $('#photo-preview').attr('src', photoUrl)
+                                        .show();
+                                } else {
+                                    $('#photo-preview').hide();
+                                }
+                            },
+                            error: function() {
+                                alert('Failed to fetch data');
+                            }
+                        });
                     },
                     error: function() {
-                        alert('Failed to fetch data');
+                        alert('Failed to store competency ID in session');
                     }
                 });
             });
+        });
 
-            $('.delete-button').click(function() {
-                var competencyId = $(this).data('id');
-                var url = "{{ route('missions.find', ':id') }}";
-                url = url.replace(':id', competencyId);
 
-                // Fetch data via AJAX
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    success: function(response) {
-                        $('#deleteModal').modal('show');
-                        $('#deleteForm').attr('action',
-                            "{{ route('missions.delete', ':id') }}".replace(
-                                ':id', competencyId));
-                        $("#deleteText").text(
-                            "Apakah anda yakin ingin menghapus misi " +
-                            response.title + "?");
-                    },
-                    error: function() {
-                        alert('Failed to fetch data');
-                    }
-                });
+        $('.delete-button').click(function() {
+            var competencyId = $(this).data('id');
+            var url = "{{ route('missions.find', ':id') }}";
+            url = url.replace(':id', competencyId);
+
+            // Fetch data via AJAX
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function(response) {
+                    $('#deleteModal').modal('show');
+                    $('#deleteForm').attr('action',
+                        "{{ route('missions.delete', ':id') }}".replace(
+                            ':id', competencyId));
+                    $("#deleteText").text(
+                        "Apakah anda yakin ingin menghapus misi " +
+                        response.title + "?");
+                },
+                error: function() {
+                    alert('Failed to fetch data');
+                }
             });
+        });
 
-            $('.show-button').click(function() {
-                var competencyId = $(this).data('id');
-                var url = "{{ route('missions.find', ':id') }}";
-                url = url.replace(':id', competencyId);
+        $('.show-button').click(function() {
+            var competencyId = $(this).data('id');
+            var url = "{{ route('missions.find', ':id') }}";
+            url = url.replace(':id', competencyId);
 
-                // Fetch data via AJAX
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    success: function(response) {
-                        $('#showModal').modal('show');
-                        $('#showName').text(response.title);
-                        $('#showDescription').text(response.description);
-                        if (response.icon) {
-                            var photoUrl = response.icon.replace('public/', '/storage/');
-                            $('#showPhoto').attr('src', photoUrl).show();
-                        } else {
-                            $('#showPhoto').hide();
-                        }
-                    },
-                    error: function() {
-                        alert('Failed to fetch data');
+            // Fetch data via AJAX
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function(response) {
+                    $('#showModal').modal('show');
+                    $('#showName').text(response.title);
+                    $('#showDescription').text(response.description);
+                    if (response.icon) {
+                        var photoUrl = response.icon.replace('public/', '/storage/');
+                        $('#showPhoto').attr('src', photoUrl).show();
+                    } else {
+                        $('#showPhoto').hide();
                     }
-                });
+                },
+                error: function() {
+                    alert('Failed to fetch data');
+                }
             });
         });
 
@@ -257,7 +297,8 @@
                         <div class="form-group">
                             <label class="form-label" for="description">Deskripsi</label>
                             <div class="form-control-wrap">
-                                <textarea class="form-control no-resize @error('description') is-invalid @enderror" name="description" id="description" placeholder="Masukkan deskripsi">{{ old('description') }}</textarea>
+                                <textarea class="form-control no-resize @error('description') is-invalid @enderror" name="description" id="description"
+                                    placeholder="Masukkan deskripsi">{{ old('description') }}</textarea>
                                 @error('description')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -296,19 +337,24 @@
                                     <label class="form-label" for="edit_photo">Ikon (.svg)</label>
                                     <input type="file" class="form-control @error('icon') is-invalid @enderror"
                                         name="icon" id="edit_photo" onchange="previewPhoto(event)">
+                                    @error('icon')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="edit_name">Judul</label>
                             <div class="form-control-wrap">
-                                <input type="text" class="form-control" name="title" id="edit_name" value="{{ old('title') }}" required>
+                                <input type="text" class="form-control" name="title" id="edit_name"
+                                    value="{{ old('title') }}" required>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="edit_description">Deskripsi</label>
                             <div class="form-control-wrap">
-                                <textarea class="form-control no-resize @error('description') is-invalid @enderror" name="description" id="edit_description">{{ old('description') }}</textarea>
+                                <textarea class="form-control no-resize @error('description') is-invalid @enderror" name="description"
+                                    id="edit_description">{{ old('description') }}</textarea>
                                 @error('description')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror

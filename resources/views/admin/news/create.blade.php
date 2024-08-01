@@ -35,7 +35,11 @@
         $(document).ready(function() {
             $('#title').on('input', function() {
                 var title = $(this).val();
-                var slug = title.toLowerCase().replace(/\s+/g, '-');
+                var slug = title.toLowerCase()
+                    .replace(/[^a-z0-9\s-]/g, '') // Hapus karakter yang bukan huruf, angka, atau spasi
+                    .replace(/\s+/g, '-') // Ganti spasi dengan tanda hubung
+                    .replace(/-+/g,
+                    '-'); // Ganti beberapa tanda hubung berturut-turut dengan satu tanda hubung
                 $('#slug').val(slug);
             });
         });
@@ -56,7 +60,7 @@
 
             $('#previewTitle').text(title);
             $('#previewCreatedAt').html('<i class="icon ni ni-calendar text-warning"></i> ' +
-            createdAt); // Memasukkan ikon kalender dan tanggal
+                createdAt); // Memasukkan ikon kalender dan tanggal
 
             var previewThumbnail = $('#previewThumbnail');
             if (thumbnailSrc) {
@@ -137,7 +141,7 @@
                                     <button type="button" class="btn btn-primary mt-2" onclick="previewContent()"><em
                                             class="icon ni ni-eye me-1"></em>Pratinjau</button>
                                 </div>
-                            </div>                            
+                            </div>
                             <div class="text-end">
                                 <button type="submit" class="btn btn-primary"><em class="ni ni-save me-1"></em>
                                     Simpan</button>

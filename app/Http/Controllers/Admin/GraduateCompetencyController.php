@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Competency;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class GraduateCompetencyController extends Controller
@@ -67,9 +68,12 @@ class GraduateCompetencyController extends Controller
             'icon' => $competency->icon,
         ]);
 
+        // Hapus ID kompetensi dari sesi
+        $request->session()->forget('edit_competency_id');
+        Log::info('Competency ID removed from session'); // Tambahkan log
+
         return redirect()->route('graduate-competencies')->with('success', 'Kompetensi lulusan berhasil diperbarui.');
     }
-
 
     public function delete($id)
     {
@@ -83,5 +87,11 @@ class GraduateCompetencyController extends Controller
     {
         $graduateCompetency = Competency::where('type', 'graduate')->findOrFail($id);
         return response()->json($graduateCompetency);
+    }
+
+    public function sessionGraduateCompetency($id)
+    {
+        session(['edit_competency_id' => $id]);
+        return response()->json(['status' => 'success']);
     }
 }
