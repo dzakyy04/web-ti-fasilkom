@@ -234,7 +234,7 @@
                                         style="display: none; max-width: 200px; max-height: 200px;">
                                 </div>
                                 <div class="custom-file position-relative mt-1">
-                                    <label class="form-label" for="icon">Icon</label>
+                                    <label class="form-label" for="icon">Ikon (.svg)</label>
                                     <input type="file" class="form-control @error('icon') is-invalid @enderror"
                                         name="icon" id="icon" onchange="previewNewPhoto(event)" required>
                                     @error('icon')
@@ -293,7 +293,7 @@
                                         style="max-width: 200px; max-height: 200px; display: none;">
                                 </div>
                                 <div class="custom-file position-relative mt-1">
-                                    <label class="form-label" for="edit_photo">Foto</label>
+                                    <label class="form-label" for="edit_photo">Ikon (.svg)</label>
                                     <input type="file" class="form-control @error('icon') is-invalid @enderror"
                                         name="icon" id="edit_photo" onchange="previewPhoto(event)">
                                 </div>
@@ -302,7 +302,7 @@
                         <div class="form-group">
                             <label class="form-label" for="edit_name">Nama</label>
                             <div class="form-control-wrap">
-                                <input type="text" class="form-control" name="name" id="edit_name" required>
+                                <input type="text" class="form-control" name="name" id="edit_name" value="{{ old('name') }}" required>
                             </div>
                         </div>
                         <div class="form-group">

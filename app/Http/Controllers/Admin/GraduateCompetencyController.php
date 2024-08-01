@@ -21,7 +21,7 @@ class GraduateCompetencyController extends Controller
         $request->validate([
             'name' => 'required|string',
             'description' => 'required|string',
-            'icon' => 'nullable|image',
+            'icon' => 'nullable|image|mimes:svg',
         ]);
 
         $iconPath = null;
@@ -46,7 +46,7 @@ class GraduateCompetencyController extends Controller
         $request->validate([
             'name' => 'required|string',
             'description' => 'required|string',
-            'icon' => 'nullable|image',
+            'icon' => 'nullable|image|mimes:svg',
         ]);
 
         $competency = Competency::where('type', 'graduate')->findOrFail($id);

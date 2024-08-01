@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\InformationController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\LeaderController;
 use App\Http\Controllers\Admin\MainCompetencyController;
+use App\Http\Controllers\Admin\MissionController;
 use App\Http\Controllers\Admin\SupportCompetencyController;
 use App\Http\Controllers\Admin\VisionController;
 
@@ -128,6 +129,12 @@ Route::prefix('admin')->group(function () {
       Route::put('/informasi-jurusan/visi/{id}', [VisionController::class, 'update'])->name('visions.update');
       Route::delete('/informasi-jurusan/visi/{id}', [VisionController::class, 'delete'])->name('visions.delete');
 
+      // Informasi Jurusan Misi
+      Route::get('/informasi-jurusan/misi', [MissionController::class, 'index'])->name('missions');
+      Route::get('/informasi-jurusan/misi/{id}', [MissionController::class, 'findMission'])->name('missions.find');
+      Route::post('/informasi-jurusan/misi', [MissionController::class, 'store'])->name('missions.store');
+      Route::put('/informasi-jurusan/misi/{id}', [MissionController::class, 'update'])->name('missions.update');
+      Route::delete('/informasi-jurusan/misi/{id}', [MissionController::class, 'delete'])->name('missions.delete');
 
    });
 });
