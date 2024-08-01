@@ -28,7 +28,7 @@ class NewsController extends Controller
         $news = $query->paginate($perPage);
     
         $news->transform(function ($newsItem) {
-            $newsItem->content = Helper::processContent($newsItem->content);
+            $newsItem->content = Helper::processContent($newsItem->content, 200);
             return $newsItem;
         });
     

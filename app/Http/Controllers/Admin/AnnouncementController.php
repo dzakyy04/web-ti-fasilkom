@@ -28,7 +28,7 @@ class AnnouncementController extends Controller
         $announcements = $query->paginate($perPage);
     
         $announcements->transform(function ($announcement) {
-            $announcement->content = Helper::processContent($announcement->content);
+            $announcement->content = Helper::processContent($announcement->content, 200);
             return $announcement;
         });
     

@@ -34,6 +34,13 @@ class AnnouncementController extends Controller
      *     required=false,
      *     @OA\Schema(type="integer", default=10)
      *   ),
+     *   @OA\Parameter(
+     *     name="panjangKonten",
+     *     in="query",
+     *     description="Jumlah karakter dalam konten",
+     *     required=false,
+     *     @OA\Schema(type="integer", default=250)
+     *   ),
      *   @OA\Response(
      *     response=200,
      *     description="Berhasil",
@@ -91,6 +98,7 @@ class AnnouncementController extends Controller
     public function getAll(Request $request)
     {
         try {
+            $length = $request->query('panjangKonten', 250);
             $limit = $request->input('batas', 10);
             $page = $request->input('halaman', 1);
 
@@ -98,8 +106,8 @@ class AnnouncementController extends Controller
                 ->latest()
                 ->paginate($limit, ['*'], 'halaman', $page);
 
-            $announcements->getCollection()->transform(function ($announcement) {
-                $announcement->content = Helper::processContent($announcement->content);
+            $announcements->getCollection()->transform(function ($announcement) use ($length) {
+                $announcement->content = Helper::processContent($announcement->content, $length);
                 $announcement->thumbnail = Helper::convertImageUrl($announcement->thumbnail);
                 return $announcement;
             });

@@ -34,6 +34,13 @@ class NewsController extends Controller
      *     required=false,
      *     @OA\Schema(type="integer", default=10)
      *   ),
+     *   @OA\Parameter(
+     *     name="panjangKonten",
+     *     in="query",
+     *     description="Jumlah karakter dalam konten",
+     *     required=false,
+     *     @OA\Schema(type="integer", default=250)
+     *   ),
      *   @OA\Response(
      *     response=200,
      *     description="Berhasil",
@@ -91,6 +98,7 @@ class NewsController extends Controller
     public function getAll(Request $request)
     {
         try {
+            $length = $request->query('panjangKonten', 250);
             $limit = $request->input('batas', 10);
             $page = $request->input('halaman', 1);
 
@@ -98,8 +106,8 @@ class NewsController extends Controller
                 ->latest()
                 ->paginate($limit, ['*'], 'halaman', $page);
 
-            $news->getCollection()->transform(function ($newsItem) {
-                $newsItem->content = Helper::processContent($newsItem->content);
+            $news->getCollection()->transform(function ($newsItem) use ($length) {
+                $newsItem->content = Helper::processContent($newsItem->content, $length);
                 $newsItem->thumbnail = Helper::convertImageUrl($newsItem->thumbnail);
                 return $newsItem;
             });

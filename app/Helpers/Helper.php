@@ -16,12 +16,12 @@ class Helper
         return $image;
     }
 
-    public static function processContent($content)
+    public static function processContent($content, $length = null)
     {
         $contentWithoutHtml = preg_replace('/\.\s*/', '. ', str_replace(["\n", "\r"], " ", strip_tags($content)));
 
-        if (strlen($contentWithoutHtml) > 250) {
-            $truncatedContent = substr($contentWithoutHtml, 0, 250);
+        if ($length !== null && strlen($contentWithoutHtml) > $length) {
+            $truncatedContent = substr($contentWithoutHtml, 0, $length);
 
             $lastSpace = strrpos($truncatedContent, ' ');
             if ($lastSpace !== false) {
@@ -33,4 +33,5 @@ class Helper
 
         return $contentWithoutHtml;
     }
+
 }
