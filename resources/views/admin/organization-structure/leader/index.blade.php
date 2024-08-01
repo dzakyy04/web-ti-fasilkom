@@ -354,8 +354,10 @@
                         <div class="form-group">
                             <label class="form-label" for="description">Deskripsi</label>
                             <div class="form-control-wrap">
-                                <textarea class="form-control no-resize" name="description" placeholder="Masukkan deskripsi" id="description"
-                                    value="{{ old('description') }}" required></textarea>
+                                <textarea class="form-control no-resize @error('description') is-invalid @enderror" name="description" id="description" placeholder="Masukkan deskripsi">{{ old('description') }}</textarea>
+                                @error('description')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
                         <div class="form-group d-flex justify-content-end">
