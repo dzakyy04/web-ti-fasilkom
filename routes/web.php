@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\FacilityController;
 use App\Http\Controllers\Admin\GraduateCompetencyController;
 use App\Http\Controllers\Admin\GraduateController;
+use App\Http\Controllers\Admin\InformationController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\LeaderController;
 use App\Http\Controllers\Admin\MainCompetencyController;
@@ -111,5 +112,12 @@ Route::prefix('admin')->group(function () {
       Route::post('/struktur-organisasi/pimpinan', [LeaderController::class, 'store'])->name('leaders.store');
       Route::put('/struktur-organisasi/pimpinan/{id}', [LeaderController::class, 'update'])->name('leaders.update');
       Route::delete('/struktur-organisasi/pimpinan/{id}', [LeaderController::class, 'delete'])->name('leaders.delete');
+
+      // Informasi Jurusan
+      Route::get('/informasi-jurusan/informasi', [InformationController::class, 'index'])->name('informations');
+      Route::get('/informasi-jurusan/informasi/{id}', [InformationController::class, 'findInformation'])->name('informations.find');
+      Route::post('/informasi-jurusan/informasi', [InformationController::class, 'store'])->name('informations.store');
+      Route::put('/informasi-jurusan/informasi/{id}', [InformationController::class, 'update'])->name('informations.update');
+      Route::delete('/informasi-jurusan/informasi/{id}', [InformationController::class, 'delete'])->name('informations.delete');
    });
 });

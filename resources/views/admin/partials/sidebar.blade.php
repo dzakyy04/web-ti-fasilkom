@@ -46,6 +46,32 @@
                     </li><!-- .nk-menu-heading -->
                     <li class="nk-menu-item has-sub">
                         <a href="#" class="nk-menu-link nk-menu-toggle">
+                            <span class="nk-menu-icon"><em class="icon ni ni-file-docs"></em></span>
+                            <span class="nk-menu-text">Informasi Jurusan</span>
+                        </a>
+                        <ul class="nk-menu-sub" style="display: none;">
+                            <li class="nk-menu-item">
+                                <a href="{{ route('informations') }}" class="nk-menu-link">
+                                    <span class="nk-menu-icon"><em class="icon ni ni-files"></em></span>
+                                    <span class="nk-menu-text">Informasi</span>
+                                </a>
+                            </li>
+                            <li class="nk-menu-item">
+                                <a href="{{ route('admins') }}" class="nk-menu-link">
+                                    <span class="nk-menu-icon"><em class="icon ni ni-files"></em></span>
+                                    <span class="nk-menu-text">Visi</span>
+                                </a>
+                            </li>
+                            <li class="nk-menu-item">
+                                <a href="{{ route('admins') }}" class="nk-menu-link">
+                                    <span class="nk-menu-icon"><em class="icon ni ni-account-setting"></em></span>
+                                    <span class="nk-menu-text">Misi</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nk-menu-item has-sub">
+                        <a href="#" class="nk-menu-link nk-menu-toggle">
                             <span class="nk-menu-icon"><em class="icon ni ni-network"></em></span>
                             <span class="nk-menu-text">Struktur Organisasi</span>
                         </a>
