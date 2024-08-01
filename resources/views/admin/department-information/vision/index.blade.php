@@ -67,26 +67,62 @@
                 }
             }
 
+            @if ($errors->any())
+                @if (session('edit_competency_id') && old('_method') == 'PUT')
+                    $('#editModal').modal('show');
+                    var competencyId = "{{ session('edit_competency_id') }}";
+                    var url = "{{ route('visions.find', ':id') }}".replace(':id', competencyId);
+
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        success: function(response) {
+                            $('#editForm').attr('action',
+                                "{{ route('visions.update', ':id') }}".replace(':id',
+                                    competencyId));
+
+                            const oldName = "{{ old('title') }}";
+                            const oldDescription = "{{ old('description') }}";
+
+                            $('#edit_title').val(oldName ? oldName : response.title);
+                            $('#edit_description').val(oldDescription ? oldDescription : response
+                                .description);
+                        },
+                        error: function() {
+                            alert('Failed to fetch data');
+                        }
+                    });
+                @else
+                    $('#modalForm').modal('show');
+                @endif
+            @endif
+
             $('.edit-button').click(function() {
                 var competencyId = $(this).data('id');
-                var url = "{{ route('visions.find', ':id') }}";
-                url = url.replace(':id', competencyId);
-
-                // Fetch data via AJAX
+                var url = "{{ route('visions.find', ':id') }}".replace(':id', competencyId);
                 $.ajax({
-                    url: url,
+                    url: "{{ route('visions.session', ':id') }}".replace(':id',
+                        competencyId),
                     type: 'GET',
-                    success: function(response) {
-                        $('#editModal').modal('show');
-                        $('#editForm').attr('action',
-                            "{{ route('visions.update', ':id') }}"
-                            .replace(
-                                ':id', competencyId));
-                        $('#edit_title').val(response.title);
-                        $('#edit_description').val(response.description);
+                    success: function() {
+                        $.ajax({
+                            url: url,
+                            type: 'GET',
+                            success: function(response) {
+                                $('#editModal').modal('show');
+                                $('#editForm').attr('action',
+                                    "{{ route('visions.update', ':id') }}"
+                                    .replace(':id', competencyId));
+                                $('#edit_title').val(response.title);
+                                $('#edit_description').val(response.description);
+                            },
+                            error: function() {
+                                alert('Failed to fetch data');
+                            }
+                        });
                     },
                     error: function() {
-                        alert('Failed to fetch data');
+                        alert('Failed to store competency ID in session');
                     }
                 });
             });

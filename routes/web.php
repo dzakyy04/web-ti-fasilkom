@@ -8,7 +8,6 @@ use App\Http\Controllers\Admin\LecturerController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\FacilityController;
 use App\Http\Controllers\Admin\GraduateCompetencyController;
-use App\Http\Controllers\Admin\GraduateController;
 use App\Http\Controllers\Admin\InformationController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\LeaderController;
@@ -76,6 +75,7 @@ Route::prefix('admin')->group(function () {
       // Facility
       Route::get('/sarana-prasarana', [FacilityController::class, 'index'])->name('facilities');
       Route::get('/sarana-prasarana/{id}', [FacilityController::class, 'findFacility'])->name('facilities.find');
+      Route::get('/sarana-prasarana/session/{id}', [FacilityController::class, 'sessionFacility'])->name('facilities.session');
       Route::post('/sarana-prasarana', [FacilityController::class, 'store'])->name('facilities.store');
       Route::put('/sarana-prasarana/{id}', [FacilityController::class, 'update'])->name('facilities.update');
       Route::delete('/sarana-prasarana/{id}', [FacilityController::class, 'delete'])->name('facilities.delete');
@@ -83,6 +83,7 @@ Route::prefix('admin')->group(function () {
       // Main Competency
       Route::get('/kompetensi-utama', [MainCompetencyController::class, 'index'])->name('main-competencies');
       Route::get('/kompetensi-utama/{id}', [MainCompetencyController::class, 'findMainCompetency'])->name('main-competencies.find');
+      Route::get('/kompetensi-utama/session/{id}', [MainCompetencyController::class, 'sessionMainCompetency'])->name('main-competencies.session');
       Route::post('/kompetensi-utama', [MainCompetencyController::class, 'store'])->name('main-competencies.store');
       Route::put('/kompetensi-utama/{id}', [MainCompetencyController::class, 'update'])->name('main-competencies.update');
       Route::delete('/kompetensi-utama/{id}', [MainCompetencyController::class, 'delete'])->name('main-competencies.delete');
@@ -90,6 +91,7 @@ Route::prefix('admin')->group(function () {
       // Kompetensi Pendukung
       Route::get('/kompetensi-pendukung', [SupportCompetencyController::class, 'index'])->name('support-competencies');
       Route::get('/kompetensi-pendukung/{id}', [SupportCompetencyController::class, 'findSupportCompetency'])->name('support-competencies.find');
+      Route::get('/kompetensi-pendukung/session/{id}', [SupportCompetencyController::class, 'sessionSupportCompetency'])->name('support-competencies.session');
       Route::post('/kompetensi-pendukung', [SupportCompetencyController::class, 'store'])->name('support-competencies.store');
       Route::put('/kompetensi-pendukung/{id}', [SupportCompetencyController::class, 'update'])->name('support-competencies.update');
       Route::delete('/kompetensi-pendukung/{id}', [SupportCompetencyController::class, 'delete'])->name('support-competencies.delete');
@@ -97,6 +99,7 @@ Route::prefix('admin')->group(function () {
       // Kompetensi Lulusan
       Route::get('/kompetensi-lulusan', [GraduateCompetencyController::class, 'index'])->name('graduate-competencies');
       Route::get('/kompetensi-lulusan/{id}', [GraduateCompetencyController::class, 'findGraduateCompetency'])->name('graduate-competencies.find');
+      Route::get('/kompetensi-lulusan/session/{id}', [GraduateCompetencyController::class, 'sessionGraduateCompetency'])->name('graduate-competencies.session');
       Route::post('/kompetensi-lulusan', [GraduateCompetencyController::class, 'store'])->name('graduate-competencies.store');
       Route::put('/kompetensi-lulusan/{id}', [GraduateCompetencyController::class, 'update'])->name('graduate-competencies.update');
       Route::delete('/kompetensi-lulusan/{id}', [GraduateCompetencyController::class, 'delete'])->name('graduate-competencies.delete');
@@ -104,6 +107,7 @@ Route::prefix('admin')->group(function () {
       // Struktur Organisasi Admin
       Route::get('/struktur-organisasi/admin', [AdminController::class, 'index'])->name('admins');
       Route::get('/struktur-organisasi/admin/{id}', [AdminController::class, 'findAdmin'])->name('admins.find');
+      Route::get('/struktur-organisasi/admin/session/{id}', [AdminController::class, 'sessionAdmin'])->name('admins.session');
       Route::post('/struktur-organisasi/admin', [AdminController::class, 'store'])->name('admins.store');
       Route::put('/struktur-organisasi/admin/{id}', [AdminController::class, 'update'])->name('admins.update');
       Route::delete('/struktur-organisasi/admin/{id}', [AdminController::class, 'delete'])->name('admins.delete');
@@ -111,6 +115,7 @@ Route::prefix('admin')->group(function () {
       // Struktur Organisasi Pimpinan
       Route::get('/struktur-organisasi/pimpinan', [LeaderController::class, 'index'])->name('leaders');
       Route::get('/struktur-organisasi/pimpinan/{id}', [LeaderController::class, 'findLeader'])->name('leaders.find');
+      Route::get('/struktur-organisasi/pimpinan/session/{id}', [LeaderController::class, 'sessionLeader'])->name('leaders.session');
       Route::post('/struktur-organisasi/pimpinan', [LeaderController::class, 'store'])->name('leaders.store');
       Route::put('/struktur-organisasi/pimpinan/{id}', [LeaderController::class, 'update'])->name('leaders.update');
       Route::delete('/struktur-organisasi/pimpinan/{id}', [LeaderController::class, 'delete'])->name('leaders.delete');
@@ -118,6 +123,7 @@ Route::prefix('admin')->group(function () {
       // Informasi Jurusan
       Route::get('/informasi-jurusan/informasi', [InformationController::class, 'index'])->name('informations');
       Route::get('/informasi-jurusan/informasi/{id}', [InformationController::class, 'findInformation'])->name('informations.find');
+      Route::get('/informasi-jurusan/session/{id}', [InformationController::class, 'sessionInformation'])->name('informations.session');
       Route::post('/informasi-jurusan/informasi', [InformationController::class, 'store'])->name('informations.store');
       Route::put('/informasi-jurusan/informasi/{id}', [InformationController::class, 'update'])->name('informations.update');
       Route::delete('/informasi-jurusan/informasi/{id}', [InformationController::class, 'delete'])->name('informations.delete');
@@ -125,6 +131,7 @@ Route::prefix('admin')->group(function () {
       // Informasi Jurusan Visi
       Route::get('/informasi-jurusan/visi', [VisionController::class, 'index'])->name('visions');
       Route::get('/informasi-jurusan/visi/{id}', [VisionController::class, 'findVision'])->name('visions.find');
+      Route::get('/informasi-jurusan/visi/session/{id}', [VisionController::class, 'sessionVision'])->name('visions.session');
       Route::post('/informasi-jurusan/visi', [VisionController::class, 'store'])->name('visions.store');
       Route::put('/informasi-jurusan/visi/{id}', [VisionController::class, 'update'])->name('visions.update');
       Route::delete('/informasi-jurusan/visi/{id}', [VisionController::class, 'delete'])->name('visions.delete');
@@ -132,6 +139,7 @@ Route::prefix('admin')->group(function () {
       // Informasi Jurusan Misi
       Route::get('/informasi-jurusan/misi', [MissionController::class, 'index'])->name('missions');
       Route::get('/informasi-jurusan/misi/{id}', [MissionController::class, 'findMission'])->name('missions.find');
+      Route::get('/informasi-jurusan/misi/session/{id}', [MissionController::class, 'sessionMission'])->name('missions.session');
       Route::post('/informasi-jurusan/misi', [MissionController::class, 'store'])->name('missions.store');
       Route::put('/informasi-jurusan/misi/{id}', [MissionController::class, 'update'])->name('missions.update');
       Route::delete('/informasi-jurusan/misi/{id}', [MissionController::class, 'delete'])->name('missions.delete');

@@ -23,7 +23,7 @@ class AdminController extends Controller
         $request->validate([
             'name' => 'required|string',
             'location' => 'required|in:Kampus Indralaya,Kampus Palembang',
-            'photo' => 'required|image|max:4096',
+            'photo' => 'required|image',
         ]);
 
         $timestamp = Carbon::now()->format('Ymd_His');
@@ -87,5 +87,11 @@ class AdminController extends Controller
         Storage::delete($admin->photo);
         $admin->delete();
         return redirect()->route('admins')->with('success', 'Data admin berhasil dihapus.');
+    }
+
+    public function sessionAdmin($id)
+    {
+        session(['edit_competency_id' => $id]);
+        return response()->json(['status' => 'success']);
     }
 }

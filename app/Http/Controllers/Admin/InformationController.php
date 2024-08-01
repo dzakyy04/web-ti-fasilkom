@@ -63,4 +63,10 @@ class InformationController extends Controller
         $information->delete();
         return redirect()->route('informations')->with('success', 'Informasi berhasil dihapus.');
     }
+
+    public function sessionInformation($id)
+    {
+        session(['edit_competency_id' => $id]);
+        return response()->json(['status' => 'success']);
+    }
 }

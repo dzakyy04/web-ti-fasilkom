@@ -35,13 +35,6 @@
             datatableWrap.children().appendTo(wrappingDiv);
             datatableWrap.append(wrappingDiv);
 
-            let educationIndex = {{ old('educations') ? count(old('educations')) : 1 }};
-            let editEducationIndex = 0;
-
-            @if ($errors->any())
-                $('#modalForm').modal('show');
-            @endif
-
             function previewOldPhoto(photoUrl) {
                 var oldPreview = $('#photo-preview');
                 oldPreview.attr('src', `{{ Storage::url('${photoUrl}') }}`);
@@ -67,26 +60,62 @@
                 }
             }
 
+            @if ($errors->any())
+                @if (session('edit_competency_id') && old('_method') == 'PUT')
+                    $('#editModal').modal('show');
+                    var competencyId = "{{ session('edit_competency_id') }}";
+                    var url = "{{ route('support-competencies.find', ':id') }}".replace(':id', competencyId);
+
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        success: function(response) {
+                            $('#editForm').attr('action',
+                                "{{ route('support-competencies.update', ':id') }}".replace(':id',
+                                    competencyId));
+
+                            const oldName = "{{ old('name') }}";
+                            const oldDescription = "{{ old('description') }}";
+
+                            $('#edit_name').val(oldName ? oldName : response.name);
+                            $('#edit_description').val(oldDescription ? oldDescription : response
+                                .description);
+                        },
+                        error: function() {
+                            alert('Failed to fetch data');
+                        }
+                    });
+                @else
+                    $('#modalForm').modal('show');
+                @endif
+            @endif
+
             $('.edit-button').click(function() {
                 var competencyId = $(this).data('id');
-                var url = "{{ route('support-competencies.find', ':id') }}";
-                url = url.replace(':id', competencyId);
-
-                // Fetch data via AJAX
+                var url = "{{ route('support-competencies.find', ':id') }}".replace(':id', competencyId);
                 $.ajax({
-                    url: url,
+                    url: "{{ route('support-competencies.session', ':id') }}".replace(':id',
+                        competencyId),
                     type: 'GET',
-                    success: function(response) {
-                        $('#editModal').modal('show');
-                        $('#editForm').attr('action',
-                            "{{ route('support-competencies.update', ':id') }}"
-                            .replace(
-                                ':id', competencyId));
-                        $('#edit_name').val(response.name);
-                        $('#edit_description').val(response.description);
+                    success: function() {
+                        $.ajax({
+                            url: url,
+                            type: 'GET',
+                            success: function(response) {
+                                $('#editModal').modal('show');
+                                $('#editForm').attr('action',
+                                    "{{ route('support-competencies.update', ':id') }}"
+                                    .replace(':id', competencyId));
+                                $('#edit_name').val(response.name);
+                                $('#edit_description').val(response.description);
+                            },
+                            error: function() {
+                                alert('Failed to fetch data');
+                            }
+                        });
                     },
                     error: function() {
-                        alert('Failed to fetch data');
+                        alert('Failed to store competency ID in session');
                     }
                 });
             });
@@ -136,14 +165,14 @@
                     }
                 });
             });
-        });
 
-        @if (session()->has('success'))
-            let message = @json(session('success'));
-            NioApp.Toast(`<h5>Berhasil</h5><p>${message}</p>`, 'success', {
-                position: 'top-right',
-            });
-        @endif
+            @if (session()->has('success'))
+                let message = @json(session('success'));
+                NioApp.Toast(`<h5>Berhasil</h5><p>${message}</p>`, 'success', {
+                    position: 'top-right',
+                });
+            @endif
+        });
     </script>
 @endpush
 

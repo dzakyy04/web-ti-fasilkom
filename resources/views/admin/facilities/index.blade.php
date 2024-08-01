@@ -67,32 +67,81 @@
                 }
             }
 
+            @if ($errors->any())
+                @if (session('edit_competency_id') && old('_method') == 'PUT')
+                    $('#editModal').modal('show');
+                    var competencyId = "{{ session('edit_competency_id') }}";
+                    var url = "{{ route('facilities.find', ':id') }}".replace(':id', competencyId);
+
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        success: function(response) {
+                            $('#editForm').attr('action',
+                                "{{ route('facilities.update', ':id') }}".replace(':id',
+                                    competencyId));
+
+                            const oldName = "{{ old('name') }}";
+                            const oldDescription = "{{ old('description') }}";
+
+                            $('#edit_name').val(oldName ? oldName : response.name);
+
+                            if (response.icon) {
+                                var photoUrl = response.icon.replace('public/', '/storage/');
+                                $('#photo-preview').attr('src', photoUrl).show();
+                            } else {
+                                $('#photo-preview').hide();
+                            }
+                        },
+                        error: function() {
+                            alert('Failed to fetch data');
+                        }
+                    });
+                @else
+                    $('#modalForm').modal('show');
+                @endif
+            @endif
+
             $('.edit-button').click(function() {
-                var lecturerId = $(this).data('id');
-                var url = "{{ route('facilities.find', ':id') }}";
-                url = url.replace(':id', lecturerId);
-
-                // Fetch facility data via AJAX
+                var competencyId = $(this).data('id');
+                var url = "{{ route('facilities.find', ':id') }}".replace(':id', competencyId);
                 $.ajax({
-                    url: url,
+                    url: "{{ route('facilities.session', ':id') }}".replace(':id',
+                        competencyId),
                     type: 'GET',
-                    success: function(response) {
-                        $('#editModal').modal('show');
-                        $('#editForm').attr('action', "{{ route('facilities.update', ':id') }}"
-                            .replace(':id', lecturerId));
-                        $('#editForm #edit_name').val(response.name);
-                        if (response.location === 'Indralaya') {
-                            $('#editForm #editCustomRadio1').prop('checked', true);
-                        } else if (response.location === 'Palembang') {
-                            $('#editForm #editCustomRadio2').prop('checked', true);
-                        }
+                    success: function() {
+                        $.ajax({
+                            url: url,
+                            type: 'GET',
+                            success: function(response) {
+                                $('#editModal').modal('show');
+                                $('#editForm').attr('action',
+                                    "{{ route('facilities.update', ':id') }}"
+                                    .replace(':id', competencyId));
+                                $('#editForm #edit_name').val(response.name);
+                                if (response.location === 'Indralaya') {
+                                    $('#editForm #editCustomRadio1').prop('checked',
+                                        true);
+                                } else if (response.location === 'Palembang') {
+                                    $('#editForm #editCustomRadio2').prop('checked',
+                                        true);
+                                }
 
-                        if (response.photo) {
-                            previewOldPhoto(response.photo.replace('public/', ''));
-                        } else {
-                            $('#photo-preview')
-                                .hide();
-                        }
+                                if (response.photo) {
+                                    previewOldPhoto(response.photo.replace(
+                                        'public/', ''));
+                                } else {
+                                    $('#photo-preview')
+                                        .hide();
+                                }
+                            },
+                            error: function() {
+                                alert('Failed to fetch data');
+                            }
+                        });
+                    },
+                    error: function() {
+                        alert('Failed to store competency ID in session');
                     }
                 });
             });

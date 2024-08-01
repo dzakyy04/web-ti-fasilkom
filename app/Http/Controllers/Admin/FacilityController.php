@@ -88,4 +88,10 @@ class FacilityController extends Controller
         $facility->delete();
         return redirect()->route('facilities')->with('success', 'Data sarana dan prasarana berhasil dihapus.');
     }
+
+    public function sessionFacility($id)
+    {
+        session(['edit_competency_id' => $id]);
+        return response()->json(['status' => 'success']);
+    }
 }

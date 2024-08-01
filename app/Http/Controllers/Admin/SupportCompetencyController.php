@@ -60,4 +60,10 @@ class SupportCompetencyController extends Controller
         $supportCompetency = Competency::where('type', 'support')->findOrFail($id);
         return response()->json($supportCompetency);
     }
+
+    public function sessionSupportCompetency($id)
+    {
+        session(['edit_competency_id' => $id]);
+        return response()->json(['status' => 'success']);
+    }
 }

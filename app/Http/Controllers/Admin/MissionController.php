@@ -84,4 +84,10 @@ class MissionController extends Controller
         $mission = VisionMission::where('type', 'mission')->findOrFail($id);
         return response()->json($mission);
     }
+
+    public function sessionMission($id)
+    {
+        session(['edit_competency_id' => $id]);
+        return response()->json(['status' => 'success']);
+    }
 }
