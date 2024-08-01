@@ -18,7 +18,13 @@ class Helper
 
     public static function processContent($content, $length = null)
     {
-        $contentWithoutHtml = preg_replace('/\.\s*/', '. ', str_replace(["\n", "\r"], " ", strip_tags($content)));
+        $contentWithoutHtml = strip_tags($content);
+
+        $contentWithoutHtml = str_replace(["\n", "\r"], " ", $contentWithoutHtml);
+
+        $contentWithoutHtml = html_entity_decode($contentWithoutHtml, ENT_QUOTES | ENT_HTML5);
+
+        $contentWithoutHtml = preg_replace('/\s+/', ' ', $contentWithoutHtml);
 
         if ($length !== null && strlen($contentWithoutHtml) > $length) {
             $truncatedContent = substr($contentWithoutHtml, 0, $length);
@@ -33,5 +39,4 @@ class Helper
 
         return $contentWithoutHtml;
     }
-
 }
