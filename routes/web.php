@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\LecturerController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\FacilityController;
 use App\Http\Controllers\Admin\GraduateCompetencyController;
+use App\Http\Controllers\Admin\GuidelineController;
 use App\Http\Controllers\Admin\InformationController;
 use App\Http\Controllers\Admin\InformationGalleryController;
 use App\Http\Controllers\Admin\NewsController;
@@ -17,6 +18,7 @@ use App\Http\Controllers\Admin\LeaderController;
 use App\Http\Controllers\Admin\MainCompetencyController;
 use App\Http\Controllers\Admin\MissionController;
 use App\Http\Controllers\Admin\SliderGalleryController;
+use App\Http\Controllers\Admin\SopController;
 use App\Http\Controllers\Admin\SupportCompetencyController;
 use App\Http\Controllers\Admin\VisionController;
 
@@ -179,6 +181,22 @@ Route::prefix('admin')->group(function () {
       Route::delete('/kurikulum/{id}', [CurriculumCOntroller::class, 'delete'])->name('curriculums.delete');
       Route::get('/kurikulum/{id}', [CurriculumCOntroller::class, 'findCurriculum'])->name('curriculums.find');
       Route::get('/kurikulum/session/{id}', [CurriculumCOntroller::class, 'sessionCurriculum'])->name('curriculums.session');
+
+      // Panduan`
+      Route::get('/panduan', [GuidelineController::class, 'index'])->name('guidelines');
+      Route::post('/panduan', [GuidelineController::class, 'store'])->name('guidelines.store');
+      Route::put('/panduan/{id}', [GuidelineController::class, 'update'])->name('guidelines.update');
+      Route::delete('/panduan/{id}', [GuidelineController::class, 'delete'])->name('guidelines.delete');
+      Route::get('/panduan/{id}', [GuidelineController::class, 'findGuideline'])->name('guidelines.find');
+      Route::get('/panduan/session/{id}', [GuidelineController::class, 'sessionGuideline'])->name('guidelines.session');
+
+      // SOP`
+      Route::get('/sop', [SopController::class, 'index'])->name('sops');
+      Route::post('/sop', [SopController::class, 'store'])->name('sops.store');
+      Route::put('/sop/{id}', [SopController::class, 'update'])->name('sops.update');
+      Route::delete('/sop/{id}', [SopController::class, 'delete'])->name('sops.delete');
+      Route::get('/sop/{id}', [SopController::class, 'findSOP'])->name('sops.find');
+      Route::get('/sop/session/{id}', [SopController::class, 'sessionSOP'])->name('sops.session');
 
    });
 });

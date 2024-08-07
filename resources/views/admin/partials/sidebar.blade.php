@@ -38,7 +38,7 @@
                                     <span class="nk-menu-text">Slider</span>
                                 </a>
                             </li>
-                            <li class="nk-menu-item"> 
+                            <li class="nk-menu-item">
                                 <a href="{{ route('information-galleries') }}" class="nk-menu-link">
                                     <span class="nk-menu-icon"><em class="icon ni ni-view-col2"></em></span>
                                     <span class="nk-menu-text">Informasi Jurusan</span>
@@ -68,7 +68,7 @@
                         </a>
                     </li>
                     <li class="nk-menu-heading">
-                        <h6 class="overline-title text-primary-alt">Akademik</h6>
+                        <h6 class="overline-title text-primary-alt">Jurusan</h6>
                     </li><!-- .nk-menu-heading -->
                     <li class="nk-menu-item has-sub">
                         <a href="#" class="nk-menu-link nk-menu-toggle">
@@ -117,15 +117,18 @@
                         </ul>
                     </li>
                     <li class="nk-menu-item has-sub">
-                        <a href="{{ route('lecturers') }}" class="nk-menu-link">
-                            <span class="nk-menu-icon"><em class="icon ni ni-users"></em></span>
-                            <span class="nk-menu-text">Dosen</span>
-                        </a>
-                    </li>
-                    <li class="nk-menu-item has-sub">
                         <a href="{{ route('facilities') }}" class="nk-menu-link">
                             <span class="nk-menu-icon"><em class="icon ni ni-building"></em></span>
                             <span class="nk-menu-text">Sarana dan Prasarana</span>
+                        </a>
+                    </li>
+                    <li class="nk-menu-heading">
+                        <h6 class="overline-title text-primary-alt">Akademik</h6>
+                    </li><!-- .nk-menu-heading -->
+                    <li class="nk-menu-item has-sub">
+                        <a href="{{ route('lecturers') }}" class="nk-menu-link">
+                            <span class="nk-menu-icon"><em class="icon ni ni-users"></em></span>
+                            <span class="nk-menu-text">Dosen</span>
                         </a>
                     </li>
                     <li class="nk-menu-item has-sub">
@@ -133,6 +136,26 @@
                             <span class="nk-menu-icon"><em class="icon ni ni-book-read"></em></span>
                             <span class="nk-menu-text">Kurikulum</span>
                         </a>
+                    </li>
+                    <li class="nk-menu-item has-sub">
+                        <a href="#" class="nk-menu-link nk-menu-toggle">
+                            <span class="nk-menu-icon"><em class="icon ni ni-swap-alt"></em></span>
+                            <span class="nk-menu-text">Panduan dan SOP</span>
+                        </a>
+                        <ul class="nk-menu-sub" style="display: none;">
+                            <li class="nk-menu-item">
+                                <a href="{{ route('guidelines') }}" class="nk-menu-link">
+                                    <span class="nk-menu-icon"><em class="icon ni ni-book"></em></span>
+                                    <span class="nk-menu-text">Panduan</span>
+                                </a>
+                            </li>
+                            <li class="nk-menu-item">
+                                <a href="{{ route('sops') }}" class="nk-menu-link">
+                                    <span class="nk-menu-icon"><em class="icon ni ni-layers"></em></span>
+                                    <span class="nk-menu-text">SOP</span>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                     {{-- <li class="nk-menu-item has-sub">
                         <a href="#" class="nk-menu-link nk-menu-toggle">

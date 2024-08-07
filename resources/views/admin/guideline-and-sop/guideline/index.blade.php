@@ -21,23 +21,23 @@
             datatableWrap.append(wrappingDiv);
 
             @if ($errors->any())
-                @if (session('edit_competency_id') && old('_method') == 'PUT')
+                @if (session('edit_guideline_id') && old('_method') == 'PUT')
                     $('#editModal').modal('show');
-                    var curriculumId = "{{ session('edit_competency_id') }}";
-                    var url = "{{ route('curriculums.find', ':id') }}".replace(':id', curriculumId);
+                    var guidelinesId = "{{ session('edit_guideline_id') }}";
+                    var url = "{{ route('guidelines.find', ':id') }}".replace(':id', guidelinesId);
 
                     $.ajax({
                         url: url,
                         type: 'GET',
                         success: function(response) {
                             $('#editForm').attr('action',
-                                "{{ route('curriculums.update', ':id') }}".replace(':id',
-                                    curriculumId));
+                                "{{ route('guidelines.update', ':id') }}".replace(':id',
+                                    guidelinesId));
 
-                            const oldName = "{{ old('name') }}";
+                            const oldName = "{{ old('title') }}";
                             const oldDescription = "{{ old('description') }}";
 
-                            $('#edit_name').val(oldName ? oldName : response.name);
+                            $('#edit_title').val(oldName ? oldName : response.title);
                             $('#edit_description').val(oldDescription ? oldDescription : response
                                 .description);
 
@@ -55,11 +55,11 @@
             @endif
 
             $('.edit-button').click(function() {
-                var curriculumId = $(this).data('id');
-                var url = "{{ route('curriculums.find', ':id') }}".replace(':id', curriculumId);
+                var guidelinesId = $(this).data('id');
+                var url = "{{ route('guidelines.find', ':id') }}".replace(':id', guidelinesId);
                 $.ajax({
-                    url: "{{ route('curriculums.session', ':id') }}".replace(':id',
-                        curriculumId),
+                    url: "{{ route('guidelines.session', ':id') }}".replace(':id',
+                        guidelinesId),
                     type: 'GET',
                     success: function() {
                         $.ajax({
@@ -68,9 +68,9 @@
                             success: function(response) {
                                 $('#editModal').modal('show');
                                 $('#editForm').attr('action',
-                                    "{{ route('curriculums.update', ':id') }}"
-                                    .replace(':id', curriculumId));
-                                $('#edit_name').val(response.name);
+                                    "{{ route('guidelines.update', ':id') }}"
+                                    .replace(':id', guidelinesId));
+                                $('#edit_title').val(response.title);
                                 $('#edit_description').val(response.description);
 
                                 if (response.file) {
@@ -90,8 +90,8 @@
             });
 
             $('.delete-button').click(function() {
-                var curriculumId = $(this).data('id');
-                var url = "{{ route('curriculums.find', ':id') }}".replace(':id', curriculumId);
+                var guidelinesId = $(this).data('id');
+                var url = "{{ route('guidelines.find', ':id') }}".replace(':id', guidelinesId);
 
                 $.ajax({
                     url: url,
@@ -99,10 +99,10 @@
                     success: function(response) {
                         $('#deleteModal').modal('show');
                         $('#deleteForm').attr('action',
-                            "{{ route('curriculums.delete', ':id') }}".replace(':id',
-                                curriculumId));
-                        $("#deleteText").text("Apakah anda yakin ingin menghapus " +
-                            response.name + "?");
+                            "{{ route('guidelines.delete', ':id') }}".replace(':id',
+                                guidelinesId));
+                        $("#deleteText").text("Apakah anda yakin ingin menghapus misi " +
+                            response.title + "?");
                     },
                     error: function() {
                         alert('Failed to fetch data');
@@ -111,16 +111,15 @@
             });
 
             $('.show-button').click(function() {
-                var curriculumId = $(this).data('id');
-                var url = "{{ route('curriculums.find', ':id') }}".replace(':id', curriculumId);
+                var guidelinesId = $(this).data('id');
+                var url = "{{ route('guidelines.find', ':id') }}".replace(':id', guidelinesId);
 
                 $.ajax({
                     url: url,
                     type: 'GET',
                     success: function(response) {
                         $('#showModal').modal('show');
-                        $('#showName').text(response.name);
-                        $('#showDescription').text(response.description);
+                        $('#showTitle').text(response.title);
 
                         if (response.file) {
                             var fileUrl = response.file.replace('public/', '/storage/');
@@ -156,7 +155,7 @@
                 </div>
                 <div class="nk-block-head-content">
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalForm">
-                        <em class="file ni ni-plus me-1"></em>Tambah Kurikulum
+                        <em class="file ni ni-plus me-1"></em>Tambah Panduan
                     </button>
                 </div>
             </div>
@@ -167,34 +166,32 @@
                         <tr class="table-light nk-tb-item nk-tb-head">
                             <th class="text-nowrap text-center align-middle">No</th>
                             <th class="text-nowrap text-center align-middle">File</th>
-                            <th class="text-nowrap text-center align-middle">Nama</th>
-                            <th class="text-nowrap text-center align-middle">Deskripsi</th>
+                            <th class="text-nowrap text-center align-middle">Judul</th>
                             <th class="text-nowrap text-center no-export align-middle">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($curriculums as $index => $curriculum)
+                        @foreach ($guidelines as $index => $guideline)
                             <tr class="text-center align-middle">
                                 <td>{{ $index + 1 }}</td>
                                 <td>
-                                    <a href="{{ Storage::url($curriculum->file) }}"
+                                    <a href="{{ Storage::url($guideline->file) }}"
                                         class="btn btn-sm rounded-pill btn-danger" target="_blank">
                                         <em class="ni ni-download mx-1"></em>Download
                                     </a>
                                 </td>
-                                <td>{{ $curriculum->name }}</td>
-                                <td class="text-start">{{ $curriculum->description }}</td>
+                                <td>{{ $guideline->title }}</td>
                                 <td>
                                     <button type="button" class="btn btn-primary btn-xs rounded-pill show-button"
-                                        data-id="{{ $curriculum->id }}">
+                                        data-id="{{ $guideline->id }}">
                                         <em class="ni ni-eye"></em>
                                     </button>
                                     <button type="button" class="btn btn-warning btn-xs rounded-pill edit-button"
-                                        data-id="{{ $curriculum->id }}">
+                                        data-id="{{ $guideline->id }}">
                                         <em class="ni ni-edit"></em>
                                     </button>
                                     <button class="btn btn-danger btn-xs rounded-pill delete-button"
-                                        data-id="{{ $curriculum->id }}">
+                                        data-id="{{ $guideline->id }}">
                                         <em class="ni ni-trash"></em>
                                     </button>
                                 </td>
@@ -212,13 +209,13 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-name">Tambah Kurikulum</h5>
+                    <h5 class="modal-name">Tambah Panduan</h5>
                     <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <em class="file ni ni-cross"></em>
                     </a>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('curriculums.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('guidelines.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
                             <div class="form-control-wrap">
@@ -233,21 +230,11 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="name">Nama</label>
+                            <label class="form-label" for="title">Judul</label>
                             <div class="form-control-wrap">
-                                <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                    name="name" id="name" value="{{ old('name') }}" placeholder="Masukkan nama" required>
-                                @error('name')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="description">Deskripsi</label>
-                            <div class="form-control-wrap">
-                                <textarea class="form-control @error('description') is-invalid @enderror" name="description" id="description" placeholder="Masukkan deskripsi"
-                                    rows="4" required>{{ old('description') }}</textarea>
-                                @error('description')
+                                <input type="text" class="form-control @error('title') is-invalid @enderror"
+                                    name="title" id="title" value="{{ old('title') }}" placeholder="Masukkan judul" required>
+                                @error('title')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -267,7 +254,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-name">Edit Kurikulum</h5>
+                    <h5 class="modal-name">Edit Panduan</h5>
                     <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <em class="file ni ni-cross"></em>
                     </a>
@@ -295,21 +282,11 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="edit_name">Nama</label>
+                            <label class="form-label" for="edit_title">Judul</label>
                             <div class="form-control-wrap">
-                                <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                    name="name" id="edit_name" value="{{ old('name') }}" required>
-                                @error('name')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="edit_description">Deskripsi</label>
-                            <div class="form-control-wrap">
-                                <textarea class="form-control @error('description') is-invalid @enderror" name="description" id="edit_description"
-                                    rows="4" required>{{ old('description') }}</textarea>
-                                @error('description')
+                                <input type="text" class="form-control @error('title') is-invalid @enderror"
+                                    name="title" id="edit_title" value="{{ old('title') }}" required>
+                                @error('title')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -329,22 +306,16 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-name">Detail Kurikulum</h5>
+                    <h5 class="modal-name">Detail Panduan</h5>
                     <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <em class="file ni ni-cross"></em>
                     </a>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label class="form-label" for="showName">Nama</label>
+                        <label class="form-label" for="showTitle">Judul</label>
                         <div class="form-control-wrap">
-                            <span id="showName"></span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="showDescription">Deskripsi</label>
-                        <div class="form-control-wrap">
-                            <span id="showDescription"></span>
+                            <span id="showTitle"></span>
                         </div>
                     </div>
                     <div class="form-group">
@@ -369,7 +340,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-name">Hapus Kurikulum</h5>
+                    <h5 class="modal-name">Hapus Panduan</h5>
                     <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <em class="file ni ni-cross"></em>
                     </a>
