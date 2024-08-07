@@ -86,7 +86,7 @@ class CompetencyController extends Controller
             $graduateCompetencies = Competency::where('type', 'graduate')->get();
 
             $graduateCompetencies->transform(function ($competency) {
-                $competency->icon = Helper::convertImageUrl($competency->icon);
+                $competency->icon = Helper::convertFileUrl($competency->icon);
                 return $competency;
             });
 

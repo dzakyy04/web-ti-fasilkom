@@ -107,7 +107,7 @@ class LecturerController extends Controller
 
             $lecturers = $query->get();
             $lecturers->transform(function ($lecturer) {
-                $lecturer->photo = Helper::convertImageUrl($lecturer->photo);
+                $lecturer->photo = Helper::convertFileUrl($lecturer->photo);
                 return $lecturer;
             });
 
@@ -224,7 +224,7 @@ class LecturerController extends Controller
     {
         try {
             $lecturer = Lecturer::with('educations', 'researchFields')->findOrFail($id);
-            $lecturer->photo = Helper::convertImageUrl($lecturer->photo);
+            $lecturer->photo = Helper::convertFileUrl($lecturer->photo);
             $mappedLecturer = $this->mapLecturers(collect([$lecturer]));
 
             return response()->json([

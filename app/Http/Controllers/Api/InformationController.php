@@ -77,7 +77,7 @@ class InformationController extends Controller
             $missions = VisionMission::where('type', 'mission')->get();
 
             $missions->transform(function ($mission) {
-                $mission->icon = Helper::convertImageUrl($mission->icon);
+                $mission->icon = Helper::convertFileUrl($mission->icon);
                 return $mission;
             });
 

@@ -85,7 +85,7 @@ class FacilityController extends Controller
 
             $facilities = $query->get();
             $facilities->transform(function ($facility) {
-                $facility->photo = Helper::convertImageUrl($facility->photo);
+                $facility->photo = Helper::convertFileUrl($facility->photo);
                 return $facility;
             });
 

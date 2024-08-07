@@ -108,7 +108,7 @@ class NewsController extends Controller
 
             $news->getCollection()->transform(function ($newsItem) use ($length) {
                 $newsItem->content = Helper::processContent($newsItem->content, $length);
-                $newsItem->thumbnail = Helper::convertImageUrl($newsItem->thumbnail);
+                $newsItem->thumbnail = Helper::convertFileUrl($newsItem->thumbnail);
                 return $newsItem;
             });
 
@@ -217,7 +217,7 @@ class NewsController extends Controller
                 ->where('type', 'news')
                 ->firstOrFail();
 
-            $newsItem->thumbnail = Helper::convertImageUrl($newsItem->thumbnail);
+            $newsItem->thumbnail = Helper::convertFileUrl($newsItem->thumbnail);
             $mappedNews = $this->mapArticles(collect([$newsItem]));
 
             return response()->json([

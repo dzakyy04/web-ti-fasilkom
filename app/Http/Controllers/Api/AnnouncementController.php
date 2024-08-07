@@ -108,7 +108,7 @@ class AnnouncementController extends Controller
 
             $announcements->getCollection()->transform(function ($announcement) use ($length) {
                 $announcement->content = Helper::processContent($announcement->content, $length);
-                $announcement->thumbnail = Helper::convertImageUrl($announcement->thumbnail);
+                $announcement->thumbnail = Helper::convertFileUrl($announcement->thumbnail);
                 return $announcement;
             });
 
@@ -217,7 +217,7 @@ class AnnouncementController extends Controller
                 ->where('type', 'announcement')
                 ->firstOrFail();
 
-            $announcement->thumbnail = Helper::convertImageUrl($announcement->thumbnail);
+            $announcement->thumbnail = Helper::convertFileUrl($announcement->thumbnail);
             $mappedAnnouncement = $this->mapArticles(collect([$announcement]));
 
             return response()->json([

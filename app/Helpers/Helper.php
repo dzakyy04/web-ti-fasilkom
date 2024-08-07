@@ -4,16 +4,16 @@ namespace App\Helpers;
 
 class Helper
 {
-    public static function convertImageUrl($image)
+    public static function convertFileUrl($file)
     {
         $appUrl = env('APP_URL');
 
-        if (isset($image)) {
-            $image = str_replace('public/', 'storage/', $image);
-            $image = $appUrl . '/' . $image;
+        if (isset($file)) {
+            $file = str_replace('public/', 'storage/', $file);
+            $file = $appUrl . '/' . $file;
         }
 
-        return $image;
+        return $file;
     }
 
     public static function processContent($content, $length = null)

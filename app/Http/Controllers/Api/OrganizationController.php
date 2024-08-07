@@ -81,14 +81,14 @@ class OrganizationController extends Controller
 
             $leaders = Leader::get();
             $leaders->transform(function ($leader) {
-                $leader->photo = Helper::convertImageUrl($leader->photo);
+                $leader->photo = Helper::convertFileUrl($leader->photo);
                 return $leader;
             });
             $mappedLeaders = $this->mapLeaders($leaders);
 
             $admins = Admin::get();
             $admins->transform(function ($admin) {
-                $admin->photo = Helper::convertImageUrl($admin->photo);
+                $admin->photo = Helper::convertFileUrl($admin->photo);
                 return $admin;
             });
             $mappedAdmins = $this->mapAdmins($admins);
