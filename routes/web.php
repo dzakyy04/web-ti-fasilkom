@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AnnouncementController;
+use App\Http\Controllers\Admin\CurriculumController;
 use App\Http\Controllers\Admin\ProfileGalleryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AuthController;
@@ -170,6 +171,14 @@ Route::prefix('admin')->group(function () {
       Route::delete('/galeri/profil/{id}', [ProfileGalleryController::class, 'delete'])->name('profile-galleries.delete');
       Route::get('/galeri/profil/{id}', [ProfileGalleryController::class, 'findProfileGallery'])->name('profile-galleries.find');
       Route::get('/galeri/profil/session/{id}', [ProfileGalleryController::class, 'sessionProfileGallery'])->name('profile-galleries.session');
+
+      // Kurikulum`
+      Route::get('/kurikulum', [CurriculumController::class, 'index'])->name('curriculums');
+      Route::post('/kurikulum', [CurriculumCOntroller::class, 'store'])->name('curriculums.store');
+      Route::put('/kurikulum/{id}', [CurriculumCOntroller::class, 'update'])->name('curriculums.update');
+      Route::delete('/kurikulum/{id}', [CurriculumCOntroller::class, 'delete'])->name('curriculums.delete');
+      Route::get('/kurikulum/{id}', [CurriculumCOntroller::class, 'findCurriculum'])->name('curriculums.find');
+      Route::get('/kurikulum/session/{id}', [CurriculumCOntroller::class, 'sessionCurriculum'])->name('curriculums.session');
 
    });
 });

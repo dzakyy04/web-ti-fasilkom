@@ -512,9 +512,9 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group d-flex justify-content-end">
-                            <button type="submit" class="btn btn-primary"><em
-                                    class="ni ni-save me-1"></em>Simpan</button>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary"><em class="ni ni-save me-1"></em>Simpan</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                         </div>
                     </form>
                 </div>
@@ -588,9 +588,9 @@
                                 <!-- Options akan ditambahkan secara dinamis melalui JavaScript -->
                             </select>
                         </div>
-                        <div class="form-group d-flex justify-content-end">
-                            <button type="submit" class="btn btn-primary"><em
-                                    class="ni ni-save me-1"></em>Simpan</button>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary"><em class="ni ni-save me-1"></em>Simpan</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                         </div>
                     </form>
                 </div>

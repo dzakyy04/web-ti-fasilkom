@@ -404,9 +404,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group d-flex justify-content-end">
-                            <button type="submit" class="btn btn-primary"><em
-                                    class="ni ni-save me-1"></em>Simpan</button>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary"><em class="ni ni-save me-1"></em>Simpan</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                         </div>
                     </form>
                 </div>
@@ -468,10 +468,9 @@
                                 </div>
                             </div>
                         </div>
-
-                        <div class="form-group d-flex justify-content-end">
-                            <button type="submit" class="btn btn-primary"><em
-                                    class="ni ni-save me-1"></em>Simpan</button>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary"><em class="ni ni-save me-1"></em>Simpan</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                         </div>
                     </form>
                 </div>
@@ -493,7 +492,7 @@
                         @csrf
                         @method('DELETE')
                         <p id="deleteText">Apakah anda yakin ingin menghapus item ini?</p>
-                        <div class="form-group d-flex justify-content-end">
+                        <div class="modal-footer">
                             <button type="submit" class="btn btn-danger"><em
                                     class="ni ni-trash me-1"></em>Hapus</button>
                         </div>

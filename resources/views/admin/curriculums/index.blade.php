@@ -14,65 +14,25 @@
     <script src="{{ asset('assets/js/libs/datatable-btns.js?ver=3.0.3') }}"></script>
     <script src="{{ asset('assets/js/example-toastr.js?ver=3.0.3') }}"></script>
     <script>
-        function previewNewPhoto(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const preview = document.getElementById('add_photo_preview');
-                    preview.src = e.target.result;
-                    preview.style.display = 'block';
-                };
-                reader.readAsDataURL(file);
-            } else {
-                document.getElementById('add_photo_preview').style.display = 'none';
-            }
-        }
-
         $(document).ready(function() {
             const datatableWrap = $(".datatable-wrap");
             const wrappingDiv = $("<div>").addClass("w-100").css("overflow-x", "scroll");
             datatableWrap.children().appendTo(wrappingDiv);
             datatableWrap.append(wrappingDiv);
 
-            function previewOldPhoto(photoUrl) {
-                var oldPreview = $('#photo-preview');
-                oldPreview.attr('src', `{{ Storage::url('${photoUrl}') }}`);
-                oldPreview.show();
-            }
-
-            $('#edit_photo').change(function(event) {
-                previewPhoto(event);
-            });
-
-            function previewPhoto(event) {
-                const file = event.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        const preview = document.getElementById('photo-preview');
-                        preview.src = e.target.result;
-                        preview.style.display = 'block';
-                    };
-                    reader.readAsDataURL(file);
-                } else {
-                    document.getElementById('photo-preview').style.display = 'none';
-                }
-            }
-
             @if ($errors->any())
                 @if (session('edit_competency_id') && old('_method') == 'PUT')
                     $('#editModal').modal('show');
-                    var competencyId = "{{ session('edit_competency_id') }}";
-                    var url = "{{ route('graduate-competencies.find', ':id') }}".replace(':id', competencyId);
+                    var curriculumId = "{{ session('edit_competency_id') }}";
+                    var url = "{{ route('curriculums.find', ':id') }}".replace(':id', curriculumId);
 
                     $.ajax({
                         url: url,
                         type: 'GET',
                         success: function(response) {
                             $('#editForm').attr('action',
-                                "{{ route('graduate-competencies.update', ':id') }}".replace(':id',
-                                    competencyId));
+                                "{{ route('curriculums.update', ':id') }}".replace(':id',
+                                    curriculumId));
 
                             const oldName = "{{ old('name') }}";
                             const oldDescription = "{{ old('description') }}";
@@ -81,11 +41,8 @@
                             $('#edit_description').val(oldDescription ? oldDescription : response
                                 .description);
 
-                            if (response.icon) {
-                                var photoUrl = response.icon.replace('public/', '/storage/');
-                                $('#photo-preview').attr('src', photoUrl).show();
-                            } else {
-                                $('#photo-preview').hide();
+                            if (response.file) {
+                                $('#edit_file_name').text(response.file.split('/').pop());
                             }
                         },
                         error: function() {
@@ -98,11 +55,11 @@
             @endif
 
             $('.edit-button').click(function() {
-                var competencyId = $(this).data('id');
-                var url = "{{ route('graduate-competencies.find', ':id') }}".replace(':id', competencyId);
+                var curriculumId = $(this).data('id');
+                var url = "{{ route('curriculums.find', ':id') }}".replace(':id', curriculumId);
                 $.ajax({
-                    url: "{{ route('graduate-competencies.session', ':id') }}".replace(':id',
-                        competencyId),
+                    url: "{{ route('curriculums.session', ':id') }}".replace(':id',
+                        curriculumId),
                     type: 'GET',
                     success: function() {
                         $.ajax({
@@ -111,18 +68,14 @@
                             success: function(response) {
                                 $('#editModal').modal('show');
                                 $('#editForm').attr('action',
-                                    "{{ route('graduate-competencies.update', ':id') }}"
-                                    .replace(':id', competencyId));
+                                    "{{ route('curriculums.update', ':id') }}"
+                                    .replace(':id', curriculumId));
                                 $('#edit_name').val(response.name);
                                 $('#edit_description').val(response.description);
 
-                                if (response.icon) {
-                                    var photoUrl = response.icon.replace('public/',
-                                        '/storage/');
-                                    $('#photo-preview').attr('src', photoUrl)
-                                        .show();
-                                } else {
-                                    $('#photo-preview').hide();
+                                if (response.file) {
+                                    $('#edit_file_name').text(response.file.split(
+                                        '/').pop());
                                 }
                             },
                             error: function() {
@@ -137,19 +90,18 @@
             });
 
             $('.delete-button').click(function() {
-                var competencyId = $(this).data('id');
-                var url = "{{ route('graduate-competencies.find', ':id') }}";
-                url = url.replace(':id', competencyId);
+                var curriculumId = $(this).data('id');
+                var url = "{{ route('curriculums.find', ':id') }}".replace(':id', curriculumId);
+
                 $.ajax({
                     url: url,
                     type: 'GET',
                     success: function(response) {
                         $('#deleteModal').modal('show');
                         $('#deleteForm').attr('action',
-                            "{{ route('graduate-competencies.delete', ':id') }}".replace(
-                                ':id', competencyId));
-                        $("#deleteText").text(
-                            "Apakah anda yakin ingin menghapus kompetensi lulusan " +
+                            "{{ route('curriculums.delete', ':id') }}".replace(':id',
+                                curriculumId));
+                        $("#deleteText").text("Apakah anda yakin ingin menghapus misi " +
                             response.name + "?");
                     },
                     error: function() {
@@ -159,9 +111,9 @@
             });
 
             $('.show-button').click(function() {
-                var competencyId = $(this).data('id');
-                var url = "{{ route('graduate-competencies.find', ':id') }}";
-                url = url.replace(':id', competencyId);
+                var curriculumId = $(this).data('id');
+                var url = "{{ route('curriculums.find', ':id') }}".replace(':id', curriculumId);
+
                 $.ajax({
                     url: url,
                     type: 'GET',
@@ -169,11 +121,14 @@
                         $('#showModal').modal('show');
                         $('#showName').text(response.name);
                         $('#showDescription').text(response.description);
-                        if (response.icon) {
-                            var photoUrl = response.icon.replace('public/', '/storage/');
-                            $('#showPhoto').attr('src', photoUrl).show();
+
+                        if (response.file) {
+                            var fileUrl = response.file.replace('public/', '/storage/');
+                            $('#showPhoto').attr('src', fileUrl).show();
+                            $('#showDownload').attr('href', fileUrl).show();
                         } else {
                             $('#showPhoto').hide();
+                            $('#showDownload').hide();
                         }
                     },
                     error: function() {
@@ -197,11 +152,11 @@
         <div class="nk-block nk-block-lg">
             <div class="nk-block-between">
                 <div class="nk-block-head-content">
-                    <h3 class="nk-block-title page-title">{{ $title }}</h3>
+                    <h3 class="nk-block-name page-name">{{ $title }}</h3>
                 </div>
                 <div class="nk-block-head-content">
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalForm">
-                        <em class="icon ni ni-plus me-1"></em>Tambah Kompetensi Lulusan
+                        <em class="file ni ni-plus me-1"></em>Tambah Kurikulum
                     </button>
                 </div>
             </div>
@@ -211,33 +166,40 @@
                     <thead>
                         <tr class="table-light nk-tb-item nk-tb-head">
                             <th class="text-nowrap text-center align-middle">No</th>
-                            <th class="text-nowrap text-center align-middle">Icon</th>
+                            <th class="text-nowrap text-center align-middle">File</th>
                             <th class="text-nowrap text-center align-middle">Nama</th>
                             <th class="text-nowrap text-center align-middle">Deskripsi</th>
                             <th class="text-nowrap text-center no-export align-middle">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($graduateCompetencies as $index => $competency)
+                        @foreach ($curriculums as $index => $curriculum)
                             <tr class="text-center align-middle">
                                 <td>{{ $index + 1 }}</td>
                                 <td>
-                                    <img src="{{ Storage::url($competency->icon) }}" alt="" class="img-fluid"
-                                        style="width: 50px;">
+                                    <a href="{{ Storage::url($curriculum->file) }}"
+                                        class="btn btn-sm rounded-pill btn-success">
+                                        <em class="ni ni-arrow-up-right mx-1"></em>Tinjau
+                                    </a>
+                                    <a href="{{ Storage::url($curriculum->file) }}"
+                                        class="btn btn-sm rounded-pill btn-danger" target="_blank">
+                                        <em class="ni ni-download mx-1"></em>Download
+                                    </a>
                                 </td>
-                                <td>{{ $competency->name }}</td>
-                                <td class="text-start">{{ $competency->description }}</td>
+
+                                <td>{{ $curriculum->name }}</td>
+                                <td class="text-start">{{ $curriculum->description }}</td>
                                 <td>
                                     <button type="button" class="btn btn-primary btn-xs rounded-pill show-button"
-                                        data-id="{{ $competency->id }}">
+                                        data-id="{{ $curriculum->id }}">
                                         <em class="ni ni-eye"></em>
                                     </button>
                                     <button type="button" class="btn btn-warning btn-xs rounded-pill edit-button"
-                                        data-id="{{ $competency->id }}">
+                                        data-id="{{ $curriculum->id }}">
                                         <em class="ni ni-edit"></em>
                                     </button>
                                     <button class="btn btn-danger btn-xs rounded-pill delete-button"
-                                        data-id="{{ $competency->id }}">
+                                        data-id="{{ $curriculum->id }}">
                                         <em class="ni ni-trash"></em>
                                     </button>
                                 </td>
@@ -245,6 +207,7 @@
                         @endforeach
                     </tbody>
                 </table>
+
             </div>
         </div>
     </div>
@@ -254,25 +217,21 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Tambah Kompetensi Lulusan</h5>
+                    <h5 class="modal-name">Tambah Kurikulum</h5>
                     <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <em class="icon ni ni-cross"></em>
+                        <em class="file ni ni-cross"></em>
                     </a>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('graduate-competencies.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('curriculums.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
                             <div class="form-control-wrap">
-                                <div class="d-flex align-items-center justify-content-start">
-                                    <img id="add_photo_preview" class="img-fluid" src="#" alt="Photo Preview"
-                                        style="display: none; max-width: 200px; max-height: 200px;">
-                                </div>
                                 <div class="custom-file position-relative mt-1">
-                                    <label class="form-label" for="icon">Ikon (.svg)</label>
-                                    <input type="file" class="form-control @error('icon') is-invalid @enderror"
-                                        name="icon" id="icon" onchange="previewNewPhoto(event)" required>
-                                    @error('icon')
+                                    <label class="form-label" for="file">File</label>
+                                    <input type="file" class="form-control @error('file') is-invalid @enderror"
+                                        name="file" id="file" required>
+                                    @error('file')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
@@ -282,8 +241,7 @@
                             <label class="form-label" for="name">Nama</label>
                             <div class="form-control-wrap">
                                 <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                    name="name" id="name" value="{{ old('name') }}" placeholder="Masukkan nama"
-                                    required>
+                                    name="name" id="name" value="{{ old('name') }}" required>
                                 @error('name')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -292,15 +250,15 @@
                         <div class="form-group">
                             <label class="form-label" for="description">Deskripsi</label>
                             <div class="form-control-wrap">
-                                <textarea class="form-control no-resize @error('description') is-invalid @enderror" name="description" id="description"
-                                    placeholder="Masukkan deskripsi">{{ old('description') }}</textarea>
+                                <textarea class="form-control @error('description') is-invalid @enderror" name="description" id="description"
+                                    rows="4" required>{{ old('description') }}</textarea>
                                 @error('description')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary"><em class="ni ni-save me-1"></em>Simpan</button>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                         </div>
                     </form>
@@ -314,26 +272,28 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Edit Kompetensi Lulusan</h5>
+                    <h5 class="modal-name">Edit Kurikulum</h5>
                     <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <em class="icon ni ni-cross"></em>
+                        <em class="file ni ni-cross"></em>
                     </a>
                 </div>
                 <div class="modal-body">
-                    <form id="editForm" action="" method="POST" enctype="multipart/form-data">
-                        @method('PUT')
+                    <form id="editForm" method="POST" enctype="multipart/form-data">
                         @csrf
+                        @method('PUT')
+                        <div class="form-group">
+                            <label class="form-label" for="edit_file_name">Nama File</label>
+                            <div class="form-control-wrap">
+                                <span id="edit_file_name"></span>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <div class="form-control-wrap">
-                                <div class="d-flex align-items-center justify-content-start">
-                                    <img id="photo-preview" class="img-fluid" src="#" alt="Photo Preview"
-                                        style="max-width: 200px; max-height: 200px; display: none;">
-                                </div>
                                 <div class="custom-file position-relative mt-1">
-                                    <label class="form-label" for="edit_photo">Ikon (.svg)</label>
-                                    <input type="file" class="form-control @error('icon') is-invalid @enderror"
-                                        name="icon" id="edit_photo" onchange="previewPhoto(event)">
-                                    @error('icon')
+                                    <label class="form-label" for="edit-file">File</label>
+                                    <input type="file" class="form-control @error('file') is-invalid @enderror"
+                                        name="file" id="edit-file">
+                                    @error('file')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
@@ -342,47 +302,25 @@
                         <div class="form-group">
                             <label class="form-label" for="edit_name">Nama</label>
                             <div class="form-control-wrap">
-                                <input type="text" class="form-control" name="name" id="edit_name"
-                                    value="{{ old('name') }}" required>
+                                <input type="text" class="form-control @error('name') is-invalid @enderror"
+                                    name="name" id="edit_name" value="{{ old('name') }}" required>
+                                @error('name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="edit_description">Deskripsi</label>
                             <div class="form-control-wrap">
-                                <textarea class="form-control no-resize @error('description') is-invalid @enderror" name="description"
-                                    id="edit_description">{{ old('description') }}</textarea>
+                                <textarea class="form-control @error('description') is-invalid @enderror" name="description" id="edit_description"
+                                    rows="4" required>{{ old('description') }}</textarea>
                                 @error('description')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary"><em class="ni ni-save me-1"></em>Simpan</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- Delete Modal --}}
-    <div class="modal fade" id="deleteModal">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Hapus Kompetensi Lulusan</h5>
-                    <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <em class="icon ni ni-cross"></em>
-                    </a>
-                </div>
-                <div class="modal-body">
-                    <form id="deleteForm" action="" method="POST">
-                        @method('DELETE')
-                        @csrf
-                        <p id="deleteText">Apakah anda yakin ingin menghapus kompetensi lulusan ini?</p>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-danger"><em class="ni ni-trash me-1"></em>Hapus</button>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                         </div>
                     </form>
@@ -393,35 +331,64 @@
 
     {{-- Show Modal --}}
     <div class="modal fade" id="showModal">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Detail Kompetensi Lulusan</h5>
+                    <h5 class="modal-name">Detail Kurikulum</h5>
                     <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <em class="icon ni ni-cross"></em>
+                        <em class="file ni ni-cross"></em>
                     </a>
                 </div>
                 <div class="modal-body">
-                    <div class="row align-items-center">
-                        <div class="col-md-4 text-center mb-3">
-                            <img src="" alt="" class="img-fluid" id="showPhoto"
-                                style="max-height: 300px;">
-                        </div>
-                        <div class="col-md-8">
-                            <table class="table table-bordered">
-                                <tbody>
-                                    <tr>
-                                        <td class="fw-bold">Nama</td>
-                                        <td id="showName"></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="fw-bold">Deskripsi</td>
-                                        <td id="showDescription"></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                    <div class="form-group">
+                        <label class="form-label" for="showName">Nama</label>
+                        <div class="form-control-wrap">
+                            <span id="showName"></span>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label class="form-label" for="showDescription">Deskripsi</label>
+                        <div class="form-control-wrap">
+                            <span id="showDescription"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="showPhoto">File</label>
+                        <div class="form-control-wrap">
+                            <a id="showDownload" href="#" class="btn btn-sm rounded-pill btn-danger"
+                                target="_blank">
+                                <em class="ni ni-download mx-1"></em>Download
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Delete Modal --}}
+    <div class="modal fade" id="deleteModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-name">Hapus Kurikulum</h5>
+                    <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <em class="file ni ni-cross"></em>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <form id="deleteForm" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <p id="deleteText"></p>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-danger">Hapus</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
