@@ -113,4 +113,15 @@ trait MapsResponse
             ];
         })->toArray();
     }
+
+    public function mapCuriculums(Collection $curiculums)
+    {
+        return $curiculums->map(function ($curiculum) {
+            return [
+                'nama' => $curiculum->name,
+                'deskripsi' => $curiculum->description,
+                'file' => $curiculum->file,
+            ];
+        })->toArray();
+    }
 }
