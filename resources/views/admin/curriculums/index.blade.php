@@ -176,9 +176,9 @@
                         @foreach ($curriculums as $index => $curriculum)
                             <tr class="text-center align-middle">
                                 <td>{{ $index + 1 }}</td>
-                                <td>
+                                <td class="d-flex justify-content-center">
                                     <a href="{{ Storage::url($curriculum->file) }}"
-                                        class="btn btn-sm rounded-pill btn-success">
+                                        class="btn btn-sm rounded-pill btn-success me-2">
                                         <em class="ni ni-arrow-up-right mx-1"></em>Tinjau
                                     </a>
                                     <a href="{{ Storage::url($curriculum->file) }}"
@@ -241,7 +241,7 @@
                             <label class="form-label" for="name">Nama</label>
                             <div class="form-control-wrap">
                                 <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                    name="name" id="name" value="{{ old('name') }}" required>
+                                    name="name" id="name" value="{{ old('name') }}" placeholder="Masukkan nama" required>
                                 @error('name')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -250,7 +250,7 @@
                         <div class="form-group">
                             <label class="form-label" for="description">Deskripsi</label>
                             <div class="form-control-wrap">
-                                <textarea class="form-control @error('description') is-invalid @enderror" name="description" id="description"
+                                <textarea class="form-control @error('description') is-invalid @enderror" name="description" id="description" placeholder="Masukkan deskripsi"
                                     rows="4" required>{{ old('description') }}</textarea>
                                 @error('description')
                                     <div class="invalid-feedback">{{ $message }}</div>

@@ -22,14 +22,14 @@ class CurriculumController extends Controller
         $request->validate([
             'name' => 'required|string',
             'description' => 'required|string',
-            'file' => 'nullable|file|mimes:pdf,doc,docx',
+            'file' => 'nullable|file|mimes:pdf,doc,docx,xlsx,xls',
         ]);
 
         $filePath = null;
         if ($request->hasFile('file')) {
             $timestamp = Carbon::now()->format('Ymd_His');
             $fileExtension = $request->file('file')->getClientOriginalExtension();
-            $filePath = $request->file('file')->storeAs('public/curriculum/file', $request->name . '_' . $timestamp . '.' . $fileExtension);
+            $filePath = $request->file('file')->storeAs('public/kurikulum/file', $request->name . '_' . $timestamp . '.' . $fileExtension);
         }
 
         Curiculum::create([
@@ -46,7 +46,7 @@ class CurriculumController extends Controller
         $request->validate([
             'name' => 'required|string',
             'description' => 'required|string',
-            'file' => 'nullable|file|mimes:pdf,doc,docx',
+            'file' => 'nullable|file|mimes:pdf,doc,docx,xlsx,xls',
         ]);
 
         $curriculum = Curiculum::findOrFail($id);
@@ -57,7 +57,7 @@ class CurriculumController extends Controller
             }
             $timestamp = Carbon::now()->format('Ymd_His');
             $fileExtension = $request->file('file')->getClientOriginalExtension();
-            $filePath = $request->file('file')->storeAs('public/curriculum/file', $request->name . '_' . $timestamp . '.' . $fileExtension);
+            $filePath = $request->file('file')->storeAs('public/kurikulum/file', $request->name . '_' . $timestamp . '.' . $fileExtension);
             $curriculum->file = $filePath;
         }
 
