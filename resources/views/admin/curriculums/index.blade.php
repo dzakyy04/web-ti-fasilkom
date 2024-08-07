@@ -176,17 +176,12 @@
                         @foreach ($curriculums as $index => $curriculum)
                             <tr class="text-center align-middle">
                                 <td>{{ $index + 1 }}</td>
-                                <td class="d-flex justify-content-center">
-                                    <a href="{{ Storage::url($curriculum->file) }}"
-                                        class="btn btn-sm rounded-pill btn-success me-2">
-                                        <em class="ni ni-arrow-up-right mx-1"></em>Tinjau
-                                    </a>
+                                <td>
                                     <a href="{{ Storage::url($curriculum->file) }}"
                                         class="btn btn-sm rounded-pill btn-danger" target="_blank">
                                         <em class="ni ni-download mx-1"></em>Download
                                     </a>
                                 </td>
-
                                 <td>{{ $curriculum->name }}</td>
                                 <td class="text-start">{{ $curriculum->description }}</td>
                                 <td>
