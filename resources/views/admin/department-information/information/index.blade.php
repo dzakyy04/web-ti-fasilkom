@@ -127,47 +127,47 @@
         });
 
 
-            $('.delete-button').click(function() {
-                var competencyId = $(this).data('id');
-                var url = "{{ route('informations.find', ':id') }}";
-                url = url.replace(':id', competencyId);
+        $('.delete-button').click(function() {
+            var competencyId = $(this).data('id');
+            var url = "{{ route('informations.find', ':id') }}";
+            url = url.replace(':id', competencyId);
 
-                // Fetch data via AJAX
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    success: function(response) {
-                        $('#deleteModal').modal('show');
-                        $('#deleteForm').attr('action',
-                            "{{ route('informations.delete', ':id') }}".replace(
-                                ':id', competencyId));
-                        $("#deleteText").text(
-                            "Apakah anda yakin ingin menghapus informasi jurusan ini ?");
-                    },
-                    error: function() {
-                        alert('Failed to fetch data');
-                    }
-                });
+            // Fetch data via AJAX
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function(response) {
+                    $('#deleteModal').modal('show');
+                    $('#deleteForm').attr('action',
+                        "{{ route('informations.delete', ':id') }}".replace(
+                            ':id', competencyId));
+                    $("#deleteText").text(
+                        "Apakah anda yakin ingin menghapus informasi jurusan ini ?");
+                },
+                error: function() {
+                    alert('Failed to fetch data');
+                }
             });
+        });
 
-            $('.show-button').click(function() {
-                var competencyId = $(this).data('id');
-                var url = "{{ route('informations.find', ':id') }}";
-                url = url.replace(':id', competencyId);
+        $('.show-button').click(function() {
+            var competencyId = $(this).data('id');
+            var url = "{{ route('informations.find', ':id') }}";
+            url = url.replace(':id', competencyId);
 
-                // Fetch data via AJAX
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    success: function(response) {
-                        $('#showModal').modal('show');
-                        $('#showDescription').text(response.description);
-                    },
-                    error: function() {
-                        alert('Failed to fetch data');
-                    }
-                });
+            // Fetch data via AJAX
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function(response) {
+                    $('#showModal').modal('show');
+                    $('#showDescription').text(response.description);
+                },
+                error: function() {
+                    alert('Failed to fetch data');
+                }
             });
+        });
 
         @if (session()->has('success'))
             let message = @json(session('success'));
@@ -186,9 +186,13 @@
                     <h3 class="nk-block-title page-title">Informasi</h3>
                 </div>
                 <div class="nk-block-head-content">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalForm">
-                        <em class="icon ni ni-plus me-1"></em>Tambah Informasi</span>
+                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip"
+                        title="Batas maksimum satu informasi">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalForm"
+                            @if ($disableAddButton) disabled @endif>
+                            <em class="icon ni ni-plus me-1"></em>Tambah Informasi</span>
                     </button>
+                    </span>
                 </div>
             </div>
             <div class="mt-3">

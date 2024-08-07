@@ -191,9 +191,13 @@
                     <h3 class="nk-block-title page-title">{{ $title }}</h3>
                 </div>
                 <div class="nk-block-head-content">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalForm">
-                        <em class="icon ni ni-plus me-1"></em>Tambah Visi
-                    </button>
+                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip"
+                        title="Batas maksimum satu visi">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalForm"
+                            @if ($disabledAddButton) disabled @endif>
+                            <em class="icon ni ni-plus me-1"></em>Tambah Visi
+                        </button>
+                    </span>
                 </div>
             </div>
             <div class="mt-3">

@@ -12,7 +12,8 @@ class VisionController extends Controller
     {
         $title = 'Visi';
         $visions = VisionMission::where('type', 'vision')->get();
-        return view('admin.department-information.vision.index', compact('title', 'visions'));
+        $disabledAddButton = VisionMission::where('type', 'vision')->count() >= 1;
+        return view('admin.department-information.vision.index', compact('title', 'visions', 'disabledAddButton'));
     }
 
     public function store(Request $request)

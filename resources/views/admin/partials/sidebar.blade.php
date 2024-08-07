@@ -26,6 +26,32 @@
                             <span class="nk-menu-text">Dashboard</span>
                         </a>
                     </li>
+                    <li class="nk-menu-item has-sub">
+                        <a href="#" class="nk-menu-link nk-menu-toggle">
+                            <span class="nk-menu-icon"><em class="icon ni ni-layout1"></em></span>
+                            <span class="nk-menu-text">Galeri</span>
+                        </a>
+                        <ul class="nk-menu-sub" style="display: none;">
+                            <li class="nk-menu-item">
+                                <a href="{{ route('slider-galleries') }}" class="nk-menu-link">
+                                    <span class="nk-menu-icon"><em class="icon ni ni-view-col-sq"></em></span>
+                                    <span class="nk-menu-text">Slider</span>
+                                </a>
+                            </li>
+                            <li class="nk-menu-item"> 
+                                <a href="{{ route('information-galleries') }}" class="nk-menu-link">
+                                    <span class="nk-menu-icon"><em class="icon ni ni-view-col2"></em></span>
+                                    <span class="nk-menu-text">Informasi Jurusan</span>
+                                </a>
+                            </li>
+                            <li class="nk-menu-item">
+                                <a href="{{ route('profile-galleries') }}" class="nk-menu-link">
+                                    <span class="nk-menu-icon"><em class="icon ni ni-propert-blank"></em></span>
+                                    <span class="nk-menu-text">Profil Jurusan</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                     <li class="nk-menu-heading">
                         <h6 class="overline-title text-primary-alt">Artikel</h6>
                     </li><!-- .nk-menu-heading -->
@@ -52,19 +78,19 @@
                         <ul class="nk-menu-sub" style="display: none;">
                             <li class="nk-menu-item">
                                 <a href="{{ route('informations') }}" class="nk-menu-link">
-                                    <span class="nk-menu-icon"><em class="icon ni ni-files"></em></span>
+                                    <span class="nk-menu-icon"><em class="icon ni ni-info-i"></em></span>
                                     <span class="nk-menu-text">Informasi</span>
                                 </a>
                             </li>
                             <li class="nk-menu-item">
                                 <a href="{{ route('visions') }}" class="nk-menu-link">
-                                    <span class="nk-menu-icon"><em class="icon ni ni-files"></em></span>
+                                    <span class="nk-menu-icon"><em class="icon ni ni-bulb"></em></span>
                                     <span class="nk-menu-text">Visi</span>
                                 </a>
                             </li>
                             <li class="nk-menu-item">
                                 <a href="{{ route('missions') }}" class="nk-menu-link">
-                                    <span class="nk-menu-icon"><em class="icon ni ni-files"></em></span>
+                                    <span class="nk-menu-icon"><em class="icon ni ni-cards"></em></span>
                                     <span class="nk-menu-text">Misi</span>
                                 </a>
                             </li>

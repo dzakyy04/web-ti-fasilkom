@@ -13,7 +13,8 @@ class InformationController extends Controller
     {
         $title = 'Informasi';
         $informations = Information::get();
-        return view('admin.department-information.information.index', compact('title', 'informations'));
+        $disableAddButton = Information::count() >= 1;
+        return view('admin.department-information.information.index', compact('title', 'informations', 'disableAddButton'));
     }
 
     public function store(Request $request)

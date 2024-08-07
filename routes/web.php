@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AnnouncementController;
+use App\Http\Controllers\Admin\ProfileGalleryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\LecturerController;
@@ -9,10 +10,12 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\FacilityController;
 use App\Http\Controllers\Admin\GraduateCompetencyController;
 use App\Http\Controllers\Admin\InformationController;
+use App\Http\Controllers\Admin\InformationGalleryController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\LeaderController;
 use App\Http\Controllers\Admin\MainCompetencyController;
 use App\Http\Controllers\Admin\MissionController;
+use App\Http\Controllers\Admin\SliderGalleryController;
 use App\Http\Controllers\Admin\SupportCompetencyController;
 use App\Http\Controllers\Admin\VisionController;
 
@@ -143,6 +146,30 @@ Route::prefix('admin')->group(function () {
       Route::post('/informasi-jurusan/misi', [MissionController::class, 'store'])->name('missions.store');
       Route::put('/informasi-jurusan/misi/{id}', [MissionController::class, 'update'])->name('missions.update');
       Route::delete('/informasi-jurusan/misi/{id}', [MissionController::class, 'delete'])->name('missions.delete');
+
+      // Gsleri Slider
+      Route::get('/galeri/slider', [SliderGalleryController::class, 'index'])->name('slider-galleries');
+      Route::post('/galeri/slider', [SliderGalleryController::class, 'store'])->name('slider-galleries.store');
+      Route::put('/galeri/slider/{id}', [SliderGalleryController::class, 'update'])->name('slider-galleries.update');
+      Route::delete('/galeri/slider/{id}', [SliderGalleryController::class, 'delete'])->name('slider-galleries.delete');
+      Route::get('/galeri/slider/{id}', [SliderGalleryController::class, 'findSliderGallery'])->name('slider-galleries.find');
+      Route::get('/galeri/slider/session/{id}', [SliderGalleryController::class, 'sessionSliderGallery'])->name('slider-galleries.session');
+
+      // Gsleri Informasi
+      Route::get('/galeri/informasi', [InformationGalleryController::class, 'index'])->name('information-galleries');
+      Route::post('/galeri/informasi', [InformationGalleryController::class, 'store'])->name('information-galleries.store');
+      Route::put('/galeri/informasi/{id}', [InformationGalleryController::class, 'update'])->name('information-galleries.update');
+      Route::delete('/galeri/informasi/{id}', [InformationGalleryController::class, 'delete'])->name('information-galleries.delete');
+      Route::get('/galeri/informasi/{id}', [InformationGalleryController::class, 'findInformationGallery'])->name('information-galleries.find');
+      Route::get('/galeri/informasi/session/{id}', [InformationGalleryController::class, 'sessionInformationGallery'])->name('information-galleries.session');
+
+      // Gsleri Profil
+      Route::get('/galeri/profil', [ProfileGalleryController::class, 'index'])->name('profile-galleries');
+      Route::post('/galeri/profil', [ProfileGalleryController::class, 'store'])->name('profile-galleries.store');
+      Route::put('/galeri/profil/{id}', [ProfileGalleryController::class, 'update'])->name('profile-galleries.update');
+      Route::delete('/galeri/profil/{id}', [ProfileGalleryController::class, 'delete'])->name('profile-galleries.delete');
+      Route::get('/galeri/profil/{id}', [ProfileGalleryController::class, 'findProfileGallery'])->name('profile-galleries.find');
+      Route::get('/galeri/profil/session/{id}', [ProfileGalleryController::class, 'sessionProfileGallery'])->name('profile-galleries.session');
 
    });
 });
