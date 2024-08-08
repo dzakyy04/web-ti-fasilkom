@@ -26,7 +26,7 @@
                             <span class="nk-menu-text">Dashboard</span>
                         </a>
                     </li>
-                    <li class="nk-menu-item has-sub">
+                    {{-- <li class="nk-menu-item has-sub">
                         <a href="#" class="nk-menu-link nk-menu-toggle">
                             <span class="nk-menu-icon"><em class="icon ni ni-layout1"></em></span>
                             <span class="nk-menu-text">Galeri</span>
@@ -51,7 +51,7 @@
                                 </a>
                             </li>
                         </ul>
-                    </li>
+                    </li> --}}
                     <li class="nk-menu-heading">
                         <h6 class="overline-title text-primary-alt">Artikel</h6>
                     </li><!-- .nk-menu-heading -->

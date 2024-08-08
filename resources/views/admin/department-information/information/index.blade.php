@@ -1,6 +1,7 @@
 @extends('admin.layouts.app')
 
 @push('css')
+    <link rel="stylesheet" href="{{ asset('assets/css/editors/summernote.css?ver=3.0.3') }}">
     <style>
         #photo-preview {
             max-height: 200px;
@@ -13,6 +14,8 @@
 @push('js')
     <script src="{{ asset('assets/js/libs/datatable-btns.js?ver=3.0.3') }}"></script>
     <script src="{{ asset('assets/js/example-toastr.js?ver=3.0.3') }}"></script>
+    <script src="{{ asset('assets/js/libs/editors/summernote.js?ver=3.0.3') }}"></script>
+    <script src="{{ asset('assets/js/editors.js?ver=3.0.3') }}"></script>
     <script>
         function previewNewPhoto(event) {
             const file = event.target.files[0];
@@ -81,11 +84,10 @@
                                 "{{ route('informations.update', ':id') }}".replace(':id',
                                     competencyId));
 
-                            const oldName = "{{ old('name') }}";
                             const oldDescription = "{{ old('description') }}";
 
-                            $('#edit_description').val(oldDescription ? oldDescription : response
-                                .description);
+                            $('#edit_description').summernote('code', oldDescription ? oldDescription :
+                                response.description);
                         },
                         error: function() {
                             alert('Failed to fetch data');
@@ -112,7 +114,8 @@
                                 $('#editForm').attr('action',
                                     "{{ route('informations.update', ':id') }}"
                                     .replace(':id', competencyId));
-                                $('#edit_description').val(response.description);
+                                $('#edit_description').summernote('code', response
+                                    .description);
                             },
                             error: function() {
                                 alert('Failed to fetch data');
@@ -150,22 +153,26 @@
             });
         });
 
-        $('.show-button').click(function() {
-            var competencyId = $(this).data('id');
-            var url = "{{ route('informations.find', ':id') }}";
-            url = url.replace(':id', competencyId);
+        $(document).ready(function() {
+            $('.show-button').click(function() {
+                var competencyId = $(this).data('id');
+                var url = "{{ route('informations.find', ':id') }}".replace(':id', competencyId);
 
-            // Fetch data via AJAX
-            $.ajax({
-                url: url,
-                type: 'GET',
-                success: function(response) {
-                    $('#showModal').modal('show');
-                    $('#showDescription').text(response.description);
-                },
-                error: function() {
-                    alert('Failed to fetch data');
-                }
+                // Fetch data via AJAX
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    success: function(response) {
+                        $('#showModal').modal('show');
+
+                        // Strip HTML tags from description and set the text
+                        var descriptionText = $('<div>').html(response.description).text();
+                        $('#showDescription').text(descriptionText);
+                    },
+                    error: function() {
+                        alert('Failed to fetch data');
+                    }
+                });
             });
         });
 
@@ -209,7 +216,7 @@
                         @foreach ($informations as $index => $information)
                             <tr class="text-center align-middle">
                                 <td>{{ $index + 1 }}</td>
-                                <td>{{ $information->description }}</td>
+                                <td class="text-start">{{ $information->description }}</td>
                                 <td>
                                     <button type="button" class="btn btn-primary btn-xs rounded-pill show-button"
                                         data-id="{{ $information->id }}">
@@ -262,7 +269,7 @@
 
     {{-- Add Modal --}}
     <div class="modal fade" id="modalForm">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Tambah Informasi</h5>
@@ -276,8 +283,10 @@
                         <div class="form-group">
                             <label class="form-label" for="description">Deskripsi</label>
                             <div class="form-control-wrap">
-                                <textarea class="form-control no-resize" name="description" placeholder="Masukkan deskripsi" id="description"
-                                    value="{{ old('description') }}" required></textarea>
+                                <textarea class="summernote-basic @error('description') is-invalid @enderror" name="description" id="description">{{ old('description') }}</textarea>
+                                @error('description')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -292,7 +301,7 @@
 
     {{-- Edit Modal --}}
     <div class="modal fade" id="editModal">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Edit Informasi</h5>
@@ -307,12 +316,13 @@
                         <div class="form-group">
                             <label class="form-label" for="edit_description">Deskripsi</label>
                             <div class="form-control-wrap">
-                                <textarea class="form-control no-resize" name="description" placeholder="Masukkan deskripsi" id="edit_description"
+                                <textarea class="summernote-basic" name="description" placeholder="Masukkan deskripsi" id="edit_description"
                                     value="{{ old('description') }}" required></textarea>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary"><em class="ni ni-save me-1"></em>Simpan</button>
+                            <button type="submit" class="btn btn-primary"><em
+                                    class="ni ni-save me-1"></em>Simpan</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                         </div>
                     </form>
