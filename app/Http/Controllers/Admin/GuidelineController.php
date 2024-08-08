@@ -13,7 +13,7 @@ class GuidelineController extends Controller
     public function index()
     {
         $title = 'Panduan';
-        $guidelines = GuidelineAndSop::where('type', 'guideline')->get();
+        $guidelines = GuidelineAndSop::where('type', 'panduan')->get();
         return view('admin.guideline-and-sop.guideline.index', compact('title', 'guidelines'));
     }
 
@@ -34,7 +34,7 @@ class GuidelineController extends Controller
         GuidelineAndSop::create([
             'title' => $request->title,
             'file' => $filePath,
-            'type' => 'guideline',
+            'type' => 'panduan',
         ]);
 
         return redirect()->route('guidelines')->with('success', 'Panduan berhasil ditambahkan.');
@@ -47,7 +47,7 @@ class GuidelineController extends Controller
             'file' => 'nullable|file|mimes:pdf,doc,docx,xlsx,xls',
         ]);
 
-        $guideline = GuidelineAndSop::where('type', 'guideline')->findOrFail($id);
+        $guideline = GuidelineAndSop::where('type', 'panduan')->findOrFail($id);
 
         if ($request->hasFile('file')) {
             if ($guideline->file) {
@@ -69,7 +69,7 @@ class GuidelineController extends Controller
 
     public function delete($id)
     {
-        $guideline = GuidelineAndSop::where('type', 'guideline')->findOrFail($id);
+        $guideline = GuidelineAndSop::where('type', 'panduan')->findOrFail($id);
         if ($guideline->file) {
             Storage::delete($guideline->file);
         }
@@ -79,7 +79,7 @@ class GuidelineController extends Controller
 
     public function findGuideline($id)
     {
-        $guideline = GuidelineAndSop::where('type', 'guideline')->findOrFail($id);
+        $guideline = GuidelineAndSop::where('type', 'panduan')->findOrFail($id);
         return response()->json($guideline);
     }
 
@@ -89,4 +89,3 @@ class GuidelineController extends Controller
         return response()->json(['status' => 'success']);
     }
 }
-

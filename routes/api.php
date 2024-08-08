@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\CompetencyController;
 use App\Http\Controllers\Api\InformationController;
 use App\Http\Controllers\Api\AnnouncementController;
 use App\Http\Controllers\Api\OrganizationController;
+use App\Http\Controllers\Api\GuidelineAndSopController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,3 +38,4 @@ Route::get('/struktur-jabatan', [OrganizationController::class, 'getAll']);
 Route::get('/kompetensi', [CompetencyController::class, 'getAll']);
 Route::get('/informasi-jurusan', [InformationController::class, 'getAll']);
 Route::get('/kurikulum', [CuriculumController::class, 'getAll']);
+Route::get('/panduan-dan-sop', [GuidelineAndSopController::class, 'getAll']);

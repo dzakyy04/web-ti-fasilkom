@@ -124,4 +124,14 @@ trait MapsResponse
             ];
         })->toArray();
     }
+
+    public function mapGuidelineAndSops(Collection $guidelineAndSops)
+    {
+        return $guidelineAndSops->map(function ($guideline) {
+            return [
+                'judul' => $guideline->title,
+                'file' => $guideline->file,
+            ];
+        })->toArray();
+    }
 }
