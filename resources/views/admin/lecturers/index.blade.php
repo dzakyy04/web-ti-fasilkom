@@ -66,12 +66,12 @@
             $('#addEducation').click(function() {
                 $('#educations').append(`
                 <div class="education mb-2">
-                        <input type="text" class="form-control mb-1" name="educations[${educationIndex}][degree]" placeholder="Masukkan gelar (contoh: S1)" required>
-                        <input type="text" class="form-control mb-1" name="educations[${educationIndex}][institution]" placeholder="Masukkan institusi" required>
-                        <input type="text" class="form-control mb-1" name="educations[${educationIndex}][major]" placeholder="Masukkan jurusan" required>
-                        <button type="button" class="btn btn-dim btn-danger btn-sm btn-remove-education mt-2"><em class="ni ni-cross me-1"></em>Batal Tambah Pendidikan</button>
-                    </div>
-                `);
+                    <input type="text" class="form-control mb-1" name="educations[${educationIndex}][degree]" placeholder="Masukkan gelar (contoh: S1)" required>
+                    <input type="text" class="form-control mb-1" name="educations[${educationIndex}][institution]" placeholder="Masukkan institusi" required>
+                    <input type="text" class="form-control mb-1" name="educations[${educationIndex}][major]" placeholder="Masukkan jurusan" required>
+                    <button type="button" class="btn btn-dim btn-danger btn-sm btn-remove-education mt-2"><em class="ni ni-cross me-1"></em>Batal Tambah Pendidikan</button>
+                </div>
+            `);
                 educationIndex++;
             });
 
@@ -136,7 +136,8 @@
                 }
             }
 
-            $('.edit-button').click(function() {
+            // Menggunakan event delegation
+            $(document).on('click', '.edit-button', function() {
                 var lecturerId = $(this).data('id');
                 var url = "{{ route('lecturers.find', ':id') }}";
                 url = url.replace(':id', lecturerId);
@@ -157,8 +158,7 @@
                         if (response.photo) {
                             previewOldPhoto(response.photo.replace('public/', ''));
                         } else {
-                            $('#photo-preview')
-                                .hide();
+                            $('#photo-preview').hide();
                         }
 
                         // Clear existing education inputs
@@ -175,7 +175,6 @@
                         `);
                         });
 
-
                         // Set editEducationIndex based on the number of existing educations
                         editEducationIndex = response.educations.length;
 
@@ -183,11 +182,10 @@
                         $('#editForm #edit_research_fields').empty();
 
                         // Populate research field inputs
-                        // Mengisi input bidang riset
                         $.each(response.research_fields, function(index, researchField) {
                             $('#editForm #edit_research_fields').append(`
-                        <option value="${researchField.name}" selected>${researchField.name}</option>
-                    `);
+                            <option value="${researchField.name}" selected>${researchField.name}</option>
+                        `);
                         });
 
                         // Inisialisasi select2
@@ -200,7 +198,7 @@
                 });
             });
 
-            $('.delete-button').click(function() {
+            $(document).on('click', '.delete-button', function() {
                 var lecturerId = $(this).data('id');
                 var url = "{{ route('lecturers.find', ':id') }}";
                 url = url.replace(':id', lecturerId);
@@ -219,7 +217,7 @@
                 });
             });
 
-            $('.show-button').click(function() {
+            $(document).on('click', '.show-button', function() {
                 var lecturerId = $(this).data('id');
                 var url = "{{ route('lecturers.find', ':id') }}";
                 url = url.replace(':id', lecturerId);
@@ -229,6 +227,7 @@
                     url: url,
                     type: 'GET',
                     success: function(response) {
+                        console.log(response);
                         let photoUrl = response.photo.replace('public/', '');
                         $('#showModal').modal('show');
                         $('#showPhoto').attr('src', `{{ Storage::url('${photoUrl}') }}`);
@@ -236,7 +235,6 @@
                         $('#showNip').text(response.nip);
                         $('#showNidn').text(response.nidn);
                         $('#showPosition').text(response.position);
-
 
                         let educationHtml = '<ul>';
                         response.educations.forEach(function(education) {
@@ -513,7 +511,8 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary"><em class="ni ni-save me-1"></em>Simpan</button>
+                            <button type="submit" class="btn btn-primary"><em
+                                    class="ni ni-save me-1"></em>Simpan</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                         </div>
                     </form>
@@ -589,7 +588,8 @@
                             </select>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary"><em class="ni ni-save me-1"></em>Simpan</button>
+                            <button type="submit" class="btn btn-primary"><em
+                                    class="ni ni-save me-1"></em>Simpan</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                         </div>
                     </form>
